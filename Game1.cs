@@ -1,6 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Library;
 
 namespace MapMaker
 {
@@ -11,6 +18,13 @@ namespace MapMaker
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private Texture2D _circleTexture;
+        private State _state;
+        private List<Circle> _circles = new List<Circle>();
+        private KeyboardState keyState, oldKeyState;
+        private Circle selectedCircle;
+        private Camera2D _camera;
+        private Matrix _viewMatrix;
 
         public Game1()
         {
@@ -18,16 +32,11 @@ namespace MapMaker
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            _camera = new Camera2D(GraphicsDevice);
+            _state = State.Main;
+            _viewMatrix = _camera.GetViewMatrix();
             base.Initialize();
         }
 
@@ -37,10 +46,10 @@ namespace MapMaker
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            IsMouseVisible = true;
+            _circleTexture = Content.Load<Texture2D>("Circle");
         }
 
         /// <summary>
@@ -59,12 +68,89 @@ namespace MapMaker
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (!IsActive)
+                return;
 
-            // TODO: Add your update logic here
+            MouseInput.mouseState = Mouse.GetState();
+            keyState = Keyboard.GetState();
+            UpdateCamera();
 
+            switch(_state)
+                {
+                    case State.Main:
+                        Main();
+                        break;
+                    case State.CreatingRect:
+                        CreatingCircle();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+            MouseInput.oldMouseState = Mouse.GetState();
+            oldKeyState = Keyboard.GetState();
             base.Update(gameTime);
+        }
+
+        private void UpdateCamera()
+        {
+            if (keyState.IsKeyDown(Keys.D)) _camera.Position += new Vector2(10, 0);
+            if (keyState.IsKeyDown(Keys.W)) _camera.Position += new Vector2(0, -10);
+            if (keyState.IsKeyDown(Keys.A)) _camera.Position += new Vector2(-10, 0);
+            if (keyState.IsKeyDown(Keys.S)) _camera.Position += new Vector2(0, 10);
+            if (keyState.IsKeyDown(Keys.E)) _camera.Zoom += 0.015f;
+            else if (keyState.IsKeyDown(Keys.Q)) _camera.Zoom -= 0.015f;
+
+        }
+
+        private void CreatingCircle()
+        {
+            selectedCircle.Radius = Vector2.Distance(new Vector2(selectedCircle.X, selectedCircle.Y), _camera.ScreenToWorld(MouseInput.mouseState.Position.ToVector2()));
+            if (keyState.IsKeyDown(Keys.Escape))
+            {
+                _state = State.Main;
+                selectedCircle.Radius = 0;
+            }
+            if (MouseInput.IsLeftKeyClicked())
+            {
+                _circles.Add(selectedCircle);
+                _state = State.Main;
+            }
+        }
+
+        private void Main()
+        {
+            if (keyState.IsKeyDown(Keys.S) && keyState.IsKeyDown(Keys.LeftControl))
+            {
+                SaveMap();
+                Exit();
+            }
+            if (keyState.IsKeyDown(Keys.L) && keyState.IsKeyDown(Keys.LeftControl))
+            {
+                LoadMap();
+            }
+            if (!MouseInput.IsLeftKeyClicked()) return;
+            selectedCircle = new Circle(0, _camera.ScreenToWorld(MouseInput.mouseState.Position.ToVector2()));
+            _state = State.CreatingRect;
+        }
+
+        private void SaveMap()
+        {
+
+            string saveString = JsonConvert.SerializeObject(_circles, Formatting.Indented);
+
+            var destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map1" + ".json");
+
+            File.WriteAllText(destPath, saveString);
+        }
+
+        private void LoadMap()
+        {
+            string destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map1" + ".json");
+
+            var saveString = File.ReadAllText(destPath);
+
+            _circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);
         }
 
         /// <summary>
@@ -73,11 +159,35 @@ namespace MapMaker
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
-            // TODO: Add your drawing code here
+            _viewMatrix = _camera.GetViewMatrix();
+            spriteBatch.Begin(transformMatrix: _viewMatrix);
+
+            DrawCircle(selectedCircle, Color.Red);
+            foreach (var circle in _circles)
+            {
+                DrawCircle(circle, Color.Blue);
+            }
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void DrawCircle(Circle circle, Color color)
+        {
+            if(circle.Radius < 1) return;
+
+            var diameter = circle.Radius * 2;
+
+            var tempRect = new Rectangle(
+                Convert.ToInt16(circle.X - circle.Radius),
+                Convert.ToInt16(circle.Y - circle.Radius),
+                Convert.ToInt16(diameter),
+                Convert.ToInt16(diameter));
+
+            spriteBatch.Draw(_circleTexture, tempRect, color);
         }
     }
 }
