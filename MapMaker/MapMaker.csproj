@@ -49,16 +49,14 @@
     <Compile Include="State.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Extended, Version=0.6.377.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MonoGame.Extended.0.6.377\lib\MonoGame.Extended.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MonoGame.Extended">
+      <HintPath>..\bin\Windows\x86\Debug\MonoGame.Extended.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\bin\Windows\x86\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -76,7 +74,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Library\Library.csproj">
+    <ProjectReference Include="..\..\Library\Library.csproj">
       <Project>{f35e5f87-1033-4fcc-b9c8-91e82a79f044}</Project>
       <Name>Library</Name>
     </ProjectReference>
