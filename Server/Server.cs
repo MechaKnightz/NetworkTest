@@ -25,7 +25,10 @@ namespace Server
 
                     string mapName = StringCheck.MakeValidFileName(Console.ReadLine());
 
-                    string destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, mapName + ".json");
+
+                    string destPath = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\",
+                        mapName + ".json");
 
                     var saveString = File.ReadAllText(destPath);
 

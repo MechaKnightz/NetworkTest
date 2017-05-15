@@ -150,19 +150,28 @@ namespace MapMaker
 
             string saveString = JsonConvert.SerializeObject(_circles, Formatting.Indented);
 
-            var destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map1" + ".json");
+            string destPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\";
 
-            File.WriteAllText(destPath, saveString);
+            var savePath = Path.Combine(destPath, "map1" + ".json");
+
+            Directory.CreateDirectory(destPath);
+            File.WriteAllText(savePath, saveString);
+
         }
 
         private void LoadMap(GameTime gameTime)
         {
-            string destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map1" + ".json");
+            string destPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\";
+
+            var savePath = Path.Combine(destPath, "map1" + ".json");
+
+
             string saveString = "";
 
+            Directory.CreateDirectory(destPath);
             try
             {
-                saveString = File.ReadAllText(destPath);
+                saveString = File.ReadAllText(savePath);
             }
             catch (Exception e)
             {
