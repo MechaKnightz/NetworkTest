@@ -106,12 +106,12 @@ namespace Server
                             outmsg.Write(_world.Circles.Count);
                             foreach (var circle in _world.Circles)
                             {
-                                WriteCircle(outmsg, circle);
+                                NetReader.WriteCircle(outmsg, circle);
                             }
                             outmsg.Write(_world.Players.Count);
                             foreach (var player in _world.Players)
                             {
-                                WritePlayer(outmsg, player);
+                                NetReader.WritePlayer(outmsg, player);
                             }
 
                             //connectionmessage:
@@ -155,7 +155,7 @@ namespace Server
 
                                 foreach (var player2 in _world.Players)
                                 {
-                                    WritePlayer(outmsg, player2);
+                                    NetReader.WritePlayer(outmsg, player2);
                                 }
 
                                 //connectionmessage:
@@ -192,21 +192,6 @@ namespace Server
         {
             _world.Players.Add(new Player(name, new Vector2(0, 0), 10f, inc.SenderConnection));
 
-        }
-
-        private static void WriteCircle(NetOutgoingMessage outmsg, Circle circle)
-        {
-            outmsg.Write(circle.Radius);
-            outmsg.Write(circle.X);
-            outmsg.Write(circle.Y);
-        }
-
-        private static void WritePlayer(NetOutgoingMessage outmsg, Player player)
-        {
-            outmsg.Write(player.Name);
-            outmsg.Write(player.X);
-            outmsg.Write(player.Y);
-            outmsg.Write(player.Health);
         }
     }
 }

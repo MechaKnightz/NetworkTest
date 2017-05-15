@@ -59,7 +59,7 @@ namespace MainGame
                             {
                                 var circle =  new Circle();
 
-                                circle = ReadCircle(inc, circle);
+                                circle = NetReader.ReadCircle(inc, circle);
 
                                 World.Circles.Add(circle);
                             }
@@ -70,7 +70,7 @@ namespace MainGame
                             {
                                 var player = new Player();
 
-                                ReadPlayer(inc, player);
+                                NetReader.ReadPlayer(inc, player);
 
                                 World.Players.Add(player);
                             }
@@ -113,29 +113,12 @@ namespace MainGame
                         for (int i = 0; i < count; i++)
                         {
                             Player player = new Player();
-                            ReadPlayer(inc, player);
+                            NetReader.ReadPlayer(inc, player);
                             World.Players.Add(player);
                         }
                     }
                 }
             }
-        }
-
-        public Circle ReadCircle(NetIncomingMessage inc, Circle circle)
-        {
-            circle.Radius = inc.ReadFloat();
-            circle.X = inc.ReadFloat();
-            circle.Y = inc.ReadFloat();
-
-            return circle;
-        }
-
-        void ReadPlayer(NetIncomingMessage inc, Player player)
-        {
-            player.Name = inc.ReadString();
-            player.X = inc.ReadFloat();
-            player.Y = inc.ReadFloat();
-            player.Health = inc.ReadFloat();
         }
     }
 }
