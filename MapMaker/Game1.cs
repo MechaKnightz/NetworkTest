@@ -16,7 +16,7 @@ namespace MapMaker
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
+        GraphicsDeviceManager Graphics;
         SpriteBatch spriteBatch;
         private Texture2D _circleTexture;
         private State _state;
@@ -28,7 +28,7 @@ namespace MapMaker
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -37,6 +37,16 @@ namespace MapMaker
             _camera = new Camera2D(GraphicsDevice);
             _state = State.Main;
             _viewMatrix = _camera.GetViewMatrix();
+            MessageHandler.Initialize(
+                Content.Load<Texture2D>("BoxTexture"),
+                Content.Load<SpriteFont>("BoxFont"),
+                Color.Black);
+
+            Graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+            Graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+            Graphics.IsFullScreen = false;
+            Graphics.ApplyChanges();
+
             base.Initialize();
         }
 
@@ -78,7 +88,7 @@ namespace MapMaker
             switch(_state)
                 {
                     case State.Main:
-                        Main();
+                        Main(gameTime);
                         break;
                     case State.CreatingRect:
                         CreatingCircle();
@@ -87,6 +97,7 @@ namespace MapMaker
                         throw new ArgumentOutOfRangeException();
                 }
 
+            MessageHandler.Update(gameTime);
             MouseInput.oldMouseState = Mouse.GetState();
             oldKeyState = Keyboard.GetState();
             base.Update(gameTime);
@@ -118,7 +129,7 @@ namespace MapMaker
             }
         }
 
-        private void Main()
+        private void Main(GameTime gameTime)
         {
             if (keyState.IsKeyDown(Keys.S) && keyState.IsKeyDown(Keys.LeftControl))
             {
@@ -127,7 +138,7 @@ namespace MapMaker
             }
             if (keyState.IsKeyDown(Keys.L) && keyState.IsKeyDown(Keys.LeftControl))
             {
-                LoadMap();
+                LoadMap(gameTime);
             }
             if (!MouseInput.IsLeftKeyClicked()) return;
             selectedCircle = new Circle(0, _camera.ScreenToWorld(MouseInput.mouseState.Position.ToVector2()));
@@ -144,12 +155,20 @@ namespace MapMaker
             File.WriteAllText(destPath, saveString);
         }
 
-        private void LoadMap()
+        private void LoadMap(GameTime gameTime)
         {
             string destPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map1" + ".json");
+            string saveString = "";
 
-            var saveString = File.ReadAllText(destPath);
-
+            try
+            {
+                saveString = File.ReadAllText(destPath);
+            }
+            catch (Exception e)
+            {
+                MessageHandler.CreateMessage(e.Message, gameTime);
+                return;
+            }
             _circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);
         }
 
@@ -169,6 +188,8 @@ namespace MapMaker
             {
                 DrawCircle(circle, Color.Blue);
             }
+
+            MessageHandler.Draw(spriteBatch);
 
             spriteBatch.End();
 

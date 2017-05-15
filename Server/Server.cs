@@ -32,9 +32,14 @@ namespace Server
                     _world.Circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);
 
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    Console.WriteLine("Error: " + e.Message);
+                    if(e is DirectoryNotFoundException)
+                        Console.WriteLine("Invalid directoty: " + e.Message);
+                    else if(e is FileNotFoundException)
+                        Console.WriteLine("Invalid file name: " + e.Message);
+                    else Console.WriteLine("Error: " + e.Message);
+
                     Console.WriteLine("Could not load map file.");
                     continue;
                 }
@@ -161,7 +166,7 @@ namespace Server
                         break;
                     case NetIncomingMessageType.StatusChanged:
 
-                        Console.WriteLine(inc.SenderConnection + " status changed. " + inc.SenderConnection.Status);
+                        Console.WriteLine(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
                         {
                             foreach (var player in _world.Players)
@@ -169,6 +174,7 @@ namespace Server
                                 if (player.Conn == inc.SenderConnection)
                                 {
                                     _world.Players.Remove(player);
+                                    Console.WriteLine("Removed player " + player.Name);
                                     break;
                                 }
                             }
