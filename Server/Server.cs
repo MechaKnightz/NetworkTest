@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using Library;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ namespace Server
     public static class Server
     {
         private static World _world = new World();
+        private static Timer _update;
 
         public static void Start()
         {
@@ -69,6 +71,10 @@ namespace Server
             TimeSpan timetopass = new TimeSpan(0, 0, 0, 0, 30);
 
             Console.WriteLine("Waiting for new connections and updating world state to current ones");
+            _update =  new Timer(1.5625);
+            _update.Elapsed += update_Elapsed;
+            _update.Start();
+
 
             while (true)
             {
@@ -138,14 +144,7 @@ namespace Server
 
                                 var b = inc.ReadByte();
 
-                                if ((byte)Keys.D == b)
-                                    player.X++;
-                                if ((byte)Keys.W == b)
-                                    player.Y--;
-                                if ((byte)Keys.A == b)
-                                    player.X--;
-                                if ((byte)Keys.S == b)
-                                    player.Y++;
+                                ReadInput(player, b);
 
                                 NetOutgoingMessage outmsg = server.CreateMessage();
 
@@ -188,9 +187,32 @@ namespace Server
             }
         }
 
+        private static void update_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            
+        }
+
+        private static void ReadInput(Player player, byte b)
+        {
+            if ((byte)Keys.D == b)
+                player.Rotation += 0.05f;
+            if ((byte) Keys.W == b)
+            {
+                player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).X;
+                player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).Y;
+            }
+            if ((byte)Keys.A == b)
+                player.Rotation -= 0.05f;
+            if ((byte) Keys.S == b)
+            {
+                player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI, player.Speed / 5 * 2).X;
+                player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI, player.Speed / 5 * 2).Y;
+            }
+        }
+
         private static void CreatePlayer(NetIncomingMessage inc, string name)
         {
-            _world.Players.Add(new Player(name, new Vector2(0, 0), 10f, inc.SenderConnection));
+            _world.Players.Add(new Player(name, new Vector2(0, 0), 10f, 0f, 5f, inc.SenderConnection));
 
         }
     }

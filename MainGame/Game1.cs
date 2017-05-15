@@ -17,7 +17,7 @@ namespace MainGame
     {
         GraphicsDeviceManager Graphics;
         SpriteBatch _spriteBatch;
-        private Texture2D _circleTexture;
+        private Texture2D _circleTexture, _playerTexture;
         private NetManager _netManager;
         private InputManager _inputManager;
         private Camera2D _camera;
@@ -76,6 +76,7 @@ namespace MainGame
 
             State = GameState.MainMenu;
             _circleTexture = Content.Load<Texture2D>("Circle");
+            _playerTexture = Content.Load<Texture2D>("PlayerCircle");
         }
 
         protected override void UnloadContent()
@@ -136,9 +137,15 @@ namespace MainGame
                 _netManager.CheckServerMessages();
                 timer = TIMER;
             }
-            var localPlayer = _netManager.World.Players.First(x => x.Name == _netManager.Name);
-            _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
+            SetCamera(_camera);
             _inputManager.Update();
+        }
+
+        private void SetCamera(Camera2D camera)
+        {
+            var localPlayer = _netManager.World.Players.First(x => x.Name == _netManager.Name);
+            //var origin = new Vector2(50, 50);
+            _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
         }
 
         private void DrawGame(GameTime gameTime)
@@ -150,7 +157,7 @@ namespace MainGame
             }
             foreach (var player in _netManager.World.Players)
             {
-                DrawCircle(new Circle(50, new Vector2(player.X, player.Y)), Color.Blue);
+                DrawPlayer(player, Color.Blue);
             }
         }
         private void OldStateChange(GameState state)
@@ -215,6 +222,21 @@ namespace MainGame
                     break;
             }
         }
+
+        void DrawPlayer(Player player, Color color)
+        {
+
+            var tempRect = new Rectangle(
+                Convert.ToInt16(player.X),
+                Convert.ToInt16(player.Y),
+                Convert.ToInt16(50 * 2),
+                Convert.ToInt16(50 * 2));
+
+            var origin = new Vector2(_playerTexture.Width / 2f, _playerTexture.Height / 2f);
+
+            _spriteBatch.Draw(_playerTexture, destinationRectangle: tempRect, color: Color.Blue, rotation: player.Rotation, origin: origin);
+        }
+
         public void DrawCircle(Circle circle, Color color)
         {
             if (circle.Radius < 1) return;

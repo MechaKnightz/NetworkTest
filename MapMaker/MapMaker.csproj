@@ -77,7 +77,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Library\Library.csproj">
+    <ProjectReference Include="..\Library\Library.csproj">
       <Project>{f35e5f87-1033-4fcc-b9c8-91e82a79f044}</Project>
       <Name>Library</Name>
     </ProjectReference>

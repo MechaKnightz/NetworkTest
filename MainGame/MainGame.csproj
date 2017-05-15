@@ -58,7 +58,7 @@
       <HintPath>..\packages\GeonBit.UI.2.0.2.1\lib\geonbitui\GeonBit.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Lidgren.Network, Version=3.5.1.1679, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Lidgren.Network, Version=3.6.0.1425, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="MonoGame.Extended, Version=0.6.377.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MonoGame.Extended.0.6.377\lib\MonoGame.Extended.dll</HintPath>
       <Private>True</Private>
@@ -476,7 +476,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Library\Library.csproj">
+    <ProjectReference Include="..\Library\Library.csproj">
       <Project>{f35e5f87-1033-4fcc-b9c8-91e82a79f044}</Project>
       <Name>Library</Name>
     </ProjectReference>
