@@ -35,8 +35,8 @@ namespace MapMaker
         protected override void Initialize()
         {
             _camera = new Camera2D(GraphicsDevice);
-            _state = State.Main;
             _viewMatrix = _camera.GetViewMatrix();
+            _state = State.Main;
             MessageHandler.Initialize(
                 Content.Load<Texture2D>("BoxTexture"),
                 Content.Load<SpriteFont>("BoxFont"),
@@ -150,7 +150,7 @@ namespace MapMaker
 
             string saveString = JsonConvert.SerializeObject(_circles, Formatting.Indented);
 
-            string destPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\";
+            string destPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\Saves\";
 
             var savePath = Path.Combine(destPath, "map1" + ".json");
 
@@ -161,7 +161,7 @@ namespace MapMaker
 
         private void LoadMap(GameTime gameTime)
         {
-            string destPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\";
+            string destPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\Saves\";
 
             var savePath = Path.Combine(destPath, "map1" + ".json");
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
 using Lidgren;
 using Library;
+using MonoGame.Extended;
 
 namespace MainGame
 {
@@ -18,6 +20,10 @@ namespace MainGame
         private Texture2D _circleTexture;
         private NetManager _netManager;
         private InputManager _inputManager;
+        private Camera2D _camera;
+        private Matrix _viewMatrix;
+        private Vector2 _halfScreen;
+        private InputHelper _inputHelper;
 
         private World _world = new World();
 
@@ -50,9 +56,13 @@ namespace MainGame
             Graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
             Graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             Graphics.IsFullScreen = false;
+            Graphics.ApplyChanges();
 
             _netManager = new NetManager();
             _inputManager = new InputManager(_netManager);
+
+            _camera = new Camera2D(GraphicsDevice);
+            _viewMatrix = _camera.GetViewMatrix();
 
             base.Initialize();
         }
@@ -61,6 +71,8 @@ namespace MainGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _halfScreen = new Vector2(Graphics.PreferredBackBufferWidth / 2f, Graphics.PreferredBackBufferHeight / 2f);
+
 
             State = GameState.MainMenu;
             _circleTexture = Content.Load<Texture2D>("Circle");
@@ -73,7 +85,7 @@ namespace MainGame
         protected override void Update(GameTime gameTime)
         {
             //if (!IsActive) return;
-
+            
             switch (_state)
             {
                     case GameState.MainMenu:
@@ -91,7 +103,8 @@ namespace MainGame
         {
             UserInterface.Draw(_spriteBatch);
 
-            _spriteBatch.Begin();
+            _viewMatrix = _camera.GetViewMatrix();
+            _spriteBatch.Begin(transformMatrix: _viewMatrix);
 
             switch (_state)
             {
@@ -123,6 +136,8 @@ namespace MainGame
                 _netManager.CheckServerMessages();
                 timer = TIMER;
             }
+            var localPlayer = _netManager.World.Players.First(x => x.Name == _netManager.Name);
+            _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
             _inputManager.Update();
         }
 

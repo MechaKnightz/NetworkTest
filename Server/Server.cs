@@ -27,7 +27,7 @@ namespace Server
 
 
                     string destPath = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\",
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\Saves\",
                         mapName + ".json");
 
                     var saveString = File.ReadAllText(destPath);
@@ -97,7 +97,7 @@ namespace Server
                             inc.SenderConnection.Approve();
                             Console.WriteLine("Approved client connection");
 
-                            _world.Players.Add(new Player(name, new Vector2(0, 0), inc.SenderConnection));
+                            CreatePlayer(inc, name);
 
                             NetOutgoingMessage outmsg = server.CreateMessage();
 
@@ -188,6 +188,12 @@ namespace Server
             }
         }
 
+        private static void CreatePlayer(NetIncomingMessage inc, string name)
+        {
+            _world.Players.Add(new Player(name, new Vector2(0, 0), 10f, inc.SenderConnection));
+
+        }
+
         private static void WriteCircle(NetOutgoingMessage outmsg, Circle circle)
         {
             outmsg.Write(circle.Radius);
@@ -200,6 +206,7 @@ namespace Server
             outmsg.Write(player.Name);
             outmsg.Write(player.X);
             outmsg.Write(player.Y);
+            outmsg.Write(player.Health);
         }
     }
 }

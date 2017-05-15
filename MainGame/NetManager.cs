@@ -13,9 +13,11 @@ namespace MainGame
     {
         private NetClient Client { get; set; }
         public World World { get; } = new World();
+        public string Name { get; set; }
 
         public bool Initialize(string name, string hostip, int port)
         {
+            Name = name;
             NetPeerConfiguration config = new NetPeerConfiguration("testGame");
             Client = new NetClient(config);
 
@@ -133,6 +135,7 @@ namespace MainGame
             player.Name = inc.ReadString();
             player.X = inc.ReadFloat();
             player.Y = inc.ReadFloat();
+            player.Health = inc.ReadFloat();
         }
     }
 }
