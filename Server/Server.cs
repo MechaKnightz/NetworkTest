@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Lidgren.Network;
 using Lidgren;
 using Microsoft.Xna.Framework.Input;
+using Server.Commands;
 
 namespace Server
 {
@@ -95,24 +96,6 @@ namespace Server
             }
         }
 
-        private static void ReadInput(Player player, byte b)
-        {
-            if ((byte)Keys.D == b)
-                player.Rotation += 0.05f;
-            if ((byte) Keys.W == b)
-            {
-                player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).X;
-                player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).Y;
-            }
-            if ((byte)Keys.A == b)
-                player.Rotation -= 0.05f;
-            if ((byte) Keys.S == b)
-            {
-                player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI, player.Speed / 5 * 2).X;
-                player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI, player.Speed / 5 * 2).Y;
-            }
-        }
-
         private static void CreatePlayer(NetIncomingMessage inc, string name)
         {
             _world.Players.Add(new Player(name, new Vector2(0, 0), 10f, 0f, 5f, inc.SenderConnection));
@@ -120,74 +103,16 @@ namespace Server
 
         private static void ReadData(NetIncomingMessage inc)
         {
-            var packetType = inc.ReadByte();
-            switch ((PacketTypes)packetType)
-            {
-                case PacketTypes.Move:
-                    Move(inc);
-                    break;
-            }
-        }
+            var command = CommandHandler.GetCommand(inc);
+            command.Run(_server, inc, null, _world);
 
-        private static void Move(NetIncomingMessage inc)
-        {
-            var dirty = false;
-            var dirtyPlayer = new Player();
-            foreach (var player in _world.Players)
-            {
-                if (player.Conn != inc.SenderConnection)
-                    continue;
-
-                var b = inc.ReadByte();
-
-                ReadInput(player, b);
-
-                dirty = true;
-                dirtyPlayer = player;
-            }
-            if (dirty)
-            {
-                SendPlayerPosition(inc, dirtyPlayer);
-                return;
-            }
-            Console.WriteLine("Couldn't find player with " + inc.SenderConnection);
-        }
-
-        private static void SendAllPlayerPositon(NetIncomingMessage inc)
-        {
-            NetOutgoingMessage outmsg = _server.CreateMessage();
-
-            outmsg.Write((byte)PacketTypes.AllPlayerPosition);
-
-            outmsg.Write(_world.Players.Count);
-
-            foreach (var player in _world.Players)
-            {
-                NetReader.WritePlayer(outmsg, player);
-            }
-
-            //connectionmessage:
-            //packet
-            //player count
-            //all player info
-
-            _server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        private static void SendPlayerPosition(NetIncomingMessage inc, Player player)
-        {
-            NetOutgoingMessage outmsg = _server.CreateMessage();
-
-            outmsg.Write((byte)PacketTypes.PlayerPosition);
-
-            NetReader.WritePlayer(outmsg, player);
-
-            //connectionmessage:
-            //packet
-            //player count
-            //all player info
-
-            _server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+            //var packetType = inc.ReadByte();
+            //switch ((PacketTypes)packetType)
+            //{
+            //    case PacketTypes.Move:
+            //        Move(inc);
+            //        break;
+            //}
         }
 
         private static void StatusChanged(NetIncomingMessage inc)
