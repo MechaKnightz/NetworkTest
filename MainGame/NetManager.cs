@@ -13,11 +13,11 @@ namespace MainGame
     {
         private NetClient Client { get; set; }
         public World World { get; } = new World();
-        public string Name { get; set; }
+        public string Username { get; set; }
 
         public bool Initialize(string name, string hostip, int port)
         {
-            Name = name;
+            Username = name;
             NetPeerConfiguration config = new NetPeerConfiguration("testGame");
             Client = new NetClient(config);
 
@@ -118,7 +118,7 @@ namespace MainGame
                 case PacketTypes.PlayerPosition:
                     Player incPlayer = new Player();
                     NetReader.ReadPlayer(inc, incPlayer);
-                    var oldPlayer = World.Players.FirstOrDefault(x => x.Name == incPlayer.Name);
+                    var oldPlayer = World.Players.FirstOrDefault(x => x.Username == incPlayer.Username);
 
                     if (oldPlayer != null)
                     {

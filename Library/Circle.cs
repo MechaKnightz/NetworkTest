@@ -23,10 +23,8 @@ namespace Library
         public Circle(float radius, float x, float y)
         {
             Radius = radius;
-            X = 0;
-            Y = 0;
-            X = X;
-            Y = Y;
+            X = x;
+            Y = y;
         }
         public Circle(float radius, Vector2 position)
         {
@@ -45,7 +43,7 @@ namespace Library
         public bool Intersect(Circle other)
         {
             var distance = Vector2.Distance(new Vector2(X, Y), new Vector2(other.X, other.Y));
-            return distance < Radius || distance < other.Radius;
+            return distance < Radius + other.Radius;
         }
 
         public bool Intersect(Rectangle other)

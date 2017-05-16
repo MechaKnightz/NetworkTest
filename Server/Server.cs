@@ -120,7 +120,7 @@ namespace Server
                     if (player.Conn == inc.SenderConnection)
                     {
                         _world.Players.Remove(player);
-                        Console.WriteLine("Removed player " + player.Name);
+                        Console.WriteLine("Removed player " + player.Username);
                         break;
                     }
                 }

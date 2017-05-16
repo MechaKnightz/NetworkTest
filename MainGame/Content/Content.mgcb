@@ -41,21 +41,18 @@
 #begin GeonBit.UI/themes/hd/fonts/Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/hd/fonts/Bold.spritefont
 
 #begin GeonBit.UI/themes/hd/fonts/Italic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/hd/fonts/Italic.spritefont
 
 #begin GeonBit.UI/themes/hd/fonts/Regular.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/hd/fonts/Regular.spritefont
 
@@ -1626,21 +1623,18 @@
 #begin GeonBit.UI/themes/lowres/fonts/Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/lowres/fonts/Bold.spritefont
 
 #begin GeonBit.UI/themes/lowres/fonts/Italic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/lowres/fonts/Italic.spritefont
 
 #begin GeonBit.UI/themes/lowres/fonts/Regular.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/lowres/fonts/Regular.spritefont
 
@@ -3223,21 +3217,18 @@
 #begin GeonBit.UI/themes/custom/fonts/Bold.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/custom/fonts/Bold.spritefont
 
 #begin GeonBit.UI/themes/custom/fonts/Italic.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/custom/fonts/Italic.spritefont
 
 #begin GeonBit.UI/themes/custom/fonts/Regular.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:GeonBit.UI/themes/custom/fonts/Regular.spritefont
 
@@ -4804,4 +4795,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:PlayerCircle.png
+
+#begin BoxFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:BoxFont.spritefont
 

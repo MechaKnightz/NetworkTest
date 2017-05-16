@@ -24,6 +24,7 @@ namespace MainGame
         private Matrix _viewMatrix;
         private Vector2 _halfScreen;
         private InputHelper _inputHelper;
+        private SpriteFont _nameFont;
 
         private World _world = new World();
 
@@ -77,6 +78,7 @@ namespace MainGame
             State = GameState.MainMenu;
             _circleTexture = Content.Load<Texture2D>("Circle");
             _playerTexture = Content.Load<Texture2D>("PlayerCircle");
+            _nameFont = Content.Load<SpriteFont>("BoxFont");
         }
 
         protected override void UnloadContent()
@@ -143,8 +145,7 @@ namespace MainGame
 
         private void SetCamera(Camera2D camera)
         {
-            var localPlayer = _netManager.World.Players.First(x => x.Name == _netManager.Name);
-            //var origin = new Vector2(50, 50);
+            var localPlayer = _netManager.World.Players.First(x => x.Username == _netManager.Username);
             _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
         }
 
@@ -155,10 +156,13 @@ namespace MainGame
             {
                 DrawCircle(circle, Color.Red);
             }
+            Player localPlayer = _netManager.World.Players.First(x => x.Username == _netManager.Username);
             foreach (var player in _netManager.World.Players)
             {
+                if(player.Username == localPlayer.Username) continue;
                 DrawPlayer(player, Color.Blue);
             }
+            DrawPlayer(localPlayer, Color.Blue);
         }
         private void OldStateChange(GameState state)
         {
@@ -186,7 +190,7 @@ namespace MainGame
                     UserInterface.AddEntity(connectMenuPanel);
 
                     TextInput nameText = new TextInput(false);
-                    nameText.PlaceholderText = "Enter Name";
+                    nameText.PlaceholderText = "Enter Username";
                     connectMenuPanel.AddChild(nameText);
 
                     TextInput ipText = new TextInput(false);
@@ -235,6 +239,13 @@ namespace MainGame
             var origin = new Vector2(_playerTexture.Width / 2f, _playerTexture.Height / 2f);
 
             _spriteBatch.Draw(_playerTexture, destinationRectangle: tempRect, color: Color.Blue, rotation: player.Rotation, origin: origin);
+
+            _spriteBatch.DrawString(_nameFont,
+                player.Username,
+                new Vector2(player.X - _nameFont.MeasureString(player.Username).X / 2f,
+                player.Y - _nameFont.MeasureString(player.Username).Y / 2f),
+                Color.White
+    );
         }
 
         public void DrawCircle(Circle circle, Color color)

@@ -17,7 +17,7 @@ namespace Server.Commands
 
             var name = inc.ReadString();
 
-            if (world.Players.Any(x => x.Name == name))
+            if (world.Players.Any(x => x.Username == name))
             {
                 var deniedReason = "Denied connection, duplicate client.";
                 inc.SenderConnection.Deny(deniedReason);
@@ -60,7 +60,30 @@ namespace Server.Commands
 
         private static void CreatePlayer(NetIncomingMessage inc, string name, World world)
         {
-            world.Players.Add(new Player(name, new Vector2(0, 0), 10f, 0f, 5f, inc.SenderConnection));
+
+            var intersects = false;
+            for (int i = 0; i < int.MaxValue; i++)
+            {
+                intersects = false;
+                var newPlayer = new Player(name, new Vector2(i * 200, 0), 10f, 0f, 5f, 50, inc.SenderConnection);
+                var circle = new Circle(newPlayer.Radius, newPlayer.X, newPlayer.Y);
+                foreach (var worldPlayer in world.Players)
+                {
+                    intersects = false;
+                    var tempCircle = new Circle(worldPlayer.Radius, worldPlayer.X, worldPlayer.Y);
+                    if (circle.Intersect(tempCircle))
+                    {
+                        intersects = true;
+                    }
+                }
+                if (intersects)
+                {
+                    Console.WriteLine("spawnpoint obstructed, moving player to position: " + new Vector2((i + 1) * 200, 0));
+                    continue;
+                }
+                world.Players.Add(newPlayer);
+                break;
+            }
         }
     }
 }

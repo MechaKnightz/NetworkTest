@@ -28,20 +28,22 @@ namespace Library
 
         public static void WritePlayer(NetOutgoingMessage outmsg, Player player)
         {
-            outmsg.Write(player.Name);
+            outmsg.Write(player.Username);
             outmsg.Write(player.X);
             outmsg.Write(player.Y);
             outmsg.Write(player.Health);
             outmsg.Write(player.Rotation);
+            outmsg.Write(player.Radius);
         }
 
         public static void ReadPlayer(NetIncomingMessage inc, Player player)
         {
-            player.Name = inc.ReadString();
+            player.Username = inc.ReadString();
             player.X = inc.ReadFloat();
             player.Y = inc.ReadFloat();
             player.Health = inc.ReadFloat();
             player.Rotation = inc.ReadFloat();
+            player.Radius = inc.ReadFloat();
         }
     }
 }

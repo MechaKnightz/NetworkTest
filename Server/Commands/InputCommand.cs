@@ -12,14 +12,15 @@ namespace Server.Commands
         {
             var dirty = false;
             var dirtyPlayer = new Player();
+
             foreach (var player2 in world.Players)
             {
                 if (player2.Conn != inc.SenderConnection)
                     continue;
 
-                var b = inc.ReadByte();
+                var key = (Keys)inc.ReadByte();
 
-                ReadInput(player2, b);
+                ReadInput(player2, world, key);
 
                 dirty = true;
                 dirtyPlayer = player2;
@@ -33,21 +34,43 @@ namespace Server.Commands
             Console.WriteLine("Couldn't find player with " + inc.SenderConnection);
         }
 
-        private static void ReadInput(Player player, byte b)
+        private static void ReadInput(Player player, World world, Keys key)
         {
-            if ((byte)Keys.D == b)
-                player.Rotation += 0.05f;
-            if ((byte)Keys.W == b)
+            var tempPlayer = (Player)player.Clone();
+
+            MovePlayer(tempPlayer, key);
+
+            if (CollisionManager.CheckCollision(tempPlayer, world))
             {
-                player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).X;
-                player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).Y;
+                Console.WriteLine("intersecting");
+                return;
             }
-            if ((byte)Keys.A == b)
-                player.Rotation -= 0.05f;
-            if ((byte)Keys.S == b)
+
+            MovePlayer(player, key);
+        }
+
+        private static void MovePlayer(Player player, Keys key)
+        {
+            switch (key)
             {
-                player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI, player.Speed / 5 * 2).X;
-                player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI, player.Speed / 5 * 2).Y;
+                case Keys.W:
+                    player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).X;
+                    player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).Y;
+                    break;
+                case Keys.A:
+                    player.Rotation -= 0.05f;
+                    break;
+                case Keys.S:
+                    player.X =
+                        Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI,
+                            player.Speed / 5 * 2).X;
+                    player.Y =
+                        Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI,
+                            player.Speed / 5 * 2).Y;
+                    break;
+                case Keys.D:
+                    player.Rotation += 0.05f;
+                    break;
             }
         }
     }
