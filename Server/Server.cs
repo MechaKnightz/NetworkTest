@@ -15,7 +15,7 @@ namespace Server
     public static class Server
     {
         private static World _world = new World();
-        private static Timer _update;
+        private static NetServer _server;
 
         public static void Start()
         {
@@ -58,11 +58,11 @@ namespace Server
 
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 
-            NetServer server = new NetServer(config);
-            
-            server.Start();
+            _server = new NetServer(config);
 
-            Console.WriteLine("Server started at IP: " + "Unknown" + " and port: " + server.Port);
+            _server.Start();
+
+            Console.WriteLine("Server started at IP: " + "Unknown" + " and port: " + _server.Port);
 
             NetIncomingMessage inc;
 
@@ -71,14 +71,10 @@ namespace Server
             TimeSpan timetopass = new TimeSpan(0, 0, 0, 0, 30);
 
             Console.WriteLine("Waiting for new connections and updating world state to current ones");
-            _update =  new Timer(1.5625);
-            _update.Elapsed += update_Elapsed;
-            _update.Start();
-
 
             while (true)
             {
-                if ((inc = server.ReadMessage()) == null) continue;
+                if ((inc = _server.ReadMessage()) == null) continue;
 
                 switch (inc.MessageType)
                 {
@@ -86,110 +82,17 @@ namespace Server
                         Console.WriteLine(inc.ReadString());
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
-
-                        if (inc.ReadByte() == (byte) PacketTypes.Login)
-                        {
-                            Console.WriteLine("Incoming login");
-
-                            var name = inc.ReadString();
-
-                            if (_world.Players.Any(x => x.Name == name))
-                            {
-                                var deniedReason = "Denied connection, duplicate client.";
-                                inc.SenderConnection.Deny(deniedReason);
-                                Console.Write(deniedReason);
-                                continue;
-                            }
-                            inc.SenderConnection.Approve();
-                            Console.WriteLine("Approved client connection");
-
-                            CreatePlayer(inc, name);
-
-                            NetOutgoingMessage outmsg = server.CreateMessage();
-
-                            outmsg.Write((byte)PacketTypes.StartState);
-
-                            outmsg.Write(_world.Circles.Count);
-                            foreach (var circle in _world.Circles)
-                            {
-                                NetReader.WriteCircle(outmsg, circle);
-                            }
-                            outmsg.Write(_world.Players.Count);
-                            foreach (var player in _world.Players)
-                            {
-                                NetReader.WritePlayer(outmsg, player);
-                            }
-
-                            //connectionmessage:
-                            //packet
-                            //circle count
-                            //all circle info
-                            //player count
-                            //all player info
-
-                            System.Threading.Thread.Sleep(500);
-
-                            server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
-
-                            Console.WriteLine("Approved new connection and updated the world status");
-                        }
+                        FirstConnection(inc);
                         break;
                     case NetIncomingMessageType.Data:
-                        if (inc.ReadByte() == (byte) PacketTypes.Move)
-                        {
-                            foreach (var player in _world.Players)
-                            {
-                                if (player.Conn != inc.SenderConnection)
-                                    continue;
-
-                                var b = inc.ReadByte();
-
-                                ReadInput(player, b);
-
-                                NetOutgoingMessage outmsg = server.CreateMessage();
-
-                                outmsg.Write((byte)PacketTypes.WorldState);
-
-                                outmsg.Write(_world.Players.Count);
-
-                                foreach (var player2 in _world.Players)
-                                {
-                                    NetReader.WritePlayer(outmsg, player2);
-                                }
-
-                                //connectionmessage:
-                                //packet
-                                //player count
-                                //all player info
-
-                                server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
-                            }
-                        }
+                        ReadData(inc);
                         break;
                     case NetIncomingMessageType.StatusChanged:
-
-                        Console.WriteLine(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
-                        if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
-                        {
-                            foreach (var player in _world.Players)
-                            {
-                                if (player.Conn == inc.SenderConnection)
-                                {
-                                    _world.Players.Remove(player);
-                                    Console.WriteLine("Removed player " + player.Name);
-                                    break;
-                                }
-                            }
-                        }
+                        StatusChanged(inc);
                         break;
                 }
                 System.Threading.Thread.Sleep(1);
             }
-        }
-
-        private static void update_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            
         }
 
         private static void ReadInput(Player player, byte b)
@@ -213,7 +116,147 @@ namespace Server
         private static void CreatePlayer(NetIncomingMessage inc, string name)
         {
             _world.Players.Add(new Player(name, new Vector2(0, 0), 10f, 0f, 5f, inc.SenderConnection));
+        }
 
+        private static void ReadData(NetIncomingMessage inc)
+        {
+            var packetType = inc.ReadByte();
+            switch ((PacketTypes)packetType)
+            {
+                case PacketTypes.Move:
+                    Move(inc);
+                    break;
+            }
+        }
+
+        private static void Move(NetIncomingMessage inc)
+        {
+            var dirty = false;
+            var dirtyPlayer = new Player();
+            foreach (var player in _world.Players)
+            {
+                if (player.Conn != inc.SenderConnection)
+                    continue;
+
+                var b = inc.ReadByte();
+
+                ReadInput(player, b);
+
+                dirty = true;
+                dirtyPlayer = player;
+            }
+            if (dirty)
+            {
+                SendPlayerPosition(inc, dirtyPlayer);
+                return;
+            }
+            Console.WriteLine("Couldn't find player with " + inc.SenderConnection);
+        }
+
+        private static void SendAllPlayerPositon(NetIncomingMessage inc)
+        {
+            NetOutgoingMessage outmsg = _server.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.AllPlayerPosition);
+
+            outmsg.Write(_world.Players.Count);
+
+            foreach (var player in _world.Players)
+            {
+                NetReader.WritePlayer(outmsg, player);
+            }
+
+            //connectionmessage:
+            //packet
+            //player count
+            //all player info
+
+            _server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        private static void SendPlayerPosition(NetIncomingMessage inc, Player player)
+        {
+            NetOutgoingMessage outmsg = _server.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.PlayerPosition);
+
+            NetReader.WritePlayer(outmsg, player);
+
+            //connectionmessage:
+            //packet
+            //player count
+            //all player info
+
+            _server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        private static void StatusChanged(NetIncomingMessage inc)
+        {
+            Console.WriteLine(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
+            if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
+            {
+                foreach (var player in _world.Players)
+                {
+                    if (player.Conn == inc.SenderConnection)
+                    {
+                        _world.Players.Remove(player);
+                        Console.WriteLine("Removed player " + player.Name);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static void FirstConnection(NetIncomingMessage inc)
+        {
+            switch ((PacketTypes) inc.ReadByte())
+            {
+                case PacketTypes.Login:
+                    Console.WriteLine("Incoming login");
+
+                    var name = inc.ReadString();
+
+                    if (_world.Players.Any(x => x.Name == name))
+                    {
+                        var deniedReason = "Denied connection, duplicate client.";
+                        inc.SenderConnection.Deny(deniedReason);
+                        Console.Write(deniedReason);
+                        return;
+                    }
+                    inc.SenderConnection.Approve();
+                    Console.WriteLine("Approved client connection");
+
+                    CreatePlayer(inc, name);
+
+                    NetOutgoingMessage outmsg = _server.CreateMessage();
+
+                    outmsg.Write((byte)PacketTypes.StartState);
+
+                    outmsg.Write(_world.Circles.Count);
+                    foreach (var circle in _world.Circles)
+                    {
+                        NetReader.WriteCircle(outmsg, circle);
+                    }
+                    outmsg.Write(_world.Players.Count);
+                    foreach (var player in _world.Players)
+                    {
+                        NetReader.WritePlayer(outmsg, player);
+                    }
+
+                    //connectionmessage:
+                    //packet
+                    //circle count
+                    //all circle info
+                    //player count
+                    //all player info
+
+                    System.Threading.Thread.Sleep(500);
+
+                    _server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
+
+                    Console.WriteLine("Approved new connection and updated the world status");
+                    break;
+            }
         }
     }
 }

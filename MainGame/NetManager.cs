@@ -100,24 +100,48 @@ namespace MainGame
             //
             // THIS is exactly the same as in WaitForStartingInfo() function
             // Check if its Data message
-            // If its WorldState, read all the characters to list
+            // If its PlayerPos, read all the characters to list
             while ((inc = Client.ReadMessage()) != null)
             {
                 if (inc.MessageType == NetIncomingMessageType.Data)
                 {
-                    if (inc.ReadByte() == (byte)PacketTypes.WorldState)
-                    {
-                        World.Players.Clear();
-                        int count;
-                        count = inc.ReadInt32();
-                        for (int i = 0; i < count; i++)
-                        {
-                            Player player = new Player();
-                            NetReader.ReadPlayer(inc, player);
-                            World.Players.Add(player);
-                        }
-                    }
+                    Data(inc);
                 }
+            }
+        }
+
+        private void Data(NetIncomingMessage inc)
+        {
+            var incomingPacket = inc.ReadByte();
+            switch ((PacketTypes) incomingPacket)
+            {
+                case PacketTypes.PlayerPosition:
+                    Player incPlayer = new Player();
+                    NetReader.ReadPlayer(inc, incPlayer);
+                    var oldPlayer = World.Players.FirstOrDefault(x => x.Name == incPlayer.Name);
+
+                    if (oldPlayer != null)
+                    {
+                        oldPlayer.X = incPlayer.X;
+                        oldPlayer.Y = incPlayer.Y;
+                        oldPlayer.Rotation = incPlayer.Rotation;
+                    }
+                    else
+                    {
+                        World.Players.Add(incPlayer);
+                    }
+                    
+                    break;
+                case PacketTypes.AllPlayerPosition:
+                    World.Players.Clear();
+                    var count = inc.ReadInt32();
+                    for (int i = 0; i < count; i++)
+                    {
+                        Player player2 = new Player();
+                        NetReader.ReadPlayer(inc, player2);
+                        World.Players.Add(player2);
+                    }
+                    break;
             }
         }
     }

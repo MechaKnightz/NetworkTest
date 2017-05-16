@@ -9,7 +9,8 @@ namespace Library
     public enum PacketTypes
     {
         Login,
-        WorldState,
+        PlayerPosition,
+        AllPlayerPosition,
         Move,
         StartState
     }
