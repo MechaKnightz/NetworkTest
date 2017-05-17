@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServerGUI"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="ServerGUI.MainWindow"
+        xmlns:custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="ServerGUI.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="900"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
