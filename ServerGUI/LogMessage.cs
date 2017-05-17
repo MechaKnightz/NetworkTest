@@ -14,7 +14,7 @@ namespace ServerGUI
         {
             Id = id;
             Message = message;
-            Timestamp = DateTime.Now;
+            Timestamp = DateTime.Now.TimeOfDay;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -28,8 +28,8 @@ namespace ServerGUI
             }
         }
 
-        private DateTime _timestamp;
-        public DateTime Timestamp
+        private TimeSpan _timestamp;
+        public TimeSpan Timestamp
         {
             get { return _timestamp; }
             set
