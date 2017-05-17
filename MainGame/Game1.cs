@@ -156,7 +156,7 @@ namespace MainGame
             {
                 DrawCircle(circle, Color.Red);
             }
-            Player localPlayer = _netManager.World.Players.First(x => x.Username == _netManager.Username);
+            var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
             foreach (var player in _netManager.World.Players)
             {
                 if(player.Username == localPlayer.Username) continue;
