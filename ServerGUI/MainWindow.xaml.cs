@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using BespokeFusion;
 using Library;
+using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 
@@ -26,7 +27,7 @@ namespace ServerGUI
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private Task _task;
         private Server _server;
