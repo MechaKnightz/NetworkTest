@@ -22,6 +22,7 @@ using Path = System.IO.Path;
 
 namespace ServerGUI
 {
+    //MaterialMessageBox.Show("Your cool message here", "The awesome message title");
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -32,6 +33,7 @@ namespace ServerGUI
         private CancellationTokenSource _cancellationTokenSource;
         public World World;
         public LoggerManager LoggerManager;
+        private string _filePath { get; set; }
 
         public MainWindow()
         {
@@ -51,22 +53,13 @@ namespace ServerGUI
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
+            BtnStart.IsEnabled = false;
+            BtnStop.IsEnabled = true;
             LoggerManager.AddLogMessage("Server", "Starting...");
-            //MaterialMessageBox.Show("Your cool message here", "The awesome message title");
-            var mapNameInput = "map1";
-            while (true)
             {
                 try
                 {
-
-                    string mapName = StringCheck.MakeValidFileName(mapNameInput);
-
-
-                    string destPath = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\Saves\",
-                        mapName + ".json");
-
-                    var saveString = File.ReadAllText(destPath);
+                    var saveString = File.ReadAllText(_filePath);
 
                     World.Circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);
 
@@ -74,21 +67,20 @@ namespace ServerGUI
                 catch (Exception ex)
                 {
                     if (ex is DirectoryNotFoundException)
-                        LoggerManager.AddServerLogMessage("Invalid directoty: " + ex.Message);
+                        MaterialMessageBox.Show("Invalid directory\nException: " + ex.Message);
                     else if (ex is FileNotFoundException)
-                        LoggerManager.AddServerLogMessage("Invalid file name: " + ex.Message);
-                    else LoggerManager.AddServerLogMessage("Error: " + ex.Message);
-
-                    LoggerManager.AddServerLogMessage("Could not load map file.");
-                    continue; //TODO return
+                        MaterialMessageBox.Show("Invalid file name\nException: " + ex.Message);
+                    else if(ex is ArgumentNullException)
+                        MaterialMessageBox.Show("You must select a map file first\nException: " + ex.Message);
+                    else
+                        MaterialMessageBox.Show("Error.\nException: " + ex.Message);
+                    LoggerManager.AddServerLogMessage("Could not load map file, Shutting down...");
+                    BtnStart.IsEnabled = true;
+                    BtnStop.IsEnabled = false;
+                    return; //TODO return
                 }
                 LoggerManager.AddServerLogMessage("Successfully imported map.");
-
-                break;
             }
-            BtnStart.IsEnabled = false;
-            BtnStop.IsEnabled = true;
-
             _cancellationTokenSource = new CancellationTokenSource();
             _task = new Task(_server.Run, _cancellationTokenSource.Token);
             _task.Start();
@@ -129,6 +121,32 @@ namespace ServerGUI
             var oldViewportHeight = e.ViewportHeight - e.ViewportHeightChange;
             if (oldVerticalOffset + oldViewportHeight + 2 >= oldExtentHeight)
                 ConsoleDataGrid.ScrollIntoView(ConsoleDataGrid.Items[ConsoleDataGrid.Items.Count - 1]);
+        }
+
+        private void BtnSelectFile_Click(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            string destPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\Saves\");
+
+            Directory.CreateDirectory(destPath);
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".json";
+            dlg.InitialDirectory = destPath;
+            //dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif";
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                _filePath = dlg.FileName;
+                string filename = dlg.SafeFileName;
+                LblFile.Content = filename;
+            }
         }
     }
 }
