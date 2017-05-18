@@ -35,10 +35,11 @@ namespace ServerGUI
         private Task _task;
         private Server _server;
         private CancellationTokenSource _cancellationTokenSource;
-        public World World;
-        public LoggerManager LoggerManager;
-        public ServerCommandHandler ServerCommandHandler;
-        public string CommandBox { get; set; } = "";
+        private World World;
+        private List<Player> Players;
+        private LoggerManager LoggerManager;
+        private ServerCommandHandler ServerCommandHandler;
+        private string CommandBox { get; set; } = "";
         private string _filePath { get; set; }
 
         public MainWindow()
@@ -47,11 +48,12 @@ namespace ServerGUI
 
             LoggerManager = new LoggerManager();
 
-            World = new World();
+            Players = new List<Player>();
+            World = new World(Players);
             LoggerManager = new LoggerManager();
             _server = new Server(LoggerManager, World);
 
-            PlayersDataGrid.DataContext = World.Players;
+            PlayersDataGrid.DataContext = World;
             ConsoleDataGrid.DataContext = LoggerManager;
             TxbCommand.DataContext = this;
 
@@ -169,6 +171,14 @@ namespace ServerGUI
 
         private void BtnCommand_Click(object sender, RoutedEventArgs e)
         {
+            {
+                var rnd = new Random();
+                var tempPlayer = new Player();
+                tempPlayer.Username = rnd.Next(0, 1000).ToString();
+                World.Players.Add(tempPlayer);
+                PlayersDataGrid.Items.Refresh();
+                return;
+            }
             LoggerManager.ServerMsg(CommandBox);
             if (EnterCommand(CommandBox))
             {

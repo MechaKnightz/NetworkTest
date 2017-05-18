@@ -15,7 +15,7 @@ namespace Server
 {
     public static class Server
     {
-        private static World _world = new World();
+        private static World _world = new World(new List<Player>());
         private static NetServer _server;
 
         public static void Start()

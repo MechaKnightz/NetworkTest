@@ -9,8 +9,11 @@ namespace Library
 {
     public class World
     {
-        public World() { }
+        public World(List<Player> players)
+        {
+            Players = players;
+        }
         public List<Circle> Circles { get; set; } = new List<Circle>();
-        public List<Player> Players { get; set; } = new List<Player>();
+        public List<Player> Players { get; set; }
     }
 }

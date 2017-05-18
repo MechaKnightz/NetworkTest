@@ -17,7 +17,7 @@ namespace ServerGUI
 {
     public class Server
     {
-        public World World { get; set; }= new World();
+        public World World { get; set; }
         public NetServer NetServer { get; private set; }
         public LoggerManager LoggerManager;
 

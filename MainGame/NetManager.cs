@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Library;
 using Lidgren.Network;
@@ -9,7 +10,7 @@ namespace MainGame
     public class NetManager
     {
         private NetClient Client { get; set; }
-        public World World { get; } = new World();
+        public World World { get; } = new World(new List<Player>());
         public string Username { get; set; }
 
         public bool Initialize(string name, string hostip, int port)
