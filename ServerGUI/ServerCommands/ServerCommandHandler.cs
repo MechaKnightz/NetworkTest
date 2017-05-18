@@ -64,7 +64,9 @@ namespace ServerGUI.ServerCommands
                     int lastPos = 0;
                     for (int i = 0; i < command.ParameterCount; i++)
                     {
-                        parameters.Add(fullString.Substring(lastPos, fullString.IndexOf(" ")));
+                        var spaceIndex = fullString.IndexOf(" ");
+                        parameters.Add(fullString.Substring(lastPos, spaceIndex));
+                        fullString = fullString.Substring(spaceIndex + 1, fullString.Length);
                         lastPos = parameters[i].Length;
                     }
                     returnBool = command.Run(LoggerManager, World, parameters, out runMessage);
@@ -75,7 +77,8 @@ namespace ServerGUI.ServerCommands
                     //command is now "param" "param" et.c
                     var parameters2 = new List<string>();
                     fullString.Insert(fullString.Length, " ");
-                    parameters2.Add(fullString.Substring(0, fullString.IndexOf(" ")));
+                    var spaceIndex2 = fullString.IndexOf(" ");
+                    parameters2.Add(fullString.Substring(0, spaceIndex2));
 
                     returnBool = command.Run(LoggerManager, World, parameters2, out runMessage);
                     return returnBool;
