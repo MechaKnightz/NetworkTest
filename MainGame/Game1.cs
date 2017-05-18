@@ -26,7 +26,7 @@ namespace MainGame
         private InputHelper _inputHelper;
         private SpriteFont _nameFont;
 
-        private World _world = new World(new List<Player>());
+        private World _world = new World();
 
         float timer = 15;
         const float TIMER = 15;
