@@ -21,6 +21,7 @@ using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 using System.ComponentModel;
+using System.Windows.Threading;
 using ServerGUI.ServerCommands;
 using ServerGUI.ServerLogger;
 
@@ -40,6 +41,7 @@ namespace ServerGUI
         private ServerCommandHandler ServerCommandHandler;
         private string CommandBox { get; set; } = "";
         private string _filePath { get; set; }
+        private DispatcherTimer _timer;
 
         public MainWindow()
         {
@@ -47,7 +49,7 @@ namespace ServerGUI
 
             LoggerManager = new LoggerManager();
 
-            World = new World(new List<Player>());
+            World = new World();
             LoggerManager = new LoggerManager();
             _server = new Server(LoggerManager, World);
 
@@ -63,6 +65,7 @@ namespace ServerGUI
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
+            StartTimer();
             BtnStart.IsEnabled = false;
             BtnStop.IsEnabled = true;
             LoggerManager.AddLogMessage("Server", "Starting...");
@@ -105,6 +108,7 @@ namespace ServerGUI
                 _cancellationTokenSource.Cancel();
                 BtnStart.IsEnabled = true;
                 BtnStop.IsEnabled = false;
+                _timer.Stop();
             }
         }
         //not mine
@@ -169,14 +173,6 @@ namespace ServerGUI
 
         private void BtnCommand_Click(object sender, RoutedEventArgs e)
         {
-            {
-                var rnd = new Random();
-                var tempPlayer = new Player();
-                tempPlayer.Username = rnd.Next(0, 1000).ToString();
-                World.Players.Add(tempPlayer);
-                PlayersDataGrid.Items.Refresh();
-                return;
-            }
             LoggerManager.ServerMsg(CommandBox);
             if (EnterCommand(CommandBox))
             {
@@ -191,6 +187,19 @@ namespace ServerGUI
 
             LoggerManager.ServerMsg(runMessage);
             return successfulRun;
+        }
+
+        private void StartTimer()
+        {
+            _timer = new DispatcherTimer();
+            _timer.Tick += new EventHandler(TimerEvent);
+            _timer.Interval = new TimeSpan(0, 0, 0, 1);
+            _timer.Start();
+        }
+
+        private void TimerEvent(object tempObject, EventArgs e)
+        {
+            PlayersDataGrid.Items.Refresh();
         }
     }
 }
