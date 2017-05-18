@@ -36,7 +36,6 @@ namespace ServerGUI
         private Server _server;
         private CancellationTokenSource _cancellationTokenSource;
         private World World;
-        private List<Player> Players;
         private LoggerManager LoggerManager;
         private ServerCommandHandler ServerCommandHandler;
         private string CommandBox { get; set; } = "";
@@ -48,8 +47,7 @@ namespace ServerGUI
 
             LoggerManager = new LoggerManager();
 
-            Players = new List<Player>();
-            World = new World(Players);
+            World = new World(new List<Player>());
             LoggerManager = new LoggerManager();
             _server = new Server(LoggerManager, World);
 
