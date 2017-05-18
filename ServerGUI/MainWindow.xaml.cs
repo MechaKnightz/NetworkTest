@@ -37,6 +37,7 @@ namespace ServerGUI
         private CancellationTokenSource _cancellationTokenSource;
         public World World;
         public LoggerManager LoggerManager;
+        public ServerCommandHandler ServerCommandHandler;
         public string CommandBox { get; set; } = "";
         private string _filePath { get; set; }
 
@@ -55,6 +56,8 @@ namespace ServerGUI
 
             var _lock = new object();
             BindingOperations.EnableCollectionSynchronization(LoggerManager.LogMessages, _lock);
+
+            ServerCommandHandler = new ServerCommandHandler(LoggerManager, World);
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
