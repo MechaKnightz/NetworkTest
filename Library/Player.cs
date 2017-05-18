@@ -1,10 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Lidgren.Network;
+using System.ComponentModel;
 
 namespace Library
 {
-    public class Player : ICloneable
+    public class Player : ICloneable, INotifyPropertyChanged
     {
         public Player() { }
         public Player(string username, Vector2 position, float health, float rotation, float speed, float radius, NetConnection conn)
@@ -22,7 +23,6 @@ namespace Library
         public float Speed;
         public float Rotation;
         public float Health;
-        public string Username;
         public float X;
         public float Y;
         public float Radius;
@@ -31,6 +31,26 @@ namespace Library
         public object Clone()
         {
             return MemberwiseClone();
+        }
+        private string _username;
+        public string Username
+        {
+            get { return _username; }
+            set
+            {
+                _username = value;
+                OnPropertyChanged("Username");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

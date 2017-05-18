@@ -51,6 +51,7 @@ namespace ServerGUI
             LoggerManager = new LoggerManager();
             _server = new Server(LoggerManager, World);
 
+            PlayersDataGrid.DataContext = World.Players;
             ConsoleDataGrid.DataContext = LoggerManager;
             TxbCommand.DataContext = this;
 
