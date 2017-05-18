@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
-namespace ServerGUI
+namespace ServerGUI.ServerLogger
 {
     public class LoggerManager
     {
@@ -31,7 +26,7 @@ namespace ServerGUI
             AddLogMessage(new LogMessage(id, message));
         }
 
-        public void AddServerLogMessage(string message)
+        public void ServerMsg(string message)
         {
             AddLogMessage("Server", message);
         }

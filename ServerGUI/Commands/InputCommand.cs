@@ -4,6 +4,7 @@ using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using ServerGUI.Commands;
+using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
 {
@@ -32,7 +33,7 @@ namespace ServerGUI.Commands
                 command.Run(loggerManager, server, inc, dirtyPlayer, world);
                 return;
             }
-            loggerManager.AddServerLogMessage("Couldn't find player with " + inc.SenderConnection);
+            loggerManager.ServerMsg("Couldn't find player with " + inc.SenderConnection);
         }
 
         private static void ReadInput(Player player, World world, Keys key)

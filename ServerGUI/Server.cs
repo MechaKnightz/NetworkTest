@@ -11,6 +11,7 @@ using Lidgren.Network;
 using Lidgren;
 using Microsoft.Xna.Framework.Input;
 using ServerGUI.Commands;
+using ServerGUI.ServerLogger;
 
 namespace ServerGUI
 {
@@ -36,12 +37,12 @@ namespace ServerGUI
 
         public void Run()
         {
-            LoggerManager.AddServerLogMessage("Server started at IP: " + "Unknown" + " and port: " + NetServer.Port);
+            LoggerManager.ServerMsg("Server started at IP: " + "Unknown" + " and port: " + NetServer.Port);
 
-            LoggerManager.AddServerLogMessage("Waiting for new connections and updating world state to current ones");
+            LoggerManager.ServerMsg("Waiting for new connections and updating world state to current ones");
 
             NetServer.Start();
-            LoggerManager.AddServerLogMessage("Server started...");
+            LoggerManager.ServerMsg("Server started...");
             while (true)
             {
                 NetIncomingMessage inc;
@@ -57,7 +58,7 @@ namespace ServerGUI
                         }
                         var deniedReason = "Faulty connection type";
                         inc.SenderConnection.Deny(deniedReason);
-                        LoggerManager.AddServerLogMessage(deniedReason);
+                        LoggerManager.ServerMsg(deniedReason);
                         break;
                     case NetIncomingMessageType.Data:
                         Data(inc);
@@ -77,7 +78,7 @@ namespace ServerGUI
 
         private void StatusChanged(NetIncomingMessage inc)
         {
-            LoggerManager.AddServerLogMessage(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
+            LoggerManager.ServerMsg(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
             if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
             {
                 foreach (var player in World.Players)
@@ -85,7 +86,7 @@ namespace ServerGUI
                     if (player.Conn == inc.SenderConnection)
                     {
                         World.Players.Remove(player);
-                        LoggerManager.AddServerLogMessage("Removed player " + player.Username);
+                        LoggerManager.ServerMsg("Removed player " + player.Username);
                         break;
                     }
                 }

@@ -1,9 +1,8 @@
 ﻿using System;
 using Library;
 using Lidgren.Network;
-using ServerGUI.Commands;
 
-namespace ServerGUI
+namespace ServerGUI.Commands
 {
     public static class CommandHandler
     {

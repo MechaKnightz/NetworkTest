@@ -21,6 +21,8 @@ using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 using System.ComponentModel;
+using ServerGUI.ServerCommands;
+using ServerGUI.ServerLogger;
 
 namespace ServerGUI
 {
@@ -78,12 +80,12 @@ namespace ServerGUI
                         MaterialMessageBox.Show("You must select a map file first\nException: " + ex.Message);
                     else
                         MaterialMessageBox.Show("Error.\nException: " + ex.Message);
-                    LoggerManager.AddServerLogMessage("Could not load map file, Shutting down...");
+                    LoggerManager.ServerMsg("Could not load map file, Shutting down...");
                     BtnStart.IsEnabled = true;
                     BtnStop.IsEnabled = false;
                     return; //TODO return
                 }
-                LoggerManager.AddServerLogMessage("Successfully imported map.");
+                LoggerManager.ServerMsg("Successfully imported map.");
             }
             _cancellationTokenSource = new CancellationTokenSource();
             _task = new Task(_server.Run, _cancellationTokenSource.Token);
@@ -95,7 +97,7 @@ namespace ServerGUI
         {
             if (_task != null && _cancellationTokenSource != null)
             {
-                LoggerManager.AddServerLogMessage("Stopping server...");
+                LoggerManager.ServerMsg("Stopping server...");
                 _cancellationTokenSource.Cancel();
                 BtnStart.IsEnabled = true;
                 BtnStop.IsEnabled = false;
@@ -163,6 +165,7 @@ namespace ServerGUI
 
         private void BtnCommand_Click(object sender, RoutedEventArgs e)
         {
+            LoggerManager.ServerMsg(CommandBox);
             if (EnterCommand(CommandBox))
             {
                 TxbCommand.Text = "";
@@ -171,8 +174,11 @@ namespace ServerGUI
 
         private bool EnterCommand(string command)
         {
-            //TODO command handling
-            return false;
+            string runMessage;
+            var successfulRun = ServerCommandHandler.HandleCommandString(command, out runMessage);
+
+            LoggerManager.ServerMsg(runMessage);
+            return successfulRun;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
+using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
 {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
 {
@@ -13,7 +14,7 @@ namespace ServerGUI.Commands
     {
         public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
-            loggerManager.AddServerLogMessage("Incoming login");
+            loggerManager.ServerMsg("Incoming login");
 
             var name = inc.ReadString();
 
@@ -21,11 +22,11 @@ namespace ServerGUI.Commands
             {
                 var deniedReason = "Denied connection, duplicate client.";
                 inc.SenderConnection.Deny(deniedReason);
-                loggerManager.AddServerLogMessage(deniedReason);
+                loggerManager.ServerMsg(deniedReason);
                 return;
             }
             inc.SenderConnection.Approve();
-            loggerManager.AddServerLogMessage("Approved client connection");
+            loggerManager.ServerMsg("Approved client connection");
 
             CreatePlayer(loggerManager, inc, name, world);
 
@@ -55,7 +56,7 @@ namespace ServerGUI.Commands
 
             server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
 
-            loggerManager.AddServerLogMessage("Approved new connection and updated the world status");
+            loggerManager.ServerMsg("Approved new connection and updated the world status");
         }
 
         private static void CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, World world)
@@ -78,7 +79,7 @@ namespace ServerGUI.Commands
                 }
                 if (intersects)
                 {
-                    loggerManager.AddServerLogMessage("spawnpoint obstructed, moving player to position: " + new Vector2((i + 1) * 200, 0));
+                    loggerManager.ServerMsg("spawnpoint obstructed, moving player to position: " + new Vector2((i + 1) * 200, 0));
                     continue;
                 }
                 world.Players.Add(newPlayer);

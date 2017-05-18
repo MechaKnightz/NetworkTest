@@ -87,8 +87,11 @@
     <Compile Include="Commands\LoginCommand.cs" />
     <Compile Include="Commands\SendAllPlayersCommand.cs" />
     <Compile Include="Commands\SendPlayerCommand.cs" />
-    <Compile Include="LogMessage.cs" />
-    <Compile Include="LoggerManager.cs" />
+    <Compile Include="ServerCommands\IServerCommand.cs" />
+    <Compile Include="ServerCommands\ServerCommandHandler.cs" />
+    <Compile Include="ServerCommands\TeleportCommand.cs" />
+    <Compile Include="ServerLogger\LogMessage.cs" />
+    <Compile Include="ServerLogger\LoggerManager.cs" />
     <Compile Include="Server.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -99,7 +102,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CollisionManager.cs" />
-    <Compile Include="CommandHandler.cs" />
+    <Compile Include="Commands\CommandHandler.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

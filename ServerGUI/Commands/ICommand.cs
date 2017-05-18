@@ -1,5 +1,6 @@
 ﻿using Library;
 using Lidgren.Network;
+using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
 {
