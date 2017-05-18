@@ -29,5 +29,7 @@
         <Button x:Name="BtnStop" Content="Stop" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStop_Click"/>
         <Button x:Name="BtnSelectFile" Content="+" Padding="0, 0, 0, 0" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment='Center' HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="40" Height="40" d:LayoutOverrides="Height" Click="BtnSelectFile_Click"/>
         <Label x:Name="LblFile" Content="No file selected" HorizontalAlignment="Left" Margin="55,100,0,0" VerticalAlignment="Top" Height="40" Width="153" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="TxbCommand" Padding="0" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="{Binding CommandBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Width="168" Height="25" KeyDown="TxbCommand_KeyDown"/>
+        <Button x:Name="BtnCommand" Content=">" HorizontalAlignment="Left" Padding="0" Margin="183,0,0,10" VerticalAlignment="Bottom" Width="25" Height="25" Click="BtnCommand_Click"/>
     </Grid>
 </metro:MetroWindow>

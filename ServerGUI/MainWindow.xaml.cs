@@ -20,6 +20,7 @@ using Library;
 using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
+using System.ComponentModel;
 
 namespace ServerGUI
 {
@@ -34,6 +35,7 @@ namespace ServerGUI
         private CancellationTokenSource _cancellationTokenSource;
         public World World;
         public LoggerManager LoggerManager;
+        public string CommandBox { get; set; } = "";
         private string _filePath { get; set; }
 
         public MainWindow()
@@ -46,7 +48,8 @@ namespace ServerGUI
             LoggerManager = new LoggerManager();
             _server = new Server(LoggerManager, World);
 
-            DataContext = LoggerManager;
+            ConsoleDataGrid.DataContext = LoggerManager;
+            TxbCommand.DataContext = this;
 
             var _lock = new object();
             BindingOperations.EnableCollectionSynchronization(LoggerManager.LogMessages, _lock);
@@ -148,6 +151,28 @@ namespace ServerGUI
                 string filename = dlg.SafeFileName;
                 LblFile.Content = filename;
             }
+        }
+
+        private void TxbCommand_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                BtnCommand_Click(sender, e);
+            }
+        }
+
+        private void BtnCommand_Click(object sender, RoutedEventArgs e)
+        {
+            if (EnterCommand(CommandBox))
+            {
+                TxbCommand.Text = "";
+            }
+        }
+
+        private bool EnterCommand(string command)
+        {
+            //TODO command handling
+            return false;
         }
     }
 }
