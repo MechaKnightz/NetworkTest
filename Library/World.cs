@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.Messenger;
 
 namespace Library
 {
@@ -12,6 +13,6 @@ namespace Library
         public World() { }
         public List<Circle> Circles { get; set; } = new List<Circle>();
         public List<Player> Players { get; set; } = new List<Player>();
-        public List<string> ChatMessages { get; set; } = new List<string>();
+        public List<Message> ChatMessages { get; set; } = new List<Message>();
     }
 }

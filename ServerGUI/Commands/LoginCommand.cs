@@ -44,6 +44,11 @@ namespace ServerGUI.Commands
             {
                 NetReader.WritePlayer(outmsg, worldPlayer);
             }
+            outmsg.Write(world.ChatMessages.Count);
+            foreach (var message in world.ChatMessages)
+            {
+                NetReader.WriteMessage(outmsg, message);
+            }
 
             //connectionmessage:
             //packet

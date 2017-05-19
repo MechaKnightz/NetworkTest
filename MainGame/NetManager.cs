@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Library;
+using Library.Messenger;
 using Lidgren.Network;
 using Microsoft.Xna.Framework.Input;
 
@@ -10,11 +11,12 @@ namespace MainGame
     public class NetManager
     {
         private NetClient Client { get; set; }
-        public World World { get; } = new World();
+        public World World { get; set; }
         public string Username { get; set; }
 
         public bool Initialize(string name, string hostip, int port)
         {
+            World = new World();
             Username = name;
             NetPeerConfiguration config = new NetPeerConfiguration("testGame");
             Client = new NetClient(config);
@@ -72,6 +74,18 @@ namespace MainGame
 
                                 World.Players.Add(player);
                             }
+
+                            var count3 = inc.ReadInt32();
+
+                            for (int i = 0; i < count3; i++)
+                            {
+                                var message = new Message();
+
+                                NetReader.ReadMessage(inc, message);
+
+                                World.ChatMessages.Add(message);
+                            }
+
                             return true;
                         }
                         break;

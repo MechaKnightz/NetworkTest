@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.Messenger;
 using Lidgren.Network;
 
 namespace Library
@@ -44,6 +45,20 @@ namespace Library
             player.Health = inc.ReadFloat();
             player.Rotation = inc.ReadFloat();
             player.Radius = inc.ReadFloat();
+        }
+
+        public static void WriteMessage(NetOutgoingMessage outmsg, Message message)
+        {
+            outmsg.Write(message.Sender);
+            outmsg.Write(message.Text);
+            outmsg.Write(message.Timestamp.ToString());
+        }
+
+        public static void ReadMessage(NetIncomingMessage inc, Message message)
+        {
+            message.Sender = inc.ReadString();
+            message.Text = inc.ReadString();
+            message.Timestamp = TimeSpan.Parse(inc.ReadString());
         }
     }
 }

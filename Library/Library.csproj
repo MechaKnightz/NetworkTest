@@ -50,8 +50,9 @@
   <ItemGroup>
     <Compile Include="Angle.cs" />
     <Compile Include="Circle.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MessageHandler.cs" />
+    <Compile Include="PopupHandler\Message.cs" />
+    <Compile Include="PopupHandler\MessageHandler.cs" />
+    <Compile Include="Messenger\Message.cs" />
     <Compile Include="MoveDirection.cs" />
     <Compile Include="NetReader.cs" />
     <Compile Include="PacketTypes.cs" />

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Library
+namespace Library.PopupHandler
 {
     public static class MessageHandler
     {
