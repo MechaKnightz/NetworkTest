@@ -12,5 +12,6 @@ namespace Library
         public World() { }
         public List<Circle> Circles { get; set; } = new List<Circle>();
         public List<Player> Players { get; set; } = new List<Player>();
+        public List<string> ChatMessages { get; set; } = new List<string>();
     }
 }

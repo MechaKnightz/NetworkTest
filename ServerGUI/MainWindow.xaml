@@ -23,7 +23,7 @@
     </Window.Resources>
     <Grid>
         <GroupBox x:Name="ConsoleGroupBox" Header="Server Output" Margin="213, 10, 10, 10">
-            <DataGrid x:Name="ConsoleDataGrid" VerticalAlignment="Top" ItemsSource="{Binding LogMessages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.ScrollChanged="control_ScrollChanged"/>
+            <DataGrid x:Name="ConsoleDataGrid" VerticalAlignment="Top" ItemsSource="{Binding LogMessages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.ScrollChanged="control_ScrollChanged" IsReadOnly="True"/>
         </GroupBox>
         <Button x:Name="BtnStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStart_Click"/>
         <Button x:Name="BtnStop" Content="Stop" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStop_Click" IsEnabled="False"/>
