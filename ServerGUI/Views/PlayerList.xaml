@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="ServerGUI.Views.PlayerList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ServerGUI.Views"
+             mc:Ignorable="d" >
+    <Grid>
+        <GroupBox x:Name="PlayersGroupBox" Header="Players">
+            <DataGrid x:Name="PlayersDataGrid" VerticalAlignment="Top" ItemsSource="{Binding Players, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="cID" Binding="{Binding Username}" Header="Username" />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu Name="StoryMenu" StaysOpen="True">
+                        <MenuItem Header="Add an Issue" Command="{Binding AddIssueCommand}" />
+                        <MenuItem Header="Burn Down Chart" Command="{Binding BurnDownChartCommand}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </GroupBox>
+    </Grid>
+</UserControl>
