@@ -87,6 +87,7 @@
     <Compile Include="Commands\LoginCommand.cs" />
     <Compile Include="Commands\SendAllPlayersCommand.cs" />
     <Compile Include="Commands\SendPlayerCommand.cs" />
+    <Compile Include="DelegateCommand.cs" />
     <Compile Include="ServerCommands\CommandType.cs" />
     <Compile Include="ServerCommands\IServerCommand.cs" />
     <Compile Include="ServerCommands\ServerCommandHandler.cs" />

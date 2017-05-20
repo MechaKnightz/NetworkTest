@@ -40,8 +40,13 @@
         <GroupBox x:Name="PlayersGroupBox" Header="Players" HorizontalAlignment="Left" Margin="10,145,0,40" Width="198">
             <DataGrid x:Name="PlayersDataGrid" VerticalAlignment="Top" ItemsSource="{Binding Players, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="cID" Binding="{Binding Username}" Header="Username" />
+                    <DataGridTextColumn x:Name="ColumnUsername" Binding="{Binding Username}" Header="Username" Width="*"/>
                 </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu Name="PlayerMenu" StaysOpen="True">
+                        <MenuItem Click="SetItem"  Header="Kick" Command="{Binding KickCommand}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
         </GroupBox>
     </Grid>

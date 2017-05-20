@@ -21,7 +21,10 @@ using MahApps.Metro.Controls;
 using Newtonsoft.Json;
 using Path = System.IO.Path;
 using System.ComponentModel;
+using System.Net;
 using System.Windows.Threading;
+using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using ServerGUI.ServerCommands;
 using ServerGUI.ServerLogger;
 
@@ -42,14 +45,26 @@ namespace ServerGUI
         private string CommandBox { get; set; } = "";
         private string _filePath { get; set; }
         private DispatcherTimer _timer;
+        public DelegateCommand KickCommand { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
 
+            KickCommand = new DelegateCommand(new Action(KickCommandExecute));
+
             LoggerManager = new LoggerManager();
 
             World = new World();
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    var tim = new Player();
+                    tim.Username = "tim" + i;
+                    World.Players.Add(tim);
+                }
+                StartTimer();
+            }
             LoggerManager = new LoggerManager();
             _server = new Server(LoggerManager, World);
 
@@ -200,6 +215,34 @@ namespace ServerGUI
         private void TimerEvent(object tempObject, EventArgs e)
         {
             PlayersDataGrid.Items.Refresh();
+        }
+
+        public void KickCommandExecute()
+        {
+            
+        }
+
+        public void SetItem(object sender, RoutedEventArgs e)
+        {
+            var menuItem = (MenuItem)sender;
+
+            var contextMenu = (ContextMenu)menuItem.Parent;
+
+            var item = (DataGrid)contextMenu.PlacementTarget;
+
+            Player toDeleteFromBindedList;
+
+            try
+            {
+                toDeleteFromBindedList = (Player)item.SelectedCells[0].Item;
+            }
+            catch (Exception exception)
+            {
+                return;
+            }
+
+            LoggerManager.ServerMsg(toDeleteFromBindedList.Username + " has been kicked from the server.");
+            World.Players.Remove(toDeleteFromBindedList);
         }
     }
 }
