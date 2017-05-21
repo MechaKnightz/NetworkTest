@@ -38,8 +38,9 @@ namespace ServerGUI
     public partial class MainWindow : MetroWindow
     {
         private Task _task;
-        private Server _server;
         private CancellationTokenSource _cancellationTokenSource;
+
+        private Server _server;
         private World World;
         private LoggerManager LoggerManager;
         private ServerCommandHandler ServerCommandHandler;
@@ -119,6 +120,7 @@ namespace ServerGUI
             if (_task != null && _cancellationTokenSource != null)
             {
                 LoggerManager.ServerMsg("Stopping server...");
+                _server.UpdateTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 _cancellationTokenSource.Cancel();
                 BtnStart.IsEnabled = true;
                 BtnStop.IsEnabled = false;

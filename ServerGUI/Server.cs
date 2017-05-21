@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Timers;
+using System.Threading.Tasks;
 using Library;
-using Microsoft.Xna.Framework;
-using Newtonsoft.Json;
 using Lidgren.Network;
-using Lidgren;
-using Microsoft.Xna.Framework.Input;
 using ServerGUI.Commands;
 using ServerGUI.ServerLogger;
 
@@ -20,6 +13,8 @@ namespace ServerGUI
         public World World { get; set; }
         public NetServer NetServer { get; private set; }
         public LoggerManager LoggerManager;
+
+        public Timer UpdateTimer;
 
         public Server(LoggerManager loggerManager, World world)
         {
@@ -41,10 +36,36 @@ namespace ServerGUI
 
             LoggerManager.ServerMsg("Waiting for new connections and updating world state to current ones");
 
+            UpdateTimer = new Timer(_ => Update(), null, 0, 16 + 2 / 3);
+
             NetServer.Start();
             LoggerManager.ServerMsg("Server started...");
 
-            Update();
+            while (true)
+            {
+                NetIncomingMessage inc;
+                if ((inc = NetServer.ReadMessage()) == null) continue;
+                switch (inc.MessageType)
+                {
+                    case NetIncomingMessageType.ConnectionApproval:
+                        if (inc.ReadByte() == (byte)PacketTypes.Login)
+                        {
+                            var login = new LoginCommand();
+                            login.Run(LoggerManager, NetServer, inc, null, World);
+                            continue;
+                        }
+                        var deniedReason = "Faulty connection type";
+                        inc.SenderConnection.Deny(deniedReason);
+                        LoggerManager.ServerMsg(deniedReason);
+                        break;
+                    case NetIncomingMessageType.Data:
+                        Data(inc);
+                        break;
+                    case NetIncomingMessageType.StatusChanged:
+                        StatusChanged(inc);
+                        break;
+                }
+            }
         }
 
         public void Data(NetIncomingMessage inc)
@@ -72,31 +93,8 @@ namespace ServerGUI
 
         private void Update()
         {
-            while (true)
-            {
-                NetIncomingMessage inc;
-                if ((inc = NetServer.ReadMessage()) == null) continue;
-                switch (inc.MessageType)
-                {
-                    case NetIncomingMessageType.ConnectionApproval:
-                        if (inc.ReadByte() == (byte)PacketTypes.Login)
-                        {
-                            var login = new LoginCommand();
-                            login.Run(LoggerManager, NetServer, inc, null, World);
-                            continue;
-                        }
-                        var deniedReason = "Faulty connection type";
-                        inc.SenderConnection.Deny(deniedReason);
-                        LoggerManager.ServerMsg(deniedReason);
-                        break;
-                    case NetIncomingMessageType.Data:
-                        Data(inc);
-                        break;
-                    case NetIncomingMessageType.StatusChanged:
-                        StatusChanged(inc);
-                        break;
-                }
-            }
+            LoggerManager.ServerMsg("test");
+
         }
     }
 }
