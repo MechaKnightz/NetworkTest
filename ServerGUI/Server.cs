@@ -43,6 +43,35 @@ namespace ServerGUI
 
             NetServer.Start();
             LoggerManager.ServerMsg("Server started...");
+
+            Update();
+        }
+
+        public void Data(NetIncomingMessage inc)
+        {
+            var command = CommandHandler.GetCommand(inc);
+            command.Run(LoggerManager, NetServer, inc, null, World);
+        }
+
+        private void StatusChanged(NetIncomingMessage inc)
+        {
+            LoggerManager.ServerMsg(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
+            if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
+            {
+                foreach (var player in World.Players)
+                {
+                    if (player.Conn == inc.SenderConnection)
+                    {
+                        World.Players.Remove(player);
+                        LoggerManager.ServerMsg("Removed player " + player.Username);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void Update()
+        {
             while (true)
             {
                 NetIncomingMessage inc;
@@ -66,29 +95,6 @@ namespace ServerGUI
                     case NetIncomingMessageType.StatusChanged:
                         StatusChanged(inc);
                         break;
-                }
-            }
-        }
-
-        public void Data(NetIncomingMessage inc)
-        {
-            var command = CommandHandler.GetCommand(inc);
-            command.Run(LoggerManager, NetServer, inc, null, World);
-        }
-
-        private void StatusChanged(NetIncomingMessage inc)
-        {
-            LoggerManager.ServerMsg(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
-            if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
-            {
-                foreach (var player in World.Players)
-                {
-                    if (player.Conn == inc.SenderConnection)
-                    {
-                        World.Players.Remove(player);
-                        LoggerManager.ServerMsg("Removed player " + player.Username);
-                        break;
-                    }
                 }
             }
         }
