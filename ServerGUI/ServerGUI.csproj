@@ -84,6 +84,7 @@
     </ApplicationDefinition>
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InputCommand.cs" />
+    <Compile Include="Commands\KickPlayerCommand.cs" />
     <Compile Include="Commands\LoginCommand.cs" />
     <Compile Include="Commands\SendAllPlayersCommand.cs" />
     <Compile Include="Commands\SendPlayerCommand.cs" />

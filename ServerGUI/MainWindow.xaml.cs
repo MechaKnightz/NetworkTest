@@ -25,6 +25,7 @@ using System.Net;
 using System.Windows.Threading;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using ServerGUI.Commands;
 using ServerGUI.ServerCommands;
 using ServerGUI.ServerLogger;
 
@@ -52,8 +53,6 @@ namespace ServerGUI
             InitializeComponent();
 
             KickCommand = new DelegateCommand(new Action(KickCommandExecute));
-
-            LoggerManager = new LoggerManager();
 
             World = new World();
             {
@@ -230,19 +229,19 @@ namespace ServerGUI
 
             var item = (DataGrid)contextMenu.PlacementTarget;
 
-            Player toDeleteFromBindedList;
+            Player player;
 
             try
             {
-                toDeleteFromBindedList = (Player)item.SelectedCells[0].Item;
+                player = (Player)item.SelectedCells[0].Item;
             }
             catch (Exception exception)
             {
                 return;
             }
 
-            LoggerManager.ServerMsg(toDeleteFromBindedList.Username + " has been kicked from the server.");
-            World.Players.Remove(toDeleteFromBindedList);
+            var command = new KickPlayerCommand();
+            command.Run(LoggerManager, null, null, player, World);
         }
     }
 }
