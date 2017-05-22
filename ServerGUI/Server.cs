@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
@@ -97,6 +98,11 @@ namespace ServerGUI
             for (int i = 0; i < World.Shots.Count; i++)
             {
                 MoveShot(World.Shots[i]);
+                if (World.Shots[i].CreatedTime + TimeSpan.FromSeconds(World.Shots[i].Duration) < DateTime.Now)
+                {
+                    World.Shots.RemoveAt(i);
+                    i--;
+                }
             }
             var command = new SendAllShotsCommand();
             command.Run(LoggerManager, NetServer, null, null, World);

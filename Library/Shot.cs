@@ -16,9 +16,14 @@ namespace Library
         public float Damage { get; set; }
         public float Radius { get; set; }
 
+        public string ParentName { get; set; }
+        public float Duration { get; set; }
+
+        public DateTime CreatedTime { get; set; }
+
         public Shot() { }
 
-        public Shot(float x, float y, float rotation, float speed, float damage, float radius)
+        public Shot(float x, float y, float rotation, float speed, float damage, float radius, float duration, string parentName)
         {
             X = x;
             Y = y;
@@ -26,6 +31,10 @@ namespace Library
             Speed = speed;
             Damage = damage;
             Radius = radius;
+            ParentName = parentName;
+            Duration = duration;
+
+            CreatedTime = DateTime.Now;
         }
     }
 }

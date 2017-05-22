@@ -35,13 +35,10 @@ namespace ServerGUI
         private string CommandBox { get; set; } = "";
         private string _filePath { get; set; }
         private DispatcherTimer _timer;
-        public DelegateCommand KickCommand { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-
-            KickCommand = new DelegateCommand(new Action(KickCommandExecute));
 
             World = new World();
 
@@ -192,7 +189,7 @@ namespace ServerGUI
             _timer.Interval = new TimeSpan(0, 0, 0, 1);
             _timer.Start();
         }
-
+        
         private void TimerEvent(object tempObject, EventArgs e)
         {
             PlayersDataGrid.Items.Refresh();
