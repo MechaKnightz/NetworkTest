@@ -97,12 +97,13 @@ namespace ServerGUI
         {
             for (int i = 0; i < World.Shots.Count; i++)
             {
-                MoveShot(World.Shots[i]);
                 if (World.Shots[i].CreatedTime + TimeSpan.FromSeconds(World.Shots[i].Duration) < DateTime.Now)
                 {
                     World.Shots.RemoveAt(i);
                     i--;
+                    continue;
                 }
+                MoveShot(World.Shots[i]);
             }
             var command = new SendAllShotsCommand();
             command.Run(LoggerManager, NetServer, null, null, World);
