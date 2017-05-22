@@ -8,7 +8,7 @@ namespace Library
     public class Player : ICloneable, INotifyPropertyChanged
     {
         public Player() { }
-        public Player(string username, Vector2 position, float health, float rotation, float speed, float radius, NetConnection conn)
+        public Player(string username, Vector2 position, float health, float rotation, float speed, float radius, float cooldown, NetConnection conn = null)
         {
             Username = username;
             X = position.X;
@@ -17,6 +17,7 @@ namespace Library
             Rotation = rotation;
             Speed = speed;
             Radius = radius;
+            Cooldown = cooldown;
             Conn = conn;
         }
 
@@ -26,7 +27,10 @@ namespace Library
         public float X;
         public float Y;
         public float Radius;
+        public float Cooldown;
         public NetConnection Conn;
+
+        public DateTime ShotLast;
 
         public object Clone()
         {
