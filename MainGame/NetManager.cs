@@ -110,7 +110,7 @@ namespace MainGame
 
             Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
-        public void CheckServerMessages()
+        public void CheckServerMessages(GameTime gameTime)
         {
             // Create new incoming message holder
             NetIncomingMessage inc;
@@ -124,12 +124,12 @@ namespace MainGame
             {
                 if (inc.MessageType == NetIncomingMessageType.Data)
                 {
-                    Data(inc);
+                    Data(inc, gameTime);
                 }
             }
         }
 
-        private void Data(NetIncomingMessage inc)
+        private void Data(NetIncomingMessage inc, GameTime gameTime)
         {
             var incomingPacket = (PacketTypes)inc.ReadByte();
             switch (incomingPacket)
@@ -175,7 +175,8 @@ namespace MainGame
                         
 
                         var tempLoc = Interpolate(new Vector2(LocalWorld.Shots[i].X, LocalWorld.Shots[i].Y),
-                            new Vector2(shot.X, shot.Y));
+                            new Vector2(shot.X, shot.Y),
+                            gameTime.ElapsedGameTime.Milliseconds);
                         Shot shot2 = new Shot(tempLoc.X, tempLoc.Y, shot.Rotation, shot.Speed, shot.Damage, shot.Radius, shot.Duration, shot.ParentName);
 
                         LocalWorld.Shots[i] = shot2;

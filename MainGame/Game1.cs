@@ -139,7 +139,7 @@ namespace MainGame
             timer -= elapsed;
             if (timer < 0)
             {
-                _netManager.CheckServerMessages();
+                _netManager.CheckServerMessages(gameTime);
                 timer = TIMER;
             }
             SetCamera(_camera);

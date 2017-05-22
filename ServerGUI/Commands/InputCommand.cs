@@ -52,7 +52,12 @@ namespace ServerGUI.Commands
 
             MovePlayer(tempPlayer, key);
 
-            if (CollisionManager.CheckCollision(tempPlayer, world))
+            if(CollisionManager.CheckCollision(tempPlayer, world))
+            {
+                return;
+            }
+
+            if (CollisionManager.CheckCollisionCircles(tempPlayer, World))
             {
                 return;
             }
