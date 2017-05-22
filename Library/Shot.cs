@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    class Shot
+    public class Shot
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -14,16 +14,18 @@ namespace Library
         public float Rotation { get; set; }
         public float Speed { get; set; }
         public float Damage { get; set; }
+        public float Radius { get; set; }
 
         public Shot() { }
 
-        public Shot(float x, float y, float rotation, float speed, float damage)
+        public Shot(float x, float y, float rotation, float speed, float damage, float radius)
         {
             X = x;
             Y = y;
             Rotation = rotation;
             Speed = speed;
             Damage = damage;
+            Radius = radius;
         }
     }
 }

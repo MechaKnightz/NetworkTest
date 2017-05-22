@@ -26,6 +26,7 @@ namespace MainGame
             CheckKeyState(Keys.A);
             CheckKeyState(Keys.S);
             CheckKeyState(Keys.D);
+            CheckKeyState(Keys.Space);
 
             _oldKeyState = Keyboard.GetState();
         }

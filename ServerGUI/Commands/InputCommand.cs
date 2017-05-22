@@ -10,8 +10,18 @@ namespace ServerGUI.Commands
 {
     class InputCommand : ICommand
     {
+        private LoggerManager LoggerManager;
+        private World World;
+        private NetServer Server;
+        private NetIncomingMessage Inc;
+
         public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
+            LoggerManager = loggerManager;
+            Server = server;
+            Inc = inc;
+            World = world;
+
             var dirty = false;
             var dirtyPlayer = new Player();
 
@@ -36,7 +46,7 @@ namespace ServerGUI.Commands
             loggerManager.ServerMsg("Couldn't find player with " + inc.SenderConnection);
         }
 
-        private static void ReadInput(Player player, World world, Keys key)
+        private void ReadInput(Player player, World world, Keys key)
         {
             var tempPlayer = (Player)player.Clone();
 
@@ -47,10 +57,43 @@ namespace ServerGUI.Commands
                 return;
             }
 
-            MovePlayer(player, key);
+            HandleKey(player, key);
         }
 
-        private static void MovePlayer(Player player, Keys key)
+        private void HandleKey(Player player, Keys key)
+        {
+            switch (key)
+            {
+                case Keys.Space:
+                    PlayerShoot(player, key);
+                    break;
+                case Keys.W:
+                    MovePlayer(player, key);
+                    break;
+                case Keys.A:
+                    MovePlayer(player, key);
+                    break;
+                case Keys.S:
+                    MovePlayer(player, key);
+                    break;
+                case Keys.D:
+                    MovePlayer(player, key);
+                    break;
+            }
+        }
+
+        private void PlayerShoot(Player player, Keys key)
+        {
+            switch (key)
+            {
+                case Keys.Space:
+                    var command = new ShootCommand();
+                    command.Run(LoggerManager, Server, Inc, player, World);
+                    break;
+            }
+        }
+
+        private void MovePlayer(Player player, Keys key)
         {
             switch (key)
             {

@@ -124,8 +124,8 @@ namespace MainGame
 
         private void Data(NetIncomingMessage inc)
         {
-            var incomingPacket = inc.ReadByte();
-            switch ((PacketTypes) incomingPacket)
+            var incomingPacket = (PacketTypes)inc.ReadByte();
+            switch (incomingPacket)
             {
                 case PacketTypes.PlayerPosition:
                     Player incPlayer = new Player();
@@ -152,6 +152,16 @@ namespace MainGame
                         Player player2 = new Player();
                         NetReader.ReadPlayer(inc, player2);
                         World.Players.Add(player2);
+                    }
+                    break;
+                case PacketTypes.AllShots:
+                    var count3 = inc.ReadInt32();
+                    World.Shots.Clear();
+                    for (int i = 0; i < count3; i++)
+                    {
+                        Shot shot = new Shot();
+                        NetReader.ReadShot(inc, shot);
+                        World.Shots.Add(shot);
                     }
                     break;
             }

@@ -60,5 +60,24 @@ namespace Library
             message.Text = inc.ReadString();
             message.Timestamp = TimeSpan.Parse(inc.ReadString());
         }
+
+        public static void WriteShot(NetOutgoingMessage outmsg, Shot shot)
+        {
+            outmsg.Write(shot.Speed);
+            outmsg.Write(shot.X);
+            outmsg.Write(shot.Y);
+            outmsg.Write(shot.Damage);
+            outmsg.Write(shot.Rotation);
+            outmsg.Write(shot.Radius);
+        }
+        public static void ReadShot(NetIncomingMessage inc, Shot shot)
+        {
+            shot.Speed = inc.ReadFloat();
+            shot.X = inc.ReadFloat();
+            shot.Y = inc.ReadFloat();
+            shot.Damage = inc.ReadFloat();
+            shot.Rotation = inc.ReadFloat();
+            shot.Radius = inc.ReadFloat();
+        }
     }
 }

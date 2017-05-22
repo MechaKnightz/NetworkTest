@@ -160,9 +160,17 @@ namespace MainGame
             foreach (var player in _netManager.World.Players)
             {
                 if(player.Username == localPlayer.Username) continue;
-                DrawPlayer(player, Color.Blue);
+                DrawPlayer(player, Color.LightBlue);
             }
             DrawPlayer(localPlayer, Color.Blue);
+            foreach (var shot in _netManager.World.Shots)
+            {
+                DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
+            }
+            foreach (var shot in _netManager.World.Shots)
+            {
+                DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
+            }
         }
         private void OldStateChange(GameState state)
         {

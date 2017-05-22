@@ -13,6 +13,7 @@ namespace Library
         public World() { }
         public List<Circle> Circles { get; set; } = new List<Circle>();
         public List<Player> Players { get; set; } = new List<Player>();
+        public List<Shot> Shots { get; set;  } = new List<Shot>();
         public List<Message> ChatMessages { get; set; } = new List<Message>();
     }
 }

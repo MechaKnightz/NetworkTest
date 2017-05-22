@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using ServerGUI.Commands;
 using ServerGUI.ServerLogger;
 
@@ -93,8 +94,18 @@ namespace ServerGUI
 
         private void Update()
         {
-            LoggerManager.ServerMsg("test");
+            for (int i = 0; i < World.Shots.Count; i++)
+            {
+                MoveShot(World.Shots[i]);
+            }
+            var command = new SendAllShotsCommand();
+            command.Run(LoggerManager, NetServer, null, null, World);
+        }
 
+        private void MoveShot(Shot shot)
+        {
+            shot.X = Angle.MoveAngle(new Vector2(shot.X, shot.Y), shot.Rotation, shot.Speed).X;
+            shot.Y = Angle.MoveAngle(new Vector2(shot.X, shot.Y), shot.Rotation, shot.Speed).Y;
         }
     }
 }
