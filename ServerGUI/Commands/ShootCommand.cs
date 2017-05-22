@@ -15,6 +15,7 @@ namespace ServerGUI.Commands
             player.ShotLast = DateTime.Now;
             var shot = new Shot(player.X, player.Y, player.Rotation, 4, 1, 20, 3, player.Username);
             loggerManager.ServerMsg(player.Username + " shot at: " + new Vector2(shot.X, shot.Y));
+
             world.Shots.Add(shot);
         }
     }

@@ -95,6 +95,31 @@ namespace ServerGUI
 
         private void Update()
         {
+            for (int j = 0; j < World.Players.Count; j++)
+            {
+                for (int i = 0; i < World.Shots.Count; i++)
+                {
+                    var playerCircle = new Circle(World.Players[j].Radius, World.Players[j].X, World.Players[j].Y);
+                    var shotCircle = new Circle(World.Shots[i].Radius, World.Shots[i].X, World.Shots[i].Y);
+
+                    if (playerCircle.Intersect(shotCircle) && World.Shots[i].ParentName != World.Players[j].Username)
+                    {
+                        World.Players[j].Health -= World.Shots[i].Damage;
+                        World.Shots.RemoveAt(i);
+                        i--;
+                        if (World.Players[j].Health <= 0)
+                        {
+                            World.Players.RemoveAt(j);
+                            j--;
+                            var command2 = new SendAllPlayersCommand();
+                            command2.Run(LoggerManager, NetServer, null, null, World);
+
+                        }
+                        continue;
+                    }
+                }
+                //don't put any code here because there would be index exception error because of j-- at 0;
+            }
             for (int i = 0; i < World.Shots.Count; i++)
             {
                 if (World.Shots[i].CreatedTime + TimeSpan.FromSeconds(World.Shots[i].Duration) < DateTime.Now)

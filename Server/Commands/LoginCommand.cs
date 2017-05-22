@@ -65,7 +65,7 @@ namespace Server.Commands
             for (int i = 0; i < int.MaxValue; i++)
             {
                 intersects = false;
-                var newPlayer = new Player(name, new Vector2(i * 200, 0), 10f, 0f, 5f, 50, inc.SenderConnection);
+                var newPlayer = new Player(name, new Vector2(i * 200, 0), 10f, 0f, 5f, 50, 5, inc.SenderConnection);
                 var circle = new Circle(newPlayer.Radius, newPlayer.X, newPlayer.Y);
                 foreach (var worldPlayer in world.Players)
                 {

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Library;
 using Library.Messenger;
 using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace MainGame
@@ -12,11 +12,15 @@ namespace MainGame
     {
         private NetClient Client { get; set; }
         public World World { get; set; }
+        public World LocalWorld { get; set; }
         public string Username { get; set; }
+
+        private const float interpolationConst = 0.3f;
 
         public bool Initialize(string name, string hostip, int port)
         {
             World = new World();
+            LocalWorld = new World();
             Username = name;
             NetPeerConfiguration config = new NetPeerConfiguration("testGame");
             Client = new NetClient(config);
@@ -62,6 +66,7 @@ namespace MainGame
                                 circle = NetReader.ReadCircle(inc, circle);
 
                                 World.Circles.Add(circle);
+                                LocalWorld.Circles.Add(circle);
                             }
 
                             var count2 = inc.ReadInt32();
@@ -73,6 +78,7 @@ namespace MainGame
                                 NetReader.ReadPlayer(inc, player);
 
                                 World.Players.Add(player);
+                                LocalWorld.Players.Add(player);
                             }
 
                             var count3 = inc.ReadInt32();
@@ -84,6 +90,7 @@ namespace MainGame
                                 NetReader.ReadMessage(inc, message);
 
                                 World.ChatMessages.Add(message);
+                                LocalWorld.ChatMessages.Add(message);
                             }
 
                             return true;
@@ -162,9 +169,41 @@ namespace MainGame
                         Shot shot = new Shot();
                         NetReader.ReadShot(inc, shot);
                         World.Shots.Add(shot);
+                        
+                        if(LocalWorld.Shots.Count <= i)
+                            LocalWorld.Shots.Add(new Shot(shot.X, shot.Y, shot.Rotation, shot.Speed, shot.Damage, shot.Radius, shot.Duration, shot.ParentName));
+                        
+
+                        var tempLoc = Interpolate(new Vector2(LocalWorld.Shots[i].X, LocalWorld.Shots[i].Y),
+                            new Vector2(shot.X, shot.Y));
+                        Shot shot2 = new Shot(tempLoc.X, tempLoc.Y, shot.Rotation, shot.Speed, shot.Damage, shot.Radius, shot.Duration, shot.ParentName);
+
+                        LocalWorld.Shots[i] = shot2;
+                    }
+
+                    for (int i = count3; i < LocalWorld.Shots.Count; i++)
+                    {
+                        LocalWorld.Shots.RemoveAt(i);
                     }
                     break;
             }
+        }
+
+        private Vector2 Interpolate(Vector2 local, Vector2 remote, float deltaTime = 100 / 60f)
+        {
+            var difference = remote.X - local.X;
+            if (difference < 1000)
+                local.X = remote.X;
+            else
+                local.X += difference * deltaTime * interpolationConst;
+
+            var difference2 = remote.Y - local.Y;
+            if (difference2 < 1000)
+                local.Y = remote.Y;
+            else
+                local.Y += difference * deltaTime * interpolationConst;
+
+            return local;
         }
     }
 }

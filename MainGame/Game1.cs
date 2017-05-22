@@ -54,6 +54,9 @@ namespace MainGame
             UserInterface.UseRenderTarget = true;
             Paragraph.BaseSize = 1.0f;
 
+            var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);
+            form.Location = new System.Drawing.Point(0, 0);
+
             Graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
             Graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             Graphics.IsFullScreen = false;
@@ -145,7 +148,10 @@ namespace MainGame
 
         private void SetCamera(Camera2D camera)
         {
-            var localPlayer = _netManager.World.Players.First(x => x.Username == _netManager.Username);
+            var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
+
+            if (localPlayer == null) return;
+
             _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
         }
 
@@ -165,9 +171,10 @@ namespace MainGame
             DrawPlayer(localPlayer, Color.Blue);
             foreach (var shot in _netManager.World.Shots)
             {
+
                 DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
             }
-            foreach (var shot in _netManager.World.Shots)
+            foreach (var shot in _netManager.LocalWorld.Shots)
             {
                 DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
             }
