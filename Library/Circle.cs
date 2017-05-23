@@ -57,6 +57,7 @@ namespace Library
             };
 
             var temp = this;
+            //TODO
             return corners.Any(corner => Vector2.Distance(new Vector2(temp.X, temp.Y), corner) < temp.Radius);
         }
 

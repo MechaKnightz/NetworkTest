@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,6 +37,9 @@ namespace ServerGUI
         private string _filePath { get; set; }
         private DispatcherTimer _timer;
 
+        private PerformanceCounter _cpuCounter;
+        private PerformanceCounter _ramCounter;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +57,9 @@ namespace ServerGUI
             BindingOperations.EnableCollectionSynchronization(LoggerManager.LogMessages, _lock);
 
             ServerCommandHandler = new ServerCommandHandler(LoggerManager, World);
+
+            _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            _ramCounter = new PerformanceCounter("Memory", "Available MBytes");
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -193,11 +200,8 @@ namespace ServerGUI
         private void TimerEvent(object tempObject, EventArgs e)
         {
             PlayersDataGrid.Items.Refresh();
-        }
 
-        public void KickCommandExecute()
-        {
-            
+
         }
 
         public void SetItem(object sender, RoutedEventArgs e)
@@ -221,6 +225,16 @@ namespace ServerGUI
 
             var command = new KickPlayerCommand();
             command.Run(LoggerManager, null, null, player, World);
+        }
+
+        public string GetCpuUsage()
+        {
+            return _cpuCounter.NextValue() + "%";
+        }
+
+        public string GetRamUsage()
+        {
+            return _ramCounter.NextValue() + "MB";
         }
     }
 }
