@@ -21,8 +21,8 @@
     <Window.Resources>
         <CollectionViewSource x:Key="ConsoleCollection" CollectionViewType="{x:Type ListCollectionView}"/>
     </Window.Resources>
-    <Grid>
-        <GroupBox x:Name="ConsoleGroupBox" Header="Server Output" Margin="213, 10, 10, 10">
+    <Grid RenderTransformOrigin="0.507,0.767">
+        <GroupBox x:Name="ConsoleGroupBox" Header="Server Output" Margin="213, 10, 10, 10" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
             <DataGrid x:Name="ConsoleDataGrid" VerticalAlignment="Top" AutoGenerateColumns="False" ItemsSource="{Binding LogMessages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.ScrollChanged="control_ScrollChanged" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="ColumnTimestamp" Binding="{Binding Timestamp}" Header="Timestamp" />
@@ -31,13 +31,13 @@
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
-        <Button x:Name="BtnStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStart_Click"/>
-        <Button x:Name="BtnStop" Content="Stop" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStop_Click" IsEnabled="False"/>
-        <Button x:Name="BtnSelectFile" Content="+" Padding="0, 0, 0, 0" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment='Center' HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="40" Height="40" d:LayoutOverrides="Height" Click="BtnSelectFile_Click"/>
-        <Label x:Name="LblFile" Content="No file selected" HorizontalAlignment="Left" Margin="55,100,0,0" VerticalAlignment="Top" Height="40" Width="153" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="TxbCommand" Padding="0" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="{Binding CommandBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Width="168" Height="25" KeyDown="TxbCommand_KeyDown"/>
-        <Button x:Name="BtnCommand" Content=">" HorizontalAlignment="Left" Padding="0" Margin="183,0,0,10" VerticalAlignment="Bottom" Width="25" Height="25" Click="BtnCommand_Click"/>
-        <GroupBox x:Name="PlayersGroupBox" Header="Players" HorizontalAlignment="Left" Margin="10,145,0,40" Width="198">
+        <Button x:Name="BtnStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStart_Click" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <Button x:Name="BtnStop" Content="Stop" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="198" Height="40" Click="BtnStop_Click" IsEnabled="False" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <Button x:Name="BtnSelectFile" Content="+" Padding="0, 0, 0, 0" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment='Center' HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="40" Height="40" d:LayoutOverrides="Height, LeftMargin, RightMargin, TopMargin, BottomMargin" Click="BtnSelectFile_Click"/>
+        <Label x:Name="LblFile" Content="No file selected" HorizontalAlignment="Left" Margin="55,100,0,0" VerticalAlignment="Top" Height="40" Width="153" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <TextBox x:Name="TxbCommand" Padding="0" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="{Binding CommandBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Width="168" Height="25" KeyDown="TxbCommand_KeyDown" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <Button x:Name="BtnCommand" Content=">" HorizontalAlignment="Left" Padding="0" Margin="183,0,0,10" VerticalAlignment="Bottom" Width="25" Height="25" Click="BtnCommand_Click" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
+        <GroupBox x:Name="PlayersGroupBox" Header="Players" HorizontalAlignment="Left" Margin="10,145,0,40" Width="198" d:LayoutOverrides="LeftMargin, RightMargin">
             <DataGrid x:Name="PlayersDataGrid" VerticalAlignment="Top" ItemsSource="{Binding Players, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="ColumnUsername" Binding="{Binding Username}" Header="Username" Width="*"/>

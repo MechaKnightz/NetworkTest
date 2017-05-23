@@ -58,8 +58,8 @@ namespace ServerGUI
 
             ServerCommandHandler = new ServerCommandHandler(LoggerManager, World);
 
-            _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            _ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            _cpuCounter = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
+            _ramCounter = new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -201,7 +201,8 @@ namespace ServerGUI
         {
             PlayersDataGrid.Items.Refresh();
 
-
+            LoggerManager.ServerMsg(GetCpuUsage() / Environment.ProcessorCount + "%");
+            LoggerManager.ServerMsg(GetRamUsage() / 1000000 + "Mb");
         }
 
         public void SetItem(object sender, RoutedEventArgs e)
@@ -227,14 +228,14 @@ namespace ServerGUI
             command.Run(LoggerManager, null, null, player, World);
         }
 
-        public string GetCpuUsage()
+        public float GetCpuUsage()
         {
-            return _cpuCounter.NextValue() + "%";
+            return _cpuCounter.NextValue();
         }
 
-        public string GetRamUsage()
+        public float GetRamUsage()
         {
-            return _ramCounter.NextValue() + "MB";
+            return _ramCounter.NextValue();
         }
     }
 }
