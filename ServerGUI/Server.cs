@@ -104,6 +104,7 @@ namespace ServerGUI
 
                     if (playerCircle.Intersect(shotCircle) && World.Shots[i].ParentName != World.Players[j].Username)
                     {
+                        LoggerManager.ServerMsg(World.Players[j] + " was hit at " + new Vector2(World.Shots[i].X, World.Shots[i].Y));
                         World.Players[j].Health -= World.Shots[i].Damage;
                         World.Shots.RemoveAt(i);
                         i--;
@@ -115,6 +116,9 @@ namespace ServerGUI
                             command2.Run(LoggerManager, NetServer, null, null, World);
 
                         }
+                        var command3 = new SendPlayerCommand();
+                        command3.Run(LoggerManager, NetServer, null, World.Players[j], World);
+
                         continue;
                     }
                 }

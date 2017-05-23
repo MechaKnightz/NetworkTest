@@ -144,6 +144,7 @@ namespace MainGame
                         oldPlayer.X = incPlayer.X;
                         oldPlayer.Y = incPlayer.Y;
                         oldPlayer.Rotation = incPlayer.Rotation;
+                        oldPlayer.Health = incPlayer.Health;
                     }
                     else
                     {
