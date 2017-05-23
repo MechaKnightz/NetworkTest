@@ -259,8 +259,13 @@ namespace MainGame
                 player.Username,
                 new Vector2(player.X - _nameFont.MeasureString(player.Username).X / 2f,
                 player.Y - _nameFont.MeasureString(player.Username).Y / 2f),
-                Color.White
-    );
+                Color.White);
+
+            _spriteBatch.DrawString(_nameFont,
+                player.Health.ToString(),
+                new Vector2(player.X - _nameFont.MeasureString(player.Health.ToString()).X / 2f,
+                    player.Y - _nameFont.MeasureString(player.Health.ToString()).Y / 2f - 50),
+                Color.White);
         }
 
         public void DrawCircle(Circle circle, Color color)
