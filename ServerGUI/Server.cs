@@ -97,6 +97,7 @@ namespace ServerGUI
         {
             for (int j = 0; j < World.Players.Count; j++)
             {
+                var outer = false;
                 for (int i = 0; i < World.Shots.Count; i++)
                 {
                     var playerCircle = new Circle(World.Players[j].Radius, World.Players[j].X, World.Players[j].Y);
@@ -112,17 +113,17 @@ namespace ServerGUI
                         {
                             World.Players.RemoveAt(j);
                             j--;
+                            outer = true;
                             var command2 = new SendAllPlayersCommand();
                             command2.Run(LoggerManager, NetServer, null, null, World);
+                            continue;
 
                         }
                         var command3 = new SendPlayerCommand();
                         command3.Run(LoggerManager, NetServer, null, World.Players[j], World);
-
-                        continue;
                     }
                 }
-                //don't put any code here because there would be index exception error because of j-- at 0;
+                if (outer) break;
             }
             for (int i = 0; i < World.Shots.Count; i++)
             {
