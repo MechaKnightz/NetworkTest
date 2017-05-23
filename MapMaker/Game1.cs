@@ -26,6 +26,7 @@ namespace MapMaker
         private Circle selectedCircle;
         private Camera2D _camera;
         private Matrix _viewMatrix;
+        private SpriteFont BoxFont;
 
         public Game1()
         {
@@ -58,6 +59,8 @@ namespace MapMaker
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            BoxFont = Content.Load<SpriteFont>("BoxFont");
 
             IsMouseVisible = true;
             _circleTexture = Content.Load<Texture2D>("Circle");
@@ -198,6 +201,9 @@ namespace MapMaker
             {
                 DrawCircle(circle, Color.Blue);
             }
+
+            spriteBatch.DrawString(BoxFont, _camera.ScreenToWorld(MouseInput.mouseState.Position.X, MouseInput.mouseState.Position.Y).ToString(),
+                _camera.ScreenToWorld(0, 0), Color.Black);
 
             MessageHandler.Draw(spriteBatch);
 
