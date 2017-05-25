@@ -13,6 +13,7 @@ namespace Library
         AllPlayerPosition,
         Move,
         StartState,
-        AllShots
+        AllShots,
+        PlayerHealth
     }
 }

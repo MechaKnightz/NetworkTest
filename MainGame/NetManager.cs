@@ -188,6 +188,18 @@ namespace MainGame
                         LocalWorld.Shots.RemoveAt(i);
                     }
                     break;
+                case PacketTypes.PlayerHealth:
+
+                    var playerName = inc.ReadString();
+
+                    var playerHealth = inc.ReadFloat();
+
+                    var player = World.Players.FirstOrDefault(x => x.Username == playerName);
+
+                    if(player != null) player.Health = playerHealth;
+
+                    break;
+
             }
         }
 

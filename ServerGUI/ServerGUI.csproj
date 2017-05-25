@@ -89,6 +89,7 @@
     <Compile Include="Commands\SendAllPlayersCommand.cs" />
     <Compile Include="Commands\SendAllShotsCommand.cs" />
     <Compile Include="Commands\SendPlayerCommand.cs" />
+    <Compile Include="Commands\SendPlayerHealthCommand.cs" />
     <Compile Include="Commands\ShootCommand.cs" />
     <Compile Include="ServerCommands\CommandType.cs" />
     <Compile Include="ServerCommands\IServerCommand.cs" />

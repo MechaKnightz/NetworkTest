@@ -29,8 +29,6 @@ namespace ServerGUI
         {
             var circle = new Circle(player.Radius, player.X, player.Y);
 
-            var tempCircles = new List<Circle>();
-
             for (int i = 0; i < world.Circles.Count; i++)
             {
                 if (world.Circles[i].Contains(circle)) return false;

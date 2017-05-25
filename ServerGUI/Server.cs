@@ -114,8 +114,8 @@ namespace ServerGUI
                             World.Players.RemoveAt(j);
                             j--;
                             outer = true;
-                            var command2 = new SendAllPlayersCommand();
-                            command2.Run(LoggerManager, NetServer, null, null, World);
+                            var command2 = new SendPlayerHealthCommand();
+                            command2.Run(LoggerManager, NetServer, null, World.Players[j], World);
                             continue;
 
                         }

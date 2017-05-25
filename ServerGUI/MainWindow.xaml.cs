@@ -101,6 +101,7 @@ namespace ServerGUI
 
         private void BtnStop_Click(object sender, RoutedEventArgs e)
         {
+            _timer.Stop();
             if (_task != null && _cancellationTokenSource != null)
             {
                 LoggerManager.ServerMsg("Stopping server...");
@@ -108,7 +109,6 @@ namespace ServerGUI
                 _cancellationTokenSource.Cancel();
                 BtnStart.IsEnabled = true;
                 BtnStop.IsEnabled = false;
-                _timer.Stop();
             }
         }
         //not mine
