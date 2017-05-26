@@ -27,7 +27,7 @@ namespace Library
             return circle;
         }
 
-        public static void WritePlayer(NetOutgoingMessage outmsg, Player player)
+        public static void WritePlayer(NetOutgoingMessage outmsg, Player player, int inputId = -1)
         {
             outmsg.Write(player.Username);
             outmsg.Write(player.X);
@@ -35,9 +35,10 @@ namespace Library
             outmsg.Write(player.Health);
             outmsg.Write(player.Rotation);
             outmsg.Write(player.Radius);
+            outmsg.Write(inputId);
         }
 
-        public static void ReadPlayer(NetIncomingMessage inc, Player player)
+        public static int ReadPlayer(NetIncomingMessage inc, Player player)
         {
             player.Username = inc.ReadString();
             player.X = inc.ReadFloat();
@@ -45,6 +46,7 @@ namespace Library
             player.Health = inc.ReadFloat();
             player.Rotation = inc.ReadFloat();
             player.Radius = inc.ReadFloat();
+            return inc.ReadInt32();
         }
 
         public static void WriteMessage(NetOutgoingMessage outmsg, Message message)

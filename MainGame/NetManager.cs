@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Library;
 using Library.Messenger;
@@ -14,11 +15,13 @@ namespace MainGame
         public World World { get; set; }
         public World LocalWorld { get; set; }
         public string Username { get; set; }
+        public List<Keys> Input { get; set; }
 
         private const float interpolationConst = 0.3f;
 
         public bool Initialize(string name, string hostip, int port)
         {
+            Input = new List<Keys>();
             World = new World();
             LocalWorld = new World();
             Username = name;
@@ -106,6 +109,16 @@ namespace MainGame
 
             outmsg.Write((byte)PacketTypes.Move);
 
+            Input.Add(key);
+            outmsg.Write(Input.Count - 1);
+
+            var localPlayer = World.Players.FirstOrDefault(x => x.Username == Username);
+
+            if (localPlayer != null)
+            {
+                InputHandler.MovePlayer(localPlayer, key);
+            }
+
             outmsg.Write((byte)key);
 
             Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
@@ -136,7 +149,9 @@ namespace MainGame
             {
                 case PacketTypes.PlayerPosition:
                     Player incPlayer = new Player();
-                    NetReader.ReadPlayer(inc, incPlayer);
+
+                    var inputId = NetReader.ReadPlayer(inc, incPlayer);
+
                     var oldPlayer = World.Players.FirstOrDefault(x => x.Username == incPlayer.Username);
 
                     if (oldPlayer != null)
@@ -145,6 +160,11 @@ namespace MainGame
                         oldPlayer.Y = incPlayer.Y;
                         oldPlayer.Rotation = incPlayer.Rotation;
                         oldPlayer.Health = incPlayer.Health;
+
+                        if (inputId != -1)
+                        {
+                            LagCompensate(oldPlayer, inputId);
+                        }
                     }
                     else
                     {
@@ -218,6 +238,16 @@ namespace MainGame
                 local.Y += difference * deltaTime * interpolationConst;
 
             return local;
+        }
+
+        private void LagCompensate(Player player, int inputId)
+        {
+            for (int i = 0; i < Input.Count; i++)
+            {
+                if(inputId > i) continue;
+
+                InputHandler.MovePlayer(player, Input[i]);
+            }
         }
     }
 }

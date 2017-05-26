@@ -11,20 +11,34 @@ namespace ServerGUI.Commands
 {
     public class SendPlayerCommand : ICommand
     {
+        private readonly int _inputId = -1;
+        public SendPlayerCommand() { }
+
+        public SendPlayerCommand(int inputId)
+        {
+            _inputId = inputId;
+        }
         public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
-            NetOutgoingMessage outmsg = server.CreateMessage();
 
-            outmsg.Write((byte)PacketTypes.PlayerPosition);
+            if (_inputId == -1)
+            {
+                NetOutgoingMessage outmsg = server.CreateMessage();
 
-            NetReader.WritePlayer(outmsg, player);
+                outmsg.Write((byte)PacketTypes.PlayerPosition);
 
-            //connectionmessage:
-            //packet
-            //player count
-            //all player info
+                NetReader.WritePlayer(outmsg, player);
 
-            server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+            }
+
+            NetOutgoingMessage outmsg2 = server.CreateMessage();
+
+            outmsg2.Write((byte)PacketTypes.PlayerPosition);
+
+            NetReader.WritePlayer(outmsg2, player, _inputId);
+
+            server.SendToAll(outmsg2, NetDeliveryMethod.ReliableOrdered);
         }
     }
 }

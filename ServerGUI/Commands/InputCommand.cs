@@ -22,6 +22,7 @@ namespace ServerGUI.Commands
             Inc = inc;
             World = world;
 
+            var inputId = -1;
             var dirty = false;
             var dirtyPlayer = new Player();
 
@@ -29,6 +30,8 @@ namespace ServerGUI.Commands
             {
                 if (player2.Conn != inc.SenderConnection)
                     continue;
+
+                inputId = inc.ReadInt32();
 
                 var key = (Keys)inc.ReadByte();
 
@@ -39,7 +42,7 @@ namespace ServerGUI.Commands
             }
             if (dirty)
             {
-                var command = new SendPlayerCommand();
+                var command = new SendPlayerCommand(inputId);
                 command.Run(loggerManager, server, inc, dirtyPlayer, world);
                 return;
             }
@@ -50,7 +53,7 @@ namespace ServerGUI.Commands
         {
             var tempPlayer = (Player)player.Clone();
 
-            MovePlayer(tempPlayer, key);
+            InputHandler.MovePlayer(tempPlayer, key);
 
             if(CollisionManager.CheckCollision(tempPlayer, world))
             {
@@ -73,16 +76,16 @@ namespace ServerGUI.Commands
                     PlayerShoot(player, key);
                     break;
                 case Keys.W:
-                    MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, key);
                     break;
                 case Keys.A:
-                    MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, key);
                     break;
                 case Keys.S:
-                    MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, key);
                     break;
                 case Keys.D:
-                    MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, key);
                     break;
             }
         }
@@ -94,31 +97,6 @@ namespace ServerGUI.Commands
                 case Keys.Space:
                     var command = new ShootCommand();
                     command.Run(LoggerManager, Server, Inc, player, World);
-                    break;
-            }
-        }
-
-        private void MovePlayer(Player player, Keys key)
-        {
-            switch (key)
-            {
-                case Keys.W:
-                    player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).X;
-                    player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).Y;
-                    break;
-                case Keys.A:
-                    player.Rotation -= 0.05f;
-                    break;
-                case Keys.S:
-                    player.X =
-                        Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI,
-                            player.Speed / 5 * 2).X;
-                    player.Y =
-                        Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI,
-                            player.Speed / 5 * 2).Y;
-                    break;
-                case Keys.D:
-                    player.Rotation += 0.05f;
                     break;
             }
         }

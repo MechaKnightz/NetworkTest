@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Angle.cs" />
     <Compile Include="Circle.cs" />
+    <Compile Include="InputHandler.cs" />
     <Compile Include="PopupHandler\Message.cs" />
     <Compile Include="PopupHandler\MessageHandler.cs" />
     <Compile Include="Messenger\Message.cs" />
