@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
@@ -23,9 +21,11 @@ namespace ServerGUI
             World = world;
             LoggerManager = loggerManager;
 
-            NetPeerConfiguration config = new NetPeerConfiguration("testGame");
-            config.MaximumConnections = 32;
-            config.Port = 9911;
+            NetPeerConfiguration config = new NetPeerConfiguration("testGame")
+            {
+                MaximumConnections = 32,
+                Port = 9911
+            };
 
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 
@@ -35,7 +35,7 @@ namespace ServerGUI
         public void Run()
         {
             LoggerManager.ServerMsg("Server started at IP: " + "Unknown" + " and port: " + NetServer.Port);
-
+            
             LoggerManager.ServerMsg("Waiting for new connections and updating world state to current ones");
 
             UpdateTimer = new Timer(_ => Update(), null, 0, 16 + 2 / 3);
@@ -70,7 +70,7 @@ namespace ServerGUI
             }
         }
 
-        public void Data(NetIncomingMessage inc)
+        private void Data(NetIncomingMessage inc)
         {
             var command = CommandHandler.GetCommand(inc);
             command.Run(LoggerManager, NetServer, inc, null, World);
