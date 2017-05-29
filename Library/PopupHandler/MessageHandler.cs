@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -23,11 +25,11 @@ namespace Library.PopupHandler
             Origin = new Vector2(_boxTexture.Width / 2f, _boxTexture.Height / 2f);
         }
 
-        public static void Update(GameTime currentTime)
+        public static void Update()
         {
             for (int i = 0; i < Messages.Count; i++)
             {
-                if (Messages[i].AppearTime + Messages[i].Age <= currentTime.TotalGameTime)
+                if (Messages[i].AppearTime + Messages[i].Age <= DateTime.Now)
                 {
                     Messages.RemoveAt(i);
                     i--;
@@ -40,14 +42,14 @@ namespace Library.PopupHandler
             Messages.Add(message);
         }
 
-        public static void CreateMessage(string text, GameTime gameTime)
+        public static void CreateMessage(string text)
         {
-            CreateMessage(text, gameTime, Font);
+            CreateMessage(text, Font);
         }
 
-        public static void CreateMessage(string text, GameTime gameTime, SpriteFont font)
+        public static void CreateMessage(string text, SpriteFont font)
         {
-            var message = new Message(text, font, gameTime.TotalGameTime);
+            var message = new Message(text, font, DateTime.Now);
             Messages.Add(message);
         }
 

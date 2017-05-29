@@ -10,12 +10,12 @@ namespace Library.PopupHandler
         public string Text { get; set; }
         public SpriteFont Font { get; set; }
 
-        public TimeSpan AppearTime { get; set; }
+        public DateTime AppearTime { get; set; }
         public TimeSpan Age { get; set; }
 
         public Vector2 Position { get; set; }
 
-        public Message(string text, SpriteFont font,  TimeSpan appearTime, TimeSpan age, Vector2 position)
+        public Message(string text, SpriteFont font,  DateTime appearTime, TimeSpan age, Vector2 position)
         {
             Text = text;
             Font = font;
@@ -24,7 +24,7 @@ namespace Library.PopupHandler
             Position = position;
         }
 
-        public Message(string text, SpriteFont font, TimeSpan appearTime)
+        public Message(string text, SpriteFont font, DateTime appearTime)
         {
             Text = text;
             Font = font;

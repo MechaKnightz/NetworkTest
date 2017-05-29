@@ -19,7 +19,7 @@ namespace MainGame
 
         private const float interpolationConst = 0.3f;
 
-        public bool Initialize(string name, string hostip, int port)
+        public bool Initialize(string name, string password, string hostip, int port, out string msg)
         {
             Input = new List<Keys>();
             World = new World();
@@ -35,13 +35,16 @@ namespace MainGame
             outmsg.Write((byte)PacketTypes.Login);
 
             outmsg.Write(name);
+            outmsg.Write(password);
 
             Client.Connect(hostip, port, outmsg);
+            
+            var tempBool = WaitForStartingInfo(Client, out msg);
 
-            return WaitForStartingInfo(Client);
+            return tempBool;
         }
 
-        private bool WaitForStartingInfo(NetClient client)
+        private bool WaitForStartingInfo(NetClient client, out string msg)
         {
             var time = DateTime.Now;
 
@@ -51,6 +54,7 @@ namespace MainGame
             {
                 if (DateTime.Now.Subtract(time).Seconds > 5)
                 {
+                    msg = "Couldn't find server";
                     return false;
                 }
                 if ((inc = client.ReadMessage()) == null) continue;
@@ -64,7 +68,7 @@ namespace MainGame
 
                             for (int i = 0; i < count1; i++)
                             {
-                                var circle =  new Circle();
+                                var circle = new Circle();
 
                                 circle = NetReader.ReadCircle(inc, circle);
 
@@ -96,7 +100,29 @@ namespace MainGame
                                 LocalWorld.ChatMessages.Add(message);
                             }
 
+                            msg = "Successfully connected to server";
                             return true;
+                        }
+                        break;
+                    case NetIncomingMessageType.StatusChanged:
+                        switch ((NetConnectionStatus)inc.ReadByte())
+                        {
+                            //When connected to the server
+                            case NetConnectionStatus.Connected:
+                                break;
+                            //When disconnected from the server
+                            case NetConnectionStatus.Disconnected:
+                                {
+                                    string reason = inc.ReadString();
+                                    if (string.IsNullOrEmpty(reason))
+                                    {
+                                        msg = "Connection denied";
+                                        return false;
+                                    }
+                                    msg = "Connection denied, reason: " + reason;
+                                    return false;
+                                }
+                                break;
                         }
                         break;
                 }
@@ -247,6 +273,70 @@ namespace MainGame
                 if(inputId > i) continue;
 
                 InputHandler.MovePlayer(player, Input[i]);
+            }
+        }
+
+        public bool Register(string name, string password, string hostip, int port, out string msg)
+        {
+            Input = new List<Keys>();
+            World = new World();
+            LocalWorld = new World();
+            Username = name;
+            NetPeerConfiguration config = new NetPeerConfiguration("testGame");
+            Client = new NetClient(config);
+
+            Client.Start();
+
+            NetOutgoingMessage outmsg = Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.Register);
+
+            outmsg.Write(name);
+            outmsg.Write(password);
+
+            Client.Connect(hostip, port, outmsg);
+
+            return WaitForRegisterInfo(Client, out msg); ;
+        }
+
+        private bool WaitForRegisterInfo(NetClient client, out string msg)
+        {
+            var time = DateTime.Now;
+
+            NetIncomingMessage inc;
+
+            while (true)
+            {
+                if (DateTime.Now.Subtract(time).Seconds > 5)
+                {
+                    msg = "Couldn't find server";
+                    return true;
+                }
+                if ((inc = client.ReadMessage()) == null) continue;
+
+                switch (inc.MessageType)
+                {
+                    case NetIncomingMessageType.StatusChanged:
+                        switch ((NetConnectionStatus)inc.ReadByte())
+                        {
+                            //When connected to the server
+                            case NetConnectionStatus.Connected:
+                                break;
+                            //When disconnected from the server
+                            case NetConnectionStatus.Disconnected:
+                                {
+                                    string reason = inc.ReadString();
+                                    if (string.IsNullOrEmpty(reason))
+                                    {
+                                        msg = "Couldn't resolve register message.";
+                                        return true;
+                                    }
+                                    msg = reason;
+                                    return true;
+                                }
+                        }
+                        break;
+                }
             }
         }
     }

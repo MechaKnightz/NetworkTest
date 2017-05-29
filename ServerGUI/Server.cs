@@ -3,6 +3,7 @@ using System.Threading;
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using MongoDB.Driver;
 using ServerGUI.Commands;
 using ServerGUI.ServerLogger;
 
@@ -13,10 +14,11 @@ namespace ServerGUI
         public World World { get; set; }
         public NetServer NetServer { get; private set; }
         public LoggerManager LoggerManager;
+        public MongoClient MongoClient { get; set; }
 
         public Timer UpdateTimer;
 
-        public Server(LoggerManager loggerManager, World world)
+        public Server(LoggerManager loggerManager, World world, string mongoUsername, string mongoPass)
         {
             World = world;
             LoggerManager = loggerManager;
@@ -30,6 +32,11 @@ namespace ServerGUI
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 
             NetServer = new NetServer(config);
+
+            MongoClient = new MongoClient("mongodb://" + mongoUsername + 
+                ":" + mongoPass +
+                "@cluster0-shard-00-00-kp9r9.mongodb.net:27017,cluster0-shard-00-01-kp9r9.mongodb.net:27017,cluster0-shard-00-02-kp9r9.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin");
+
         }
 
         public void Run()
@@ -50,12 +57,23 @@ namespace ServerGUI
                 switch (inc.MessageType)
                 {
                     case NetIncomingMessageType.ConnectionApproval:
-                        if (inc.ReadByte() == (byte)PacketTypes.Login)
+                        var connectionType = (PacketTypes)inc.ReadByte();
+                        switch (connectionType)
                         {
-                            var login = new LoginCommand();
-                            login.Run(LoggerManager, NetServer, inc, null, World);
-                            continue;
+                            case PacketTypes.Login:
+                            {
+                                var login = new LoginCommand();
+                                login.Run(LoggerManager, MongoClient, NetServer, inc, null, World);
+                                continue;
+                            }
+                            case PacketTypes.Register:
+                            {
+                                var login = new RegisterCommand();
+                                login.Run(LoggerManager, MongoClient, NetServer, inc, null, World);
+                                continue;
+                            }
                         }
+
                         var deniedReason = "Faulty connection type";
                         inc.SenderConnection.Deny(deniedReason);
                         LoggerManager.ServerMsg(deniedReason);
@@ -73,7 +91,7 @@ namespace ServerGUI
         private void Data(NetIncomingMessage inc)
         {
             var command = CommandHandler.GetCommand(inc);
-            command.Run(LoggerManager, NetServer, inc, null, World);
+            command.Run(LoggerManager, null, NetServer, inc, null, World);
         }
 
         private void StatusChanged(NetIncomingMessage inc)
@@ -115,12 +133,12 @@ namespace ServerGUI
                             j--;
                             outer = true;
                             var command2 = new SendPlayerHealthCommand();
-                            command2.Run(LoggerManager, NetServer, null, World.Players[j], World);
+                            command2.Run(LoggerManager, null, NetServer, null, World.Players[j], World);
                             continue;
 
                         }
                         var command3 = new SendPlayerCommand();
-                        command3.Run(LoggerManager, NetServer, null, World.Players[j], World);
+                        command3.Run(LoggerManager, null, NetServer, null, World.Players[j], World);
                     }
                 }
                 if (outer) break;
@@ -136,7 +154,7 @@ namespace ServerGUI
                 MoveShot(World.Shots[i]);
             }
             var command = new SendAllShotsCommand();
-            command.Run(LoggerManager, NetServer, null, null, World);
+            command.Run(LoggerManager, null, NetServer, null, null, World);
         }
 
         private void MoveShot(Shot shot)

@@ -47,7 +47,25 @@ namespace ServerGUI
             World = new World();
 
             LoggerManager = new LoggerManager();
-            _server = new Server(LoggerManager, World);
+
+            //temp
+            string destPath = Path.Combine(
+Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\MongoLogin\");
+
+            Directory.CreateDirectory(destPath);
+
+            var filePath = Path.Combine(destPath, "login" + ".txt");
+
+            var loginString = File.ReadAllText(filePath);
+
+            var tempIndex = loginString.IndexOf(" ");
+
+            var mongoName = loginString.Substring(0, tempIndex);
+
+            var mongoPass = loginString.Substring(tempIndex + 1, loginString.Length - tempIndex - 1);
+            //temp end
+
+            _server = new Server(LoggerManager, World, mongoName, mongoPass);
 
             PlayersDataGrid.DataContext = World;
             ConsoleDataGrid.DataContext = LoggerManager;
@@ -225,7 +243,7 @@ namespace ServerGUI
             }
 
             var command = new KickPlayerCommand();
-            command.Run(LoggerManager, null, null, player, World);
+            command.Run(LoggerManager, null, null, null, player, World);
         }
 
         public float GetCpuUsage()

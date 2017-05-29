@@ -3,6 +3,7 @@ using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MongoDB.Driver;
 using ServerGUI.Commands;
 using ServerGUI.ServerLogger;
 
@@ -15,7 +16,7 @@ namespace ServerGUI.Commands
         private NetServer Server;
         private NetIncomingMessage Inc;
 
-        public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
             LoggerManager = loggerManager;
             Server = server;
@@ -43,7 +44,7 @@ namespace ServerGUI.Commands
             if (dirty)
             {
                 var command = new SendPlayerCommand(inputId);
-                command.Run(loggerManager, server, inc, dirtyPlayer, world);
+                command.Run(loggerManager, null, server, inc, dirtyPlayer, world);
                 return;
             }
             loggerManager.ServerMsg("Couldn't find player with " + inc.SenderConnection);
@@ -96,7 +97,7 @@ namespace ServerGUI.Commands
             {
                 case Keys.Space:
                     var command = new ShootCommand();
-                    command.Run(LoggerManager, Server, Inc, player, World);
+                    command.Run(LoggerManager, null, Server, Inc, player, World);
                     break;
             }
         }

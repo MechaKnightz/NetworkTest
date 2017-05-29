@@ -101,7 +101,7 @@ namespace MapMaker
                         throw new ArgumentOutOfRangeException();
                 }
 
-            MessageHandler.Update(gameTime);
+            MessageHandler.Update();
             MouseInput.oldMouseState = Mouse.GetState();
             oldKeyState = Keyboard.GetState();
             base.Update(gameTime);
@@ -170,7 +170,7 @@ namespace MapMaker
             var savePath = Path.Combine(destPath, "map1" + ".json");
 
 
-            string saveString = "";
+            string saveString;
 
             Directory.CreateDirectory(destPath);
             try
@@ -179,7 +179,7 @@ namespace MapMaker
             }
             catch (Exception e)
             {
-                MessageHandler.CreateMessage(e.Message, gameTime);
+                MessageHandler.CreateMessage(e.Message);
                 return;
             }
             _circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);

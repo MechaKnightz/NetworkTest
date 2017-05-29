@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
 using Lidgren;
 using Library;
+using Library.PopupHandler;
 using MonoGame.Extended;
 
 namespace MainGame
@@ -25,6 +26,7 @@ namespace MainGame
         private Vector2 _halfScreen;
         private InputHelper _inputHelper;
         private SpriteFont _nameFont;
+        private string _tempPassString;
 
         private World _world = new World();
 
@@ -65,6 +67,11 @@ namespace MainGame
             _netManager = new NetManager();
             _inputManager = new InputManager(_netManager);
 
+            MessageHandler.Initialize(
+                Content.Load<Texture2D>("BoxTexture"),
+                Content.Load<SpriteFont>("BoxFont"),
+                Color.Black);
+
             _camera = new Camera2D(GraphicsDevice);
             _viewMatrix = _camera.GetViewMatrix();
 
@@ -101,6 +108,7 @@ namespace MainGame
                         break;
             }
 
+            MessageHandler.Update();
             UserInterface.Update(gameTime);
             base.Update(gameTime);
         }
@@ -121,10 +129,13 @@ namespace MainGame
                     DrawGame(gameTime);
                     break;
             }
-
             _spriteBatch.End();
 
             UserInterface.DrawMainRenderTarget(_spriteBatch);
+
+            _spriteBatch.Begin();
+            MessageHandler.Draw(_spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -199,14 +210,46 @@ namespace MainGame
                         State = GameState.ConnectMenu;
                     };
                     mainMenuPanel.AddChild(mainMenuPlayButton);
+
+                    var mainMenuRegisterButton = new Button("Register");
+                    mainMenuRegisterButton.ButtonParagraph.Scale = 0.5f;
+                    mainMenuRegisterButton.OnClick = (Entity btn) =>
+                    {
+                        State = GameState.RegisterMenu;
+                    };
+                    mainMenuPanel.AddChild(mainMenuRegisterButton);
                     break;
                 case GameState.ConnectMenu:
                     var connectMenuPanel = new Panel(new Vector2(500, 500));
                     UserInterface.AddEntity(connectMenuPanel);
 
+                    var backButton = new Button("Back");
+                    backButton.ButtonParagraph.Scale = 0.5f;
+                    backButton.OnClick = (Entity btn) =>
+                    {
+                        ChangeState(GameState.MainMenu);
+                    };
+                    connectMenuPanel.AddChild(backButton);
+
                     TextInput nameText = new TextInput(false);
                     nameText.PlaceholderText = "Enter Username";
                     connectMenuPanel.AddChild(nameText);
+
+                    TextInput passText = new TextInput(false);
+                    passText.PlaceholderText = "Enter password";
+                    connectMenuPanel.AddChild(passText);
+                    passText.OnValueChange = entity =>
+                    {
+                        if (_tempPassString == null) _tempPassString = passText.Value;
+                        if (_tempPassString.Length > passText.Value.Length)
+                        {
+                            _tempPassString = _tempPassString.Substring(0, passText.Value.Length);
+                        }
+                        var tempString = passText.Value;
+                        passText.Value = new string('*', passText.Value.Length);
+                        tempString = tempString.Replace("*", "");
+                        _tempPassString += tempString;
+                    };
 
                     TextInput ipText = new TextInput(false);
                     ipText.PlaceholderText = "Enter host IP";
@@ -219,25 +262,48 @@ namespace MainGame
                     //temp
 
                     nameText.Value = "mecha";
+                    passText.Value = "test";
                     ipText.Value = "127.0.0.1";
                     portText.Value = "9911";
 
                     //temp end
 
-                    var connectButton = new Button("Play");
+                    var connectButton = new Button("Connect");
                     connectButton.ButtonParagraph.Scale = 0.5f;
                     connectButton.OnClick = (Entity btn) =>
                     {
                         if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
                         {
-                            if (_netManager.Initialize(nameText.Value, ipText.Value, int.Parse(portText.Value)))
+                            if (_tempPassString == null) _tempPassString = passText.Value;
+                            string temp;
+                            if (_netManager.Initialize(nameText.Value, _tempPassString, ipText.Value, int.Parse(portText.Value), out temp))
                             {
-                                State = GameState.MainGame;
+                                State = GameState.RoomConnectMenu;
+                            }
+                            else
+                            {
+                                portText.Value = temp;
                             }
                         }
                     };
                     connectMenuPanel.AddChild(connectButton);
+                    break;
+                case GameState.RoomConnectMenu:
+                    var connectRoomMenuPanel = new Panel(new Vector2(500, 500));
+                    UserInterface.AddEntity(connectRoomMenuPanel);
 
+                    TextInput roomNameText = new TextInput(false);
+                    roomNameText.PlaceholderText = "Enter room name";
+
+                    connectRoomMenuPanel.AddChild(roomNameText);
+
+                    var connectRoomButton = new Button("Play");
+                    connectRoomButton.ButtonParagraph.Scale = 0.5f;
+
+                    connectRoomMenuPanel.AddChild(connectRoomButton);
+                    break;
+                case GameState.RegisterMenu:
+                    DrawRegisterMenu();
                     break;
             }
         }
@@ -281,6 +347,70 @@ namespace MainGame
                 Convert.ToInt16(diameter));
 
             _spriteBatch.Draw(_circleTexture, tempRect, color);
+        }
+
+        public void DrawRegisterMenu()
+        {
+
+            var connectMenuPanel = new Panel(new Vector2(500, 500));
+            UserInterface.AddEntity(connectMenuPanel);
+
+            var backButton = new Button("Back");
+            backButton.ButtonParagraph.Scale = 0.5f;
+            backButton.OnClick = (Entity btn) =>
+            {
+                ChangeState(GameState.MainMenu);
+            };
+            connectMenuPanel.AddChild(backButton);
+
+            TextInput nameText = new TextInput(false);
+            nameText.PlaceholderText = "Enter Username";
+            connectMenuPanel.AddChild(nameText);
+
+            TextInput passText = new TextInput(false);
+            passText.PlaceholderText = "Enter password";
+            connectMenuPanel.AddChild(passText);
+            passText.OnValueChange = entity =>
+            {
+                if (_tempPassString == null) _tempPassString = passText.Value;
+                if (_tempPassString.Length > passText.Value.Length)
+                {
+                    _tempPassString = _tempPassString.Substring(0, passText.Value.Length);
+                }
+                var tempString = passText.Value;
+                passText.Value = new string('*', passText.Value.Length);
+                tempString = tempString.Replace("*", "");
+                _tempPassString += tempString;
+            };
+
+            TextInput ipText = new TextInput(false);
+            ipText.PlaceholderText = "Enter host IP";
+            connectMenuPanel.AddChild(ipText);
+
+            TextInput portText = new TextInput(false);
+            portText.PlaceholderText = "Enter host port";
+            connectMenuPanel.AddChild(portText);
+
+            var connectButton = new Button("Register");
+            connectButton.ButtonParagraph.Scale = 0.5f;
+            connectButton.OnClick = (Entity btn) =>
+            {
+                MessageHandler.CreateMessage("LUL");
+                if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
+                {
+                    if (_tempPassString == null) _tempPassString = passText.Value;
+                    string temp;
+                    if (_netManager.Register(nameText.Value, _tempPassString, ipText.Value, int.Parse(portText.Value),
+                        out temp))
+                        MessageHandler.CreateMessage(temp);
+                }
+            };
+            connectMenuPanel.AddChild(connectButton);
+
+            //temp
+            ipText.Value = "127.0.0.1";
+            portText.Value = "9911";
+            //temp end
         }
     }
 }

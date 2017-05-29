@@ -10,6 +10,8 @@ namespace MainGame
     {
         MainMenu,
         MainGame,
-        ConnectMenu
+        RegisterMenu,
+        ConnectMenu,
+        RoomConnectMenu
     }
 }

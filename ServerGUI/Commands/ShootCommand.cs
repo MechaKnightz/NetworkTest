@@ -2,13 +2,14 @@
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using MongoDB.Driver;
 using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
 {
     public class ShootCommand : ICommand
     {
-        public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
             if (player.ShotLast + TimeSpan.FromSeconds(player.Cooldown) > DateTime.Now)
                 return;

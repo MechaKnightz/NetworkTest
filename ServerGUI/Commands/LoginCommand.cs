@@ -6,17 +6,49 @@ using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
 {
     class LoginCommand : ICommand
     {
-        public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
-            loggerManager.ServerMsg("Incoming login");
-
             var name = inc.ReadString();
+            var password = inc.ReadString();
+
+            var database = mongoClient.GetDatabase("MapMaker");
+
+            var collection = database.GetCollection<BsonDocument>("Logins");
+
+            var filter = Builders<BsonDocument>.Filter.Eq("Username", name);
+            var projection = Builders<BsonDocument>.Projection.Include("Password").Exclude("_id");
+
+            var documentTest = collection.Find(filter).Project(projection).FirstOrDefault();
+
+            if (documentTest == null)
+            {
+                inc.SenderConnection.Deny("Incorrect username or password");
+                return;
+            }
+
+            string passHash = "";
+            foreach (var value in documentTest.Values)
+            {
+                passHash = (string)value;
+            }
+
+            if (Hasher.VerifyHash(password, "SHA256", passHash))
+            {
+                inc.SenderConnection.Approve();
+            }
+            else inc.SenderConnection.Deny("Incorrect username or password");
+
+
+
+            loggerManager.ServerMsg("Incoming login");
 
             if (world.Players.Any(x => x.Username == name))
             {

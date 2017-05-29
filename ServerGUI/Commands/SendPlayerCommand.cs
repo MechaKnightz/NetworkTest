@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
+using MongoDB.Driver;
 using ServerGUI.ServerLogger;
 
 namespace ServerGUI.Commands
@@ -18,7 +19,7 @@ namespace ServerGUI.Commands
         {
             _inputId = inputId;
         }
-        public void Run(LoggerManager loggerManager, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
         {
 
             if (_inputId == -1)
