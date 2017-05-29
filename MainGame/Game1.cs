@@ -282,7 +282,7 @@ namespace MainGame
                             }
                             else
                             {
-                                portText.Value = temp;
+                                MessageHandler.CreateMessage(temp);
                             }
                         }
                     };
