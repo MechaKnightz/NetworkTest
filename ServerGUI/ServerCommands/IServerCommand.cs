@@ -10,6 +10,6 @@ namespace ServerGUI.ServerCommands
         CommandType Type { get; set; }
         string CommandName { get; set; }
         int ParameterCount { get; set; }
-        bool Run(LoggerManager loggerManager, World world, List<string> parameters, out string runMessage);
+        bool Run(LoggerManager loggerManager, List<Player> allPlayers, List<string> parameters, out string runMessage);
     }
 }

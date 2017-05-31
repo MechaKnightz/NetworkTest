@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Library;
 using Lidgren.Network;
@@ -11,17 +13,20 @@ namespace ServerGUI
 {
     public class Server
     {
-        public World World { get; set; }
         public NetServer NetServer { get; private set; }
         public LoggerManager LoggerManager;
         public MongoClient MongoClient { get; set; }
 
+        public List<GameRoom> GameRooms { get; set; }
+        public List<Player> AllPlayers { get; set; }
+
         public Timer UpdateTimer;
 
-        public Server(LoggerManager loggerManager, World world, string mongoUsername, string mongoPass)
+        public Server(LoggerManager loggerManager, List<Player> allPlayers, string mongoUsername, string mongoPass)
         {
-            World = world;
+            AllPlayers = allPlayers;
             LoggerManager = loggerManager;
+            GameRooms = new List<GameRoom>();
 
             NetPeerConfiguration config = new NetPeerConfiguration("testGame")
             {
@@ -63,13 +68,13 @@ namespace ServerGUI
                             case PacketTypes.Login:
                             {
                                 var login = new LoginCommand();
-                                login.Run(LoggerManager, MongoClient, NetServer, inc, null, World);
+                                login.Run(LoggerManager, MongoClient, NetServer, inc, null, AllPlayers, GameRooms);
                                 continue;
                             }
                             case PacketTypes.Register:
                             {
                                 var login = new RegisterCommand();
-                                login.Run(LoggerManager, MongoClient, NetServer, inc, null, World);
+                                login.Run(LoggerManager, MongoClient, NetServer, inc, null, AllPlayers, GameRooms);
                                 continue;
                             }
                         }
@@ -91,7 +96,7 @@ namespace ServerGUI
         private void Data(NetIncomingMessage inc)
         {
             var command = CommandHandler.GetCommand(inc);
-            command.Run(LoggerManager, null, NetServer, inc, null, World);
+            command.Run(LoggerManager, null, NetServer, inc, null, AllPlayers, GameRooms);
         }
 
         private void StatusChanged(NetIncomingMessage inc)
@@ -99,11 +104,11 @@ namespace ServerGUI
             LoggerManager.ServerMsg(inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
             if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected || inc.SenderConnection.Status == NetConnectionStatus.Disconnecting)
             {
-                foreach (var player in World.Players)
+                foreach (var player in AllPlayers)
                 {
                     if (player.Conn == inc.SenderConnection)
                     {
-                        World.Players.Remove(player);
+                        AllPlayers.Remove(player);
                         LoggerManager.ServerMsg("Removed player " + player.Username);
                         break;
                     }
@@ -113,54 +118,19 @@ namespace ServerGUI
 
         private void Update()
         {
-            for (int j = 0; j < World.Players.Count; j++)
-            {
-                var outer = false;
-                for (int i = 0; i < World.Shots.Count; i++)
-                {
-                    var playerCircle = new Circle(World.Players[j].Radius, World.Players[j].X, World.Players[j].Y);
-                    var shotCircle = new Circle(World.Shots[i].Radius, World.Shots[i].X, World.Shots[i].Y);
-
-                    if (playerCircle.Intersect(shotCircle) && World.Shots[i].ParentName != World.Players[j].Username)
-                    {
-                        LoggerManager.ServerMsg(World.Players[j] + " was hit at " + new Vector2(World.Shots[i].X, World.Shots[i].Y));
-                        World.Players[j].Health -= World.Shots[i].Damage;
-                        World.Shots.RemoveAt(i);
-                        i--;
-                        if (World.Players[j].Health <= 0)
-                        {
-                            World.Players.RemoveAt(j);
-                            j--;
-                            outer = true;
-                            var command2 = new SendPlayerHealthCommand();
-                            command2.Run(LoggerManager, null, NetServer, null, World.Players[j], World);
-                            continue;
-
-                        }
-                        var command3 = new SendPlayerCommand();
-                        command3.Run(LoggerManager, null, NetServer, null, World.Players[j], World);
-                    }
-                }
-                if (outer) break;
-            }
-            for (int i = 0; i < World.Shots.Count; i++)
-            {
-                if (World.Shots[i].CreatedTime + TimeSpan.FromSeconds(World.Shots[i].Duration) < DateTime.Now)
-                {
-                    World.Shots.RemoveAt(i);
-                    i--;
-                    continue;
-                }
-                MoveShot(World.Shots[i]);
-            }
-            var command = new SendAllShotsCommand();
-            command.Run(LoggerManager, null, NetServer, null, null, World);
+            //TODO
         }
 
-        private void MoveShot(Shot shot)
+        private static GameRoom GetGameRoom(Player player, List<GameRoom> gameRooms)
         {
-            shot.X = Angle.MoveAngle(new Vector2(shot.X, shot.Y), shot.Rotation, shot.Speed).X;
-            shot.Y = Angle.MoveAngle(new Vector2(shot.X, shot.Y), shot.Rotation, shot.Speed).Y;
+            foreach (var room in gameRooms)
+            {
+                if (room.Players.Any(x => x.Username == player.Username))
+                {
+                    return room;
+                }
+            }
+            return null;
         }
     }
 }

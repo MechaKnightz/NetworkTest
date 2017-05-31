@@ -30,7 +30,7 @@ namespace ServerGUI
         private CancellationTokenSource _cancellationTokenSource;
 
         private Server _server;
-        private World World;
+        private List<Player> AllPlayers { get; set; }
         private LoggerManager LoggerManager;
         private ServerCommandHandler ServerCommandHandler;
         private string CommandBox { get; set; } = "";
@@ -44,7 +44,7 @@ namespace ServerGUI
         {
             InitializeComponent();
 
-            World = new World();
+            AllPlayers = new List<Player>();
 
             LoggerManager = new LoggerManager();
 
@@ -65,16 +65,16 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
             var mongoPass = loginString.Substring(tempIndex + 1, loginString.Length - tempIndex - 1);
             //temp end
 
-            _server = new Server(LoggerManager, World, mongoName, mongoPass);
+            _server = new Server(LoggerManager, AllPlayers, mongoName, mongoPass);
 
-            PlayersDataGrid.DataContext = World;
+            PlayersDataGrid.DataContext = this;
             ConsoleDataGrid.DataContext = LoggerManager;
             TxbCommand.DataContext = this;
 
             var _lock = new object();
             BindingOperations.EnableCollectionSynchronization(LoggerManager.LogMessages, _lock);
 
-            ServerCommandHandler = new ServerCommandHandler(LoggerManager, World);
+            ServerCommandHandler = new ServerCommandHandler(LoggerManager, AllPlayers);
 
             _cpuCounter = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
             _ramCounter = new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
@@ -91,7 +91,8 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
                 {
                     var saveString = File.ReadAllText(_filePath);
 
-                    World.Circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);
+                    //TODO world load
+                    //World.Circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);
 
                 }
                 catch (Exception ex)
@@ -114,7 +115,6 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
             _cancellationTokenSource = new CancellationTokenSource();
             _task = new Task(_server.Run, _cancellationTokenSource.Token);
             _task.Start();
-            World = _server.World;
         }
 
         private void BtnStop_Click(object sender, RoutedEventArgs e)
@@ -219,8 +219,9 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
         {
             PlayersDataGrid.Items.Refresh();
 
-            LoggerManager.ServerMsg(GetCpuUsage() / Environment.ProcessorCount + "%");
-            LoggerManager.ServerMsg(GetRamUsage() / 1000000 + "Mb");
+            //TODO disabled for now
+            //LoggerManager.ServerMsg(GetCpuUsage() / Environment.ProcessorCount + "%");
+            //LoggerManager.ServerMsg(GetRamUsage() / 1000000 + "Mb");
         }
 
         public void SetItem(object sender, RoutedEventArgs e)
@@ -243,7 +244,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
             }
 
             var command = new KickPlayerCommand();
-            command.Run(LoggerManager, null, null, null, player, World);
+            command.Run(LoggerManager, null, null, null, player, AllPlayers, null);
         }
 
         public float GetCpuUsage()

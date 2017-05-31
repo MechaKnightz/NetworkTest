@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Library;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
@@ -11,23 +13,15 @@ namespace ServerGUI.Commands
 {
     class InputCommand : ICommand
     {
-        private LoggerManager LoggerManager;
-        private World World;
-        private NetServer Server;
-        private NetIncomingMessage Inc;
 
-        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> allRooms)
         {
-            LoggerManager = loggerManager;
-            Server = server;
-            Inc = inc;
-            World = world;
 
             var inputId = -1;
             var dirty = false;
             var dirtyPlayer = new Player();
 
-            foreach (var player2 in world.Players)
+            foreach (var player2 in allPlayers)
             {
                 if (player2.Conn != inc.SenderConnection)
                     continue;
@@ -36,7 +30,13 @@ namespace ServerGUI.Commands
 
                 var key = (Keys)inc.ReadByte();
 
-                ReadInput(player2, world, key);
+                var tempRoom = new GameRoom();
+                foreach (var gameRoom in allRooms)
+                {
+                    if (gameRoom.Players.Any(x => x.Username == player2.Username)) tempRoom = gameRoom;
+                }
+
+                ReadInput(player2, tempRoom, key);
 
                 dirty = true;
                 dirtyPlayer = player2;
@@ -44,24 +44,19 @@ namespace ServerGUI.Commands
             if (dirty)
             {
                 var command = new SendPlayerCommand(inputId);
-                command.Run(loggerManager, null, server, inc, dirtyPlayer, world);
+                command.Run(loggerManager, null, server, inc, dirtyPlayer, allPlayers, allRooms);
                 return;
             }
             loggerManager.ServerMsg("Couldn't find player with " + inc.SenderConnection);
         }
 
-        private void ReadInput(Player player, World world, Keys key)
+        private void ReadInput(Player player, GameRoom gameRoom, Keys key)
         {
             var tempPlayer = (Player)player.Clone();
 
             InputHandler.MovePlayer(tempPlayer, key);
 
-            if(CollisionManager.CheckCollision(tempPlayer, world))
-            {
-                return;
-            }
-
-            if (CollisionManager.CheckCollisionCircles(tempPlayer, World))
+            if(CollisionManager.CheckCollision(tempPlayer, gameRoom.Players))
             {
                 return;
             }
@@ -96,8 +91,9 @@ namespace ServerGUI.Commands
             switch (key)
             {
                 case Keys.Space:
-                    var command = new ShootCommand();
-                    command.Run(LoggerManager, null, Server, Inc, player, World);
+                    //TODO jump command
+                    //var command = new ShootCommand();
+                    //command.Run(LoggerManager, null, Server, Inc, player, allPlayers, allRooms);
                     break;
             }
         }

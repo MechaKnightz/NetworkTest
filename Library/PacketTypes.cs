@@ -14,7 +14,8 @@ namespace Library
         AllPlayerPosition,
         Move,
         StartState,
-        AllShots,
-        PlayerHealth
+        PlayerHealth,
+        JoinRoom,
+        RoomStartState
     }
 }

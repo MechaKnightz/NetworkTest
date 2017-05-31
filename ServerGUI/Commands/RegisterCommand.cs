@@ -12,14 +12,17 @@ namespace ServerGUI.Commands
     public class RegisterCommand : ICommand
     {
         private static List<Cooldown> Cooldowns = new List<Cooldown>();
-        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player,
-            World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
             for (int i = 0; i < Cooldowns.Count; i++)
             {
                 if(Cooldowns[i].CreatedTime + TimeSpan.FromMinutes(5) <= DateTime.Now) Cooldowns.RemoveAt(i);
             }
-            if (Cooldowns.Any(x => x.SenderConnection == inc.SenderConnection)) return;
+            if (Cooldowns.Any(x => x.SenderConnection.RemoteEndPoint.Address.Equals(inc.SenderConnection.RemoteEndPoint.Address)))
+            {
+                inc.SenderConnection.Deny("You have created too many accounts within the last 5 minutes.");
+                return;
+            }
 
             var name = inc.ReadString();
             if (name.Length <= 3)
@@ -64,6 +67,7 @@ namespace ServerGUI.Commands
                 collection.InsertOne(document);
                 Cooldowns.Add(new Cooldown(inc.SenderConnection));
                 inc.SenderConnection.Deny("Successfully registered account");
+                loggerManager.ServerMsg("Registered account " +  name);
                 return;
             }
             inc.SenderConnection.Deny("Account already exists");

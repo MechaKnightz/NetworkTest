@@ -15,10 +15,10 @@ namespace ServerGUI.ServerCommands
         public string CommandName { get; set; } = "teleport";
         public int ParameterCount { get; set; } = 2;
 
-        public bool Run(LoggerManager loggerManager, World world, List<string> parameters, out string runMessage)
+        public bool Run(LoggerManager loggerManager, List<Player> allPlayers, List<string> parameters, out string runMessage)
         {
-            var firstPlayer = world.Players.FirstOrDefault(x => x.Username == parameters[0]);
-            var secondPlayer = world.Players.FirstOrDefault(x => x.Username == parameters[1]);
+            var firstPlayer = allPlayers.FirstOrDefault(x => x.Username == parameters[0]);
+            var secondPlayer = allPlayers.FirstOrDefault(x => x.Username == parameters[1]);
 
             if(firstPlayer == null || secondPlayer == null)
 

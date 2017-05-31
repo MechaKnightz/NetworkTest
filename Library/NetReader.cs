@@ -11,22 +11,6 @@ namespace Library
     public static class NetReader
     {
 
-        public static void WriteCircle(NetOutgoingMessage outmsg, Circle circle)
-        {
-            outmsg.Write(circle.Radius);
-            outmsg.Write(circle.X);
-            outmsg.Write(circle.Y);
-        }
-
-        public static Circle ReadCircle(NetIncomingMessage inc, Circle circle)
-        {
-            circle.Radius = inc.ReadFloat();
-            circle.X = inc.ReadFloat();
-            circle.Y = inc.ReadFloat();
-
-            return circle;
-        }
-
         public static void WritePlayer(NetOutgoingMessage outmsg, Player player, int inputId = -1)
         {
             outmsg.Write(player.Username);
@@ -80,6 +64,68 @@ namespace Library
             shot.Damage = inc.ReadFloat();
             shot.Rotation = inc.ReadFloat();
             shot.Radius = inc.ReadFloat();
+        }
+
+        public static void ReadRoom(NetIncomingMessage inc, GameRoom room)
+        {
+            room.Name = inc.ReadString();
+            ReadMap(inc, room.Map);
+            ReadPlayerList(inc, room.Players);
+        }
+
+        public static void WriteRoom(NetOutgoingMessage outmsg, GameRoom room)
+        {
+            outmsg.Write(room.Name);
+            WriteMap(outmsg, room.Map);
+            WritePlayerList(outmsg, room.Players);
+        }
+
+        public static void WriteMap(NetOutgoingMessage outmsg, Map map)
+        {
+            var rows = map.MapData.Count;
+            outmsg.Write(rows);
+            for (int i = 0; i < rows; i++)
+            {
+                var columnLength = map.MapData[i].Count;
+                outmsg.Write(columnLength);
+                for (int j = 0; j < columnLength; j++)
+                {
+                    outmsg.Write(map.MapData[i][j]);
+                }
+            }
+        }
+
+        public static void ReadMap(NetIncomingMessage inc, Map map)
+        {
+            var rows = inc.ReadInt32();
+            for (int i = 0; i < rows; i++)
+            {
+                var columnLength = inc.ReadInt32();
+                for (int j = 0; j < columnLength; j++)
+                {
+                    map.MapData[i][j] = inc.ReadInt32();
+                }
+            }
+        }
+
+        public static void WritePlayerList(NetOutgoingMessage outmsg, List<Player> players)
+        {
+            var playerCount = players.Count;
+            outmsg.Write(playerCount);
+            for (int i = 0; i < playerCount; i++)
+            {
+                WritePlayer(outmsg, players[i]);
+            }
+        }
+
+        public static void ReadPlayerList(NetIncomingMessage inc, List<Player> players)
+        {
+            var playerCount = inc.ReadInt32();
+            for (int i = 0; i < playerCount; i++)
+            {
+                players.Add(new Player());
+                ReadPlayer(inc, players[i]);
+            }
         }
     }
 }

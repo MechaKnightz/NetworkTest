@@ -101,14 +101,14 @@
     <Compile Include="Commands\Cooldown.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InputCommand.cs" />
+    <Compile Include="Commands\JoinRoomCommand.cs" />
     <Compile Include="Commands\KickPlayerCommand.cs" />
     <Compile Include="Commands\LoginCommand.cs" />
     <Compile Include="Commands\RegisterCommand.cs" />
     <Compile Include="Commands\SendAllPlayersCommand.cs" />
-    <Compile Include="Commands\SendAllShotsCommand.cs" />
     <Compile Include="Commands\SendPlayerCommand.cs" />
     <Compile Include="Commands\SendPlayerHealthCommand.cs" />
-    <Compile Include="Commands\ShootCommand.cs" />
+    <Compile Include="Commands\SendRoomStartState.cs" />
     <Compile Include="Hasher.cs" />
     <Compile Include="ServerCommands\CommandType.cs" />
     <Compile Include="ServerCommands\IServerCommand.cs" />

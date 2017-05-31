@@ -19,7 +19,7 @@ namespace ServerGUI.Commands
         {
             _inputId = inputId;
         }
-        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
 
             if (_inputId == -1)
@@ -39,7 +39,16 @@ namespace ServerGUI.Commands
 
             NetReader.WritePlayer(outmsg2, player, _inputId);
 
-            server.SendToAll(outmsg2, NetDeliveryMethod.ReliableOrdered);
+            var tempRoom = new GameRoom();
+            foreach (var room in gameRooms)
+            {
+                if (room.Players.Any(x => x.Username == player.Username)) tempRoom = room;
+            }
+
+            foreach (var tempPlayer in tempRoom.Players)
+            {
+                server.SendMessage(outmsg2, tempPlayer.Conn, NetDeliveryMethod.ReliableOrdered);
+            }
         }
     }
 }

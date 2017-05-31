@@ -14,7 +14,7 @@ namespace ServerGUI.Commands
 {
     class LoginCommand : ICommand
     {
-        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
             var name = inc.ReadString();
             var password = inc.ReadString();
@@ -31,6 +31,7 @@ namespace ServerGUI.Commands
             if (documentTest == null)
             {
                 inc.SenderConnection.Deny("Incorrect username or password");
+                loggerManager.ServerMsg("Incorrect username or password from: " + inc.SenderConnection);
                 return;
             }
 
@@ -44,13 +45,15 @@ namespace ServerGUI.Commands
             {
                 inc.SenderConnection.Approve();
             }
-            else inc.SenderConnection.Deny("Incorrect username or password");
-
-
+            else
+            {
+                inc.SenderConnection.Deny("Incorrect username or password");
+                loggerManager.ServerMsg("Incorrect username or password from: " + inc.SenderConnection);
+            }
 
             loggerManager.ServerMsg("Incoming login");
 
-            if (world.Players.Any(x => x.Username == name))
+            if (allPlayers.Any(x => x.Username == name))
             {
                 var deniedReason = "Denied connection, duplicate client.";
                 inc.SenderConnection.Deny(deniedReason);
@@ -60,26 +63,16 @@ namespace ServerGUI.Commands
             inc.SenderConnection.Approve();
             loggerManager.ServerMsg("Approved client connection");
 
-            CreatePlayer(loggerManager, inc, name, world);
+            CreatePlayer(loggerManager, inc, name, allPlayers);
 
             NetOutgoingMessage outmsg = server.CreateMessage();
 
             outmsg.Write((byte)PacketTypes.StartState);
 
-            outmsg.Write(world.Circles.Count);
-            foreach (var circle in world.Circles)
+            outmsg.Write(gameRooms.Count);
+            for (int i = 0; i < gameRooms.Count; i++)
             {
-                NetReader.WriteCircle(outmsg, circle);
-            }
-            outmsg.Write(world.Players.Count);
-            foreach (var worldPlayer in world.Players)
-            {
-                NetReader.WritePlayer(outmsg, worldPlayer);
-            }
-            outmsg.Write(world.ChatMessages.Count);
-            foreach (var message in world.ChatMessages)
-            {
-                NetReader.WriteMessage(outmsg, message);
+                outmsg.Write(gameRooms[i].Name);
             }
 
             //connectionmessage:
@@ -96,7 +89,7 @@ namespace ServerGUI.Commands
             loggerManager.ServerMsg("Approved new connection and updated the world status");
         }
 
-        private static void CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, World world)
+        private static void CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, List<Player> allPlayers)
         {
 
             var intersects = false;
@@ -105,7 +98,7 @@ namespace ServerGUI.Commands
                 intersects = false;
                 var newPlayer = new Player(name, new Vector2(i * 200, 0), 10f, 0f, 5f, 50, 3, inc.SenderConnection);
                 var circle = new Circle(newPlayer.Radius, newPlayer.X, newPlayer.Y);
-                foreach (var worldPlayer in world.Players)
+                foreach (var worldPlayer in allPlayers)
                 {
                     intersects = false;
                     var tempCircle = new Circle(worldPlayer.Radius, worldPlayer.X, worldPlayer.Y);
@@ -119,7 +112,7 @@ namespace ServerGUI.Commands
                     loggerManager.ServerMsg("spawnpoint obstructed, moving player to position: " + new Vector2((i + 1) * 200, 0));
                     continue;
                 }
-                world.Players.Add(newPlayer);
+                allPlayers.Add(newPlayer);
                 break;
             }
         }

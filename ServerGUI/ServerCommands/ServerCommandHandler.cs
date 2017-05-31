@@ -12,11 +12,11 @@ namespace ServerGUI.ServerCommands
     {
         private List<IServerCommand> Commands { get; set; }= new List<IServerCommand>();
         private readonly LoggerManager LoggerManager;
-        private readonly World World;
+        private List<Player> AllPlayers { get; set; }
 
-        public ServerCommandHandler(LoggerManager loggerManager, World world)
+        public ServerCommandHandler(LoggerManager loggerManager, List<Player> allPlayers)
         {
-            World = world;
+            AllPlayers = allPlayers;
             LoggerManager = loggerManager;
             //Commands
             Commands.Add(new TeleportCommand());
@@ -53,7 +53,7 @@ namespace ServerGUI.ServerCommands
             switch (command.Type)
             {
                 case CommandType.NoParameters:
-                    returnBool = command.Run(LoggerManager, World, null, out runMessage);
+                    returnBool = command.Run(LoggerManager, AllPlayers, null, out runMessage);
                     break;
                 case CommandType.Parameters:
                     //command is CommandName "param" "param"
@@ -69,7 +69,7 @@ namespace ServerGUI.ServerCommands
                         fullString = fullString.Substring(spaceIndex + 1, fullString.Length);
                         lastPos = parameters[i].Length;
                     }
-                    returnBool = command.Run(LoggerManager, World, parameters, out runMessage);
+                    returnBool = command.Run(LoggerManager, AllPlayers, parameters, out runMessage);
                     return returnBool;
                 case CommandType.Bool:
                     //command is CommandName "param" "param"
@@ -80,7 +80,7 @@ namespace ServerGUI.ServerCommands
                     var spaceIndex2 = fullString.IndexOf(" ");
                     parameters2.Add(fullString.Substring(0, spaceIndex2));
 
-                    returnBool = command.Run(LoggerManager, World, parameters2, out runMessage);
+                    returnBool = command.Run(LoggerManager, AllPlayers, parameters2, out runMessage);
                     return returnBool;
                 default:
                     throw new ArgumentOutOfRangeException();

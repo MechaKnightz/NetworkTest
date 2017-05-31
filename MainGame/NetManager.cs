@@ -12,18 +12,16 @@ namespace MainGame
     public class NetManager
     {
         private NetClient Client { get; set; }
-        public World World { get; set; }
-        public World LocalWorld { get; set; }
+        public List<GameRoom> GameRooms { get; set; }
+        public GameRoom CurrentRoom { get; set; }
         public string Username { get; set; }
         public List<Keys> Input { get; set; }
-
-        private const float interpolationConst = 0.3f;
 
         public bool Initialize(string name, string password, string hostip, int port, out string msg)
         {
             Input = new List<Keys>();
-            World = new World();
-            LocalWorld = new World();
+            GameRooms = new List<GameRoom>();
+            CurrentRoom = new GameRoom();
             Username = name;
             NetPeerConfiguration config = new NetPeerConfiguration("testGame");
             Client = new NetClient(config);
@@ -66,41 +64,15 @@ namespace MainGame
                         {
                             var count1 = inc.ReadInt32();
 
+                            GameRooms.Clear();
                             for (int i = 0; i < count1; i++)
                             {
-                                var circle = new Circle();
-
-                                circle = NetReader.ReadCircle(inc, circle);
-
-                                World.Circles.Add(circle);
-                                LocalWorld.Circles.Add(circle);
+                                var tempRoom = new GameRoom();
+                                tempRoom.Name = inc.ReadString();
+                                GameRooms.Add(tempRoom);
                             }
 
-                            var count2 = inc.ReadInt32();
-
-                            for (int i = 0; i < count2; i++)
-                            {
-                                var player = new Player();
-
-                                NetReader.ReadPlayer(inc, player);
-
-                                World.Players.Add(player);
-                                LocalWorld.Players.Add(player);
-                            }
-
-                            var count3 = inc.ReadInt32();
-
-                            for (int i = 0; i < count3; i++)
-                            {
-                                var message = new Message();
-
-                                NetReader.ReadMessage(inc, message);
-
-                                World.ChatMessages.Add(message);
-                                LocalWorld.ChatMessages.Add(message);
-                            }
-
-                            msg = "Successfully connected to server";
+                            msg = "Successfully connected to lobby";
                             return true;
                         }
                         break;
@@ -138,7 +110,7 @@ namespace MainGame
             Input.Add(key);
             outmsg.Write(Input.Count - 1);
 
-            var localPlayer = World.Players.FirstOrDefault(x => x.Username == Username);
+            var localPlayer = CurrentRoom.Players.FirstOrDefault(x => x.Username == Username);
 
             if (localPlayer != null)
             {
@@ -178,7 +150,7 @@ namespace MainGame
 
                     var inputId = NetReader.ReadPlayer(inc, incPlayer);
 
-                    var oldPlayer = World.Players.FirstOrDefault(x => x.Username == incPlayer.Username);
+                    var oldPlayer = CurrentRoom.Players.FirstOrDefault(x => x.Username == incPlayer.Username);
 
                     if (oldPlayer != null)
                     {
@@ -194,44 +166,18 @@ namespace MainGame
                     }
                     else
                     {
-                        World.Players.Add(incPlayer);
+                        CurrentRoom.Players.Add(incPlayer);
                     }
                     
                     break;
                 case PacketTypes.AllPlayerPosition:
-                    World.Players.Clear();
+                    CurrentRoom.Players.Clear();
                     var count = inc.ReadInt32();
                     for (int i = 0; i < count; i++)
                     {
                         Player player2 = new Player();
                         NetReader.ReadPlayer(inc, player2);
-                        World.Players.Add(player2);
-                    }
-                    break;
-                case PacketTypes.AllShots:
-                    var count3 = inc.ReadInt32();
-                    World.Shots.Clear();
-                    for (int i = 0; i < count3; i++)
-                    {
-                        Shot shot = new Shot();
-                        NetReader.ReadShot(inc, shot);
-                        World.Shots.Add(shot);
-                        
-                        if(LocalWorld.Shots.Count <= i)
-                            LocalWorld.Shots.Add(new Shot(shot.X, shot.Y, shot.Rotation, shot.Speed, shot.Damage, shot.Radius, shot.Duration, shot.ParentName));
-                        
-
-                        var tempLoc = Interpolate(new Vector2(LocalWorld.Shots[i].X, LocalWorld.Shots[i].Y),
-                            new Vector2(shot.X, shot.Y),
-                            gameTime.ElapsedGameTime.Milliseconds);
-                        Shot shot2 = new Shot(tempLoc.X, tempLoc.Y, shot.Rotation, shot.Speed, shot.Damage, shot.Radius, shot.Duration, shot.ParentName);
-
-                        LocalWorld.Shots[i] = shot2;
-                    }
-
-                    for (int i = count3; i < LocalWorld.Shots.Count; i++)
-                    {
-                        LocalWorld.Shots.RemoveAt(i);
+                        CurrentRoom.Players.Add(player2);
                     }
                     break;
                 case PacketTypes.PlayerHealth:
@@ -240,30 +186,11 @@ namespace MainGame
 
                     var playerHealth = inc.ReadFloat();
 
-                    var player = World.Players.FirstOrDefault(x => x.Username == playerName);
+                    var player = CurrentRoom.Players.FirstOrDefault(x => x.Username == playerName);
 
                     if(player != null) player.Health = playerHealth;
-
                     break;
-
             }
-        }
-
-        private Vector2 Interpolate(Vector2 local, Vector2 remote, float deltaTime = 100 / 60f)
-        {
-            var difference = remote.X - local.X;
-            if (difference < 1000)
-                local.X = remote.X;
-            else
-                local.X += difference * deltaTime * interpolationConst;
-
-            var difference2 = remote.Y - local.Y;
-            if (difference2 < 1000)
-                local.Y = remote.Y;
-            else
-                local.Y += difference * deltaTime * interpolationConst;
-
-            return local;
         }
 
         private void LagCompensate(Player player, int inputId)
@@ -278,9 +205,6 @@ namespace MainGame
 
         public bool Register(string name, string password, string hostip, int port, out string msg)
         {
-            Input = new List<Keys>();
-            World = new World();
-            LocalWorld = new World();
             Username = name;
             NetPeerConfiguration config = new NetPeerConfiguration("testGame");
             Client = new NetClient(config);
@@ -296,7 +220,7 @@ namespace MainGame
 
             Client.Connect(hostip, port, outmsg);
 
-            return WaitForRegisterInfo(Client, out msg); ;
+            return WaitForRegisterInfo(Client, out msg);
         }
 
         private bool WaitForRegisterInfo(NetClient client, out string msg)
@@ -334,6 +258,69 @@ namespace MainGame
                                     msg = reason;
                                     return true;
                                 }
+                        }
+                        break;
+                }
+            }
+        }
+
+        public bool SendJoinRoomInput(string roomName, out string msg)
+        {
+            var outmsg = Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.JoinRoom);
+
+            outmsg.Write(roomName);
+
+            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+            return WaitForRoomInfo(Client, out msg);
+        }
+
+        private bool WaitForRoomInfo(NetClient client, out string msg)
+        {
+            var time = DateTime.Now;
+
+            NetIncomingMessage inc;
+
+            while (true)
+            {
+                if (DateTime.Now.Subtract(time).Seconds > 5)
+                {
+                    msg = "Couldn't connect to room";
+                    return false;
+                }
+                if ((inc = client.ReadMessage()) == null) continue;
+
+                switch (inc.MessageType)
+                {
+                    case NetIncomingMessageType.Data:
+                        if (inc.ReadByte() == (byte)PacketTypes.RoomStartState)
+                        {
+                            CurrentRoom = new GameRoom();
+                            NetReader.ReadRoom(inc, CurrentRoom);
+                            msg = "Successfully connected to room";
+                            return true;
+                        }
+                        break;
+                    case NetIncomingMessageType.StatusChanged:
+                        switch ((NetConnectionStatus)inc.ReadByte())
+                        {
+                            //When connected to the server
+                            case NetConnectionStatus.Connected:
+                                break;
+                            //When disconnected from the server
+                            case NetConnectionStatus.Disconnected:
+                            {
+                                string reason = inc.ReadString();
+                                if (string.IsNullOrEmpty(reason))
+                                {
+                                    msg = "Connection denied";
+                                    return false;
+                                }
+                                msg = "Connection denied, reason: " + reason;
+                                return false;
+                            }
                         }
                         break;
                 }

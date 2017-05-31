@@ -12,15 +12,15 @@ namespace ServerGUI.Commands
 {
     class SendAllPlayersCommand : ICommand
     {
-        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
             NetOutgoingMessage outmsg = server.CreateMessage();
 
             outmsg.Write((byte)PacketTypes.AllPlayerPosition);
 
-            outmsg.Write(world.Players.Count);
+            outmsg.Write(allPlayers.Count);
 
-            foreach (var worldPlayer in world.Players)
+            foreach (var worldPlayer in allPlayers)
             {
                 NetReader.WritePlayer(outmsg, worldPlayer);
             }

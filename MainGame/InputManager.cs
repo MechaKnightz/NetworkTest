@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace MainGame
 {
@@ -37,6 +32,11 @@ namespace MainGame
             {
                 _netManager.SendInput(key);
             }
+        }
+
+        public bool JoinRoom(string roomName, out string msg)
+        {
+            return _netManager.SendJoinRoomInput(roomName, out msg);
         }
     }
 }

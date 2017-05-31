@@ -20,6 +20,8 @@ namespace ServerGUI.Commands
                     return new InputCommand();
                 case PacketTypes.StartState:
                     break;
+                case PacketTypes.JoinRoom:
+                    return new JoinRoomCommand();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

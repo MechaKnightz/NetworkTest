@@ -28,8 +28,6 @@ namespace MainGame
         private SpriteFont _nameFont;
         private string _tempPassString;
 
-        private World _world = new World();
-
         float timer = 15;
         const float TIMER = 15;
 
@@ -159,36 +157,36 @@ namespace MainGame
 
         private void SetCamera(Camera2D camera)
         {
-            var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
+            //var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
 
-            if (localPlayer == null) return;
+            //if (localPlayer == null) return;
 
-            _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
+            //_camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
         }
 
         private void DrawGame(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
-            foreach (var circle in _netManager.World.Circles)
-            {
-                DrawCircle(circle, Color.Red);
-            }
-            var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
-            foreach (var player in _netManager.World.Players)
-            {
-                if(player.Username == localPlayer.Username) continue;
-                DrawPlayer(player, Color.LightBlue);
-            }
-            DrawPlayer(localPlayer, Color.Blue);
-            foreach (var shot in _netManager.World.Shots)
-            {
+            GraphicsDevice.Clear(Color.Green);
+            //foreach (var circle in _netManager.World.Circles)
+            //{
+            //    DrawCircle(circle, Color.Red);
+            //}
+            //var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
+            //foreach (var player in _netManager.World.Players)
+            //{
+            //    if(player.Username == localPlayer.Username) continue;
+            //    DrawPlayer(player, Color.LightBlue);
+            //}
+            //DrawPlayer(localPlayer, Color.Blue);
+            //foreach (var shot in _netManager.World.Shots)
+            //{
 
-                DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
-            }
-            foreach (var shot in _netManager.LocalWorld.Shots)
-            {
-                DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
-            }
+            //    DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
+            //}
+            //foreach (var shot in _netManager.LocalWorld.Shots)
+            //{
+            //    DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
+            //}
         }
         private void OldStateChange(GameState state)
         {
@@ -227,7 +225,7 @@ namespace MainGame
                     backButton.ButtonParagraph.Scale = 0.5f;
                     backButton.OnClick = (Entity btn) =>
                     {
-                        ChangeState(GameState.MainMenu);
+                        State = GameState.MainMenu;
                     };
                     connectMenuPanel.AddChild(backButton);
 
@@ -297,8 +295,21 @@ namespace MainGame
 
                     connectRoomMenuPanel.AddChild(roomNameText);
 
-                    var connectRoomButton = new Button("Play");
+                    var connectRoomButton = new Button("Join room");
                     connectRoomButton.ButtonParagraph.Scale = 0.5f;
+
+                    connectRoomButton.OnClick = entity =>
+                    {
+                        string msg;
+                        if (_inputManager.JoinRoom(roomNameText.Value, out msg))
+                        {
+                            State = GameState.MainGame;
+                        }
+                        else
+                        {
+                            MessageHandler.CreateMessage(msg);
+                        }
+                    };
 
                     connectRoomMenuPanel.AddChild(connectRoomButton);
                     break;
@@ -359,7 +370,7 @@ namespace MainGame
             backButton.ButtonParagraph.Scale = 0.5f;
             backButton.OnClick = (Entity btn) =>
             {
-                ChangeState(GameState.MainMenu);
+                State = GameState.MainMenu;
             };
             connectMenuPanel.AddChild(backButton);
 
@@ -395,7 +406,6 @@ namespace MainGame
             connectButton.ButtonParagraph.Scale = 0.5f;
             connectButton.OnClick = (Entity btn) =>
             {
-                MessageHandler.CreateMessage("LUL");
                 if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
                 {
                     if (_tempPassString == null) _tempPassString = passText.Value;

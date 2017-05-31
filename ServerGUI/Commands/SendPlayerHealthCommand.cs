@@ -12,7 +12,7 @@ namespace ServerGUI.Commands
 {
     public class SendPlayerHealthCommand : ICommand
     {
-        public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, World world)
+        public void Run(LoggerManager loggerManager, MongoClient mongoCLient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
             var outmsg = server.CreateMessage();
 
