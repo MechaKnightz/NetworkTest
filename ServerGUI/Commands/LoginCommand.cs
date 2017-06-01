@@ -40,7 +40,6 @@ namespace ServerGUI.Commands
             {
                 passHash = (string)value;
             }
-
             if (Hasher.VerifyHash(password, "SHA256", passHash))
             {
                 inc.SenderConnection.Approve();
@@ -63,7 +62,7 @@ namespace ServerGUI.Commands
             inc.SenderConnection.Approve();
             loggerManager.ServerMsg("Approved client connection");
 
-            CreatePlayer(loggerManager, inc, name, allPlayers);
+            allPlayers.Add(CreatePlayer(loggerManager, inc, name, allPlayers));
 
             NetOutgoingMessage outmsg = server.CreateMessage();
 
@@ -89,32 +88,9 @@ namespace ServerGUI.Commands
             loggerManager.ServerMsg("Approved new connection and updated the world status");
         }
 
-        private static void CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, List<Player> allPlayers)
+        private static Player CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, List<Player> allPlayers)
         {
-
-            var intersects = false;
-            for (int i = 0; i < int.MaxValue; i++)
-            {
-                intersects = false;
-                var newPlayer = new Player(name, new Vector2(i * 200, 0), 10f, 0f, 5f, 50, 3, inc.SenderConnection);
-                var circle = new Circle(newPlayer.Radius, newPlayer.X, newPlayer.Y);
-                foreach (var worldPlayer in allPlayers)
-                {
-                    intersects = false;
-                    var tempCircle = new Circle(worldPlayer.Radius, worldPlayer.X, worldPlayer.Y);
-                    if (circle.Intersect(tempCircle))
-                    {
-                        intersects = true;
-                    }
-                }
-                if (intersects)
-                {
-                    loggerManager.ServerMsg("spawnpoint obstructed, moving player to position: " + new Vector2((i + 1) * 200, 0));
-                    continue;
-                }
-                allPlayers.Add(newPlayer);
-                break;
-            }
+            return new Player(name, new Vector2(0, 0), 10f, 0f, 5f, 50, 3, inc.SenderConnection);
         }
     }
 }

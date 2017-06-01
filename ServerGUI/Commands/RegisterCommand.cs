@@ -11,7 +11,7 @@ namespace ServerGUI.Commands
 {
     public class RegisterCommand : ICommand
     {
-        private static List<Cooldown> Cooldowns = new List<Cooldown>();
+        private static readonly List<Cooldown> Cooldowns = new List<Cooldown>();
         public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
             for (int i = 0; i < Cooldowns.Count; i++)

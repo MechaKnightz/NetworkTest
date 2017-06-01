@@ -8,6 +8,7 @@ namespace Library
 {
     public class Map
     {
+        public const int TileSize = 32;
         public List<List<int>> MapData { get; set; }
 
         public Map(MapSize mapSize)

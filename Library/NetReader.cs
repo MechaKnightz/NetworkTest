@@ -16,9 +16,6 @@ namespace Library
             outmsg.Write(player.Username);
             outmsg.Write(player.X);
             outmsg.Write(player.Y);
-            outmsg.Write(player.Health);
-            outmsg.Write(player.Rotation);
-            outmsg.Write(player.Radius);
             outmsg.Write(inputId);
         }
 
@@ -27,9 +24,6 @@ namespace Library
             player.Username = inc.ReadString();
             player.X = inc.ReadFloat();
             player.Y = inc.ReadFloat();
-            player.Health = inc.ReadFloat();
-            player.Rotation = inc.ReadFloat();
-            player.Radius = inc.ReadFloat();
             return inc.ReadInt32();
         }
 

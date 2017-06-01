@@ -27,6 +27,7 @@ namespace MainGame
         private InputHelper _inputHelper;
         private SpriteFont _nameFont;
         private string _tempPassString;
+        private Texture2D _tileset;
 
         float timer = 15;
         const float TIMER = 15;
@@ -87,6 +88,7 @@ namespace MainGame
             _circleTexture = Content.Load<Texture2D>("Circle");
             _playerTexture = Content.Load<Texture2D>("PlayerCircle");
             _nameFont = Content.Load<SpriteFont>("BoxFont");
+            _tileset = Content.Load<Texture2D>("Tileset");
         }
 
         protected override void UnloadContent()
@@ -157,37 +159,37 @@ namespace MainGame
 
         private void SetCamera(Camera2D camera)
         {
-            //var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
+            var localPlayer = _netManager.CurrentRoom.Players.FirstOrDefault(x => x.Username == _netManager.Username);
 
-            //if (localPlayer == null) return;
+            if (localPlayer == null) return;
 
-            //_camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
+            _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
         }
 
         private void DrawGame(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Green);
-            //foreach (var circle in _netManager.World.Circles)
-            //{
-            //    DrawCircle(circle, Color.Red);
-            //}
-            //var localPlayer = _netManager.World.Players.FirstOrDefault(x => x.Username == _netManager.Username);
-            //foreach (var player in _netManager.World.Players)
-            //{
-            //    if(player.Username == localPlayer.Username) continue;
-            //    DrawPlayer(player, Color.LightBlue);
-            //}
-            //DrawPlayer(localPlayer, Color.Blue);
-            //foreach (var shot in _netManager.World.Shots)
-            //{
-
-            //    DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
-            //}
-            //foreach (var shot in _netManager.LocalWorld.Shots)
-            //{
-            //    DrawCircle(new Circle(shot.Radius, shot.X, shot.Y), Color.Pink);
-            //}
+            DrawMap(gameTime);
+            for (int i = 0; i < _netManager.CurrentRoom.Players.Count; i++)
+            {
+                DrawPlayer(_netManager.CurrentRoom.Players[i], Color.Red);
+            }
         }
+
+        private void DrawMap(GameTime gameTime)
+        {
+            for (int i = 0; i < _netManager.CurrentRoom.Map.MapData.Count; i++)
+            {
+                for (int j = 0; j < _netManager.CurrentRoom.Map.MapData[i].Count; j++)
+                {
+                    _spriteBatch.Draw(_tileset,
+                        new Vector2(j * Map.TileSize, i * Map.TileSize),
+                        new Rectangle(_netManager.CurrentRoom.Map.MapData[i][j] * Map.TileSize, 0, Map.TileSize, Map.TileSize),
+                        Color.White);
+                }
+            }
+        }
+
         private void OldStateChange(GameState state)
         {
             UserInterface.Clear();
@@ -238,7 +240,7 @@ namespace MainGame
                     connectMenuPanel.AddChild(passText);
                     passText.OnValueChange = entity =>
                     {
-                        if (_tempPassString == null) _tempPassString = passText.Value;
+                        if (_tempPassString == null) _tempPassString = "";
                         if (_tempPassString.Length > passText.Value.Length)
                         {
                             _tempPassString = _tempPassString.Substring(0, passText.Value.Length);
@@ -383,7 +385,7 @@ namespace MainGame
             connectMenuPanel.AddChild(passText);
             passText.OnValueChange = entity =>
             {
-                if (_tempPassString == null) _tempPassString = passText.Value;
+                if (_tempPassString == null) _tempPassString = "";
                 if (_tempPassString.Length > passText.Value.Length)
                 {
                     _tempPassString = _tempPassString.Substring(0, passText.Value.Length);
@@ -406,7 +408,7 @@ namespace MainGame
             connectButton.ButtonParagraph.Scale = 0.5f;
             connectButton.OnClick = (Entity btn) =>
             {
-                if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
+                if (nameText.Value != "" && ipText.Value != "" && portText.Value != "" && passText.Value != "")
                 {
                     if (_tempPassString == null) _tempPassString = passText.Value;
                     string temp;
