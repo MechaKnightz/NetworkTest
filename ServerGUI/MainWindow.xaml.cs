@@ -78,6 +78,8 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
 
             _cpuCounter = new PerformanceCounter("Process", "% Processor Time", Process.GetCurrentProcess().ProcessName);
             _ramCounter = new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
+
+            BtnStart_Click(_lock, new RoutedEventArgs());
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
@@ -89,7 +91,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
             {
                 try
                 {
-                    var saveString = File.ReadAllText(_filePath);
+                    //var saveString = File.ReadAllText(_filePath);
 
                     //TODO world load
                     //World.Circles = JsonConvert.DeserializeObject<List<Circle>>(saveString);

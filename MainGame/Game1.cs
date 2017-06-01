@@ -163,17 +163,33 @@ namespace MainGame
 
             if (localPlayer == null) return;
 
-            _camera.Position = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
+            var tempPos = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
+
+            tempPos.X = Clamp(tempPos.X,
+                0,
+                (float)_netManager.CurrentRoom.Map.MapSize * Map.TileSize - _halfScreen.X * 2);
+
+            tempPos.Y = Clamp(tempPos.Y,
+                0,
+                (float) _netManager.CurrentRoom.Map.MapSize * Map.TileSize - _halfScreen.Y * 2);
+
+            _camera.Position = tempPos;
         }
 
         private void DrawGame(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Green);
             DrawMap(gameTime);
+            Player localPlayer = new Player();
             for (int i = 0; i < _netManager.CurrentRoom.Players.Count; i++)
             {
                 DrawPlayer(_netManager.CurrentRoom.Players[i], Color.Red);
+                if (_netManager.CurrentRoom.Players[i].Username == _netManager.Username)
+                    localPlayer = _netManager.CurrentRoom.Players[i];
             }
+
+            _spriteBatch.DrawString(_nameFont, new Vector2(localPlayer.X, localPlayer.Y).ToString(), _camera.ScreenToWorld(0, 0), Color.White);
+
         }
 
         private void DrawMap(GameTime gameTime)
@@ -423,6 +439,11 @@ namespace MainGame
             ipText.Value = "127.0.0.1";
             portText.Value = "9911";
             //temp end
+        }
+
+        public static float Clamp(float value, float min, float max)
+        {
+            return (value < min) ? min : (value > max) ? max : value;
         }
     }
 }

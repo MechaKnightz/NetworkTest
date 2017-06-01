@@ -50,7 +50,7 @@ namespace MainGame
 
             while (true)
             {
-                if (DateTime.Now.Subtract(time).Seconds > 5)
+                if (DateTime.Now.Subtract(time).Seconds > 10)
                 {
                     msg = "Couldn't find server";
                     return false;
@@ -231,7 +231,7 @@ namespace MainGame
 
             while (true)
             {
-                if (DateTime.Now.Subtract(time).Seconds > 5)
+                if (DateTime.Now.Subtract(time).Seconds > 10)
                 {
                     msg = "Couldn't find server";
                     return true;
