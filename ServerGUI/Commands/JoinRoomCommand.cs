@@ -35,7 +35,7 @@ namespace ServerGUI.Commands
             {
                 server.SendMessage(outmsg, gameRoom.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
             }
-            loggerManager.ServerMsg(tempPlayer + " joined room " + gameRoom.Name);
+            loggerManager.ServerMsg(tempPlayer.Username + " joined room " + gameRoom.Name);
         }
 
         private GameRoom GetGameRoom(string name, List<GameRoom> gameRooms)
