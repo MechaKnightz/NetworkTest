@@ -54,17 +54,17 @@ namespace ServerGUI.Commands
         {
             var tempPlayer = (Player)player.Clone();
 
-            InputHandler.MovePlayer(tempPlayer, key);
+            InputHandler.MovePlayer(tempPlayer, gameRoom.Map, key);
 
             if(CollisionManager.CheckCollision(tempPlayer, gameRoom.Players))
             {
                 return;
             }
 
-            HandleKey(player, key);
+            HandleKey(player, gameRoom, key);
         }
 
-        private void HandleKey(Player player, Keys key)
+        private void HandleKey(Player player, GameRoom gameRoom, Keys key)
         {
             switch (key)
             {
@@ -72,16 +72,16 @@ namespace ServerGUI.Commands
                     PlayerShoot(player, key);
                     break;
                 case Keys.W:
-                    InputHandler.MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, gameRoom.Map, key);
                     break;
                 case Keys.A:
-                    InputHandler.MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, gameRoom.Map, key);
                     break;
                 case Keys.S:
-                    InputHandler.MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, gameRoom.Map, key);
                     break;
                 case Keys.D:
-                    InputHandler.MovePlayer(player, key);
+                    InputHandler.MovePlayer(player, gameRoom.Map, key);
                     break;
             }
         }

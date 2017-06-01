@@ -13,7 +13,7 @@ namespace ServerGUI
 {
     public class Server
     {
-        public NetServer NetServer { get; private set; }
+        public NetServer NetServer { get; }
         public LoggerManager LoggerManager;
         public MongoClient MongoClient { get; set; }
 
@@ -91,6 +91,7 @@ namespace ServerGUI
                         break;
                 }
             }
+            // ReSharper disable once FunctionNeverReturns
         }
 
         private void Data(NetIncomingMessage inc)
@@ -106,19 +107,57 @@ namespace ServerGUI
             {
                 foreach (var player in AllPlayers)
                 {
-                    if (player.Conn == inc.SenderConnection)
-                    {
-                        AllPlayers.Remove(player);
-                        LoggerManager.ServerMsg("Removed player " + player.Username);
-                        break;
-                    }
+                    if (player.Conn != inc.SenderConnection) continue;
+                    AllPlayers.Remove(player);
+                    LoggerManager.ServerMsg("Removed player " + player.Username);
+                    break;
                 }
             }
         }
 
         private void Update()
         {
-            //TODO
+            PlayerTileIntersection();
+
+            for (int i = 0; i < GameRooms.Count; i++)
+            {
+                for (int j = 0; j < GameRooms[i].Players.Count; j++)
+                {
+                    if (GameRooms[i].Players[j].IsDirty)
+                    {
+                        var outmsg = NetServer.CreateMessage();
+                        NetReader.WritePlayer(outmsg, GameRooms[i].Players[j]);
+
+                        for (int k = 0; k < GameRooms[i].Players.Count; k++)
+                        {
+                            NetServer.SendMessage(outmsg, GameRooms[i].Players[k].Conn,
+                                NetDeliveryMethod.ReliableOrdered);
+                        }
+                        GameRooms[i].Players[j].IsDirty = false;
+                    }
+                }
+            }
+        }
+
+        private void PlayerTileIntersection()
+        {
+            //TODO Refactor into GameRoom class
+            for (int i = 0; i < GameRooms.Count; i++)
+            {
+                for (int j = 0; j < GameRooms[i].Players.Count; j++)
+                {
+                    GameRooms[i].Intersection(GameRooms[i].Players[j]);
+                }
+            }
+
+            for (int i = 0; i < GameRooms.Count; i++)
+            {
+                for (int j = 0; j < GameRooms[i].Players.Count; j++)
+                {
+                    if(!GameRooms[i].Players[j].Falling) continue;
+                    GameRooms[i].Players[j].Y += GlobalConsts.GravityConst;
+                }
+            }
         }
 
         private static GameRoom GetGameRoom(Player player, List<GameRoom> gameRooms)

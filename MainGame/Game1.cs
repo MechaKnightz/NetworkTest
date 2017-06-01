@@ -178,7 +178,7 @@ namespace MainGame
 
         private void DrawGame(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Green);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
             DrawMap(gameTime);
             Player localPlayer = new Player();
             for (int i = 0; i < _netManager.CurrentRoom.Players.Count; i++)
@@ -334,12 +334,10 @@ namespace MainGame
             var tempRect = new Rectangle(
                 Convert.ToInt16(player.X),
                 Convert.ToInt16(player.Y),
-                Convert.ToInt16(50 * 2),
-                Convert.ToInt16(50 * 2));
+                Convert.ToInt16(Player.Width),
+                Convert.ToInt16(Player.Height));
 
-            var origin = new Vector2(_playerTexture.Width / 2f, _playerTexture.Height / 2f);
-
-            _spriteBatch.Draw(_playerTexture, destinationRectangle: tempRect, color: Color.Blue, rotation: player.Rotation, origin: origin);
+            _spriteBatch.Draw(_playerTexture, tempRect, color);
 
             _spriteBatch.DrawString(_nameFont,
                 player.Username,

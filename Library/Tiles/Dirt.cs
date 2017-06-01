@@ -29,9 +29,29 @@ namespace Library.Tiles
             return this;
         }
 
+        public bool IfIntersects()
+        {
+            return true;
+        }
+
         public Dirt()
         {
             Id = 1;
+        }
+
+        public Rectangle GetCollisionRectangle()
+        {
+            return new Rectangle(0, 0, Map.TileSize, Map.TileSize);
+        }
+
+        public Rectangle GetClickRectangle()
+        {
+            return new Rectangle(0, 0, Map.TileSize, Map.TileSize);
+        }
+
+        public void OnClick()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="Angle.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="GameRoom.cs" />
+    <Compile Include="GlobalConsts.cs" />
     <Compile Include="InputHandler.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapSize.cs" />

@@ -10,27 +10,21 @@ namespace Library
 {
     public static class InputHandler
     {
-        public static void MovePlayer(Player player, Keys key)
+        public static void MovePlayer(Player player, Map map, Keys key)
         {
             switch (key)
             {
                 case Keys.W:
-                    player.X = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).X;
-                    player.Y = Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation, player.Speed).Y;
+                    //TODO
                     break;
                 case Keys.A:
-                    player.Rotation -= 0.05f;
+                    if(player.X > 0) player.X -= player.Speed;
                     break;
                 case Keys.S:
-                    player.X =
-                        Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI,
-                            player.Speed / 5 * 2).X;
-                    player.Y =
-                        Angle.MoveAngle(new Vector2(player.X, player.Y), player.Rotation + (float)Math.PI,
-                            player.Speed / 5 * 2).Y;
+                    //TODO
                     break;
                 case Keys.D:
-                    player.Rotation += 0.05f;
+                    if(player.X + Player.Width < Map.TileSize * (int) map.MapSize) player.X += player.Speed;
                     break;
             }
         }

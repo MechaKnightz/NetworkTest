@@ -113,7 +113,7 @@ namespace MainGame
 
             if (localPlayer != null)
             {
-                InputHandler.MovePlayer(localPlayer, key);
+                InputHandler.MovePlayer(localPlayer, CurrentRoom.Map, key);
             }
 
             outmsg.Write((byte)key);
@@ -155,8 +155,6 @@ namespace MainGame
                     {
                         oldPlayer.X = incPlayer.X;
                         oldPlayer.Y = incPlayer.Y;
-                        oldPlayer.Rotation = incPlayer.Rotation;
-                        oldPlayer.Health = incPlayer.Health;
 
                         if (inputId != -1)
                         {
@@ -198,7 +196,7 @@ namespace MainGame
             {
                 if(inputId > i) continue;
 
-                InputHandler.MovePlayer(player, Input[i]);
+                InputHandler.MovePlayer(player, CurrentRoom.Map, Input[i]);
             }
         }
 

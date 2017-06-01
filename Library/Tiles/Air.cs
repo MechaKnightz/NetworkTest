@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using MapMaker.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,10 +11,10 @@ namespace Library.Tiles
         public float Id { get; set; }
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
         {
-            spriteBatch.Draw(tileset,
-                pos,
-                new Rectangle((int)Id * Map.TileSize, 0, Map.TileSize, Map.TileSize),
-                Color.White);
+            //spriteBatch.Draw(tileset,
+            //    pos,
+            //    new Rectangle((int)Id * Map.TileSize, 0, Map.TileSize, Map.TileSize),
+            //    Color.White);
         }
 
         public void Write(NetOutgoingMessage outmsg)
@@ -26,6 +27,26 @@ namespace Library.Tiles
             Id = inc.ReadFloat();
 
             return this;
+        }
+
+        public bool IfIntersects()
+        {
+            return false;
+        }
+
+        public Rectangle GetCollisionRectangle()
+        {
+            return Rectangle.Empty;
+        }
+
+        public Rectangle GetClickRectangle()
+        {
+            return new Rectangle(0, 0, Map.TileSize, Map.TileSize);
+        }
+
+        public void OnClick()
+        {
+            throw new NotImplementedException();
         }
 
         public Air()

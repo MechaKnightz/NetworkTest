@@ -19,21 +19,41 @@ namespace Library
             Radius = radius;
             Cooldown = cooldown;
             Conn = conn;
+            Falling = true;
         }
 
         public const float Width = Map.TileSize * 2;
         public const float Height = Map.TileSize * 3;
 
+        public bool IsDirty;
+        public bool Falling;
         public float Speed;
         public float Rotation;
         public float Health;
-        public float X;
-        public float Y;
         public float Radius;
         public float Cooldown;
         public NetConnection Conn;
 
-        public DateTime ShotLast;
+        private float _x;
+        public float X
+        {
+            get { return _x; }
+            set
+            {
+                _x = value;
+                IsDirty = true;
+            }
+        }
+        private float _y;
+        public float Y
+        {
+            get { return _y; }
+            set
+            {
+                _y = value;
+                IsDirty = true;
+            }
+        }
 
         public object Clone()
         {
