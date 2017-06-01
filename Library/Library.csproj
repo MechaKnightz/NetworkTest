@@ -65,6 +65,7 @@
     <Compile Include="Shot.cs" />
     <Compile Include="StringCheck.cs" />
     <Compile Include="Tiles\Air.cs" />
+    <Compile Include="Tiles\Dirt.cs" />
     <Compile Include="Tiles\ITile.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,11 +1,12 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using MapMaker.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Library.Tiles
 {
-    public class Air : ITile
+    public class Dirt : ITile
     {
         public float Id { get; set; }
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
@@ -28,9 +29,9 @@ namespace Library.Tiles
             return this;
         }
 
-        public Air()
+        public Dirt()
         {
-            Id = 0;
+            Id = 1;
         }
     }
 }

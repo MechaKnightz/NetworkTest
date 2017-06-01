@@ -194,16 +194,7 @@ namespace MainGame
 
         private void DrawMap(GameTime gameTime)
         {
-            for (int i = 0; i < _netManager.CurrentRoom.Map.MapData.Count; i++)
-            {
-                for (int j = 0; j < _netManager.CurrentRoom.Map.MapData[i].Count; j++)
-                {
-                    _spriteBatch.Draw(_tileset,
-                        new Vector2(j * Map.TileSize, i * Map.TileSize),
-                        new Rectangle(_netManager.CurrentRoom.Map.MapData[i][j] * Map.TileSize, 0, Map.TileSize, Map.TileSize),
-                        Color.White);
-                }
-            }
+            _netManager.CurrentRoom.Map.Draw(_spriteBatch, _tileset);
         }
 
         private void OldStateChange(GameState state)

@@ -59,8 +59,7 @@ namespace ServerGUI.Commands
             if (documentTest == null)
             {
                 var document = new BsonDocument
-                {
-                    { "count", 0 },
+                { 
                     { "Username", name},
                     { "Password", Hasher.ComputeHash(password, "SHA256", null) }
                 };

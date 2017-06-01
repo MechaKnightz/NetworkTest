@@ -84,7 +84,7 @@ namespace Library
                 outmsg.Write(columnLength);
                 for (int j = 0; j < columnLength; j++)
                 {
-                    outmsg.Write(map.MapData[i][j]);
+                    map.MapData[i][j].Write(outmsg);
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace Library
                 var columnLength = inc.ReadInt32();
                 for (int j = 0; j < columnLength; j++)
                 {
-                    map.MapData[i][j] = inc.ReadInt32();
+                    map.MapData[i][j] = map.MapData[i][j].Read(inc);
                 }
             }
         }

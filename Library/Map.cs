@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Library.Tiles;
+using MapMaker.Tiles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Library
 {
@@ -10,12 +10,12 @@ namespace Library
     {
         public const int TileSize = 32;
 
-        public List<List<int>> MapData { get; set; }
+        public List<List<ITile>> MapData { get; set; }
         public MapSize MapSize { get; set; }
 
         public Map(MapSize mapSize)
         {
-            MapData = new List<List<int>>((int)mapSize);
+            MapData = new List<List<ITile>>((int)mapSize);
             MapSize = mapSize;
 
             GenerateMap(mapSize);
@@ -25,15 +25,25 @@ namespace Library
         {
             for (int i = 0; i < MapData.Capacity; i++)
             {
-                var tempList = new List<int>((int)mapSize);
+                var tempList = new List<ITile>((int)mapSize);
                 for (int j = 0; j < tempList.Capacity; j++)
                 {
-                    if (i > 32) tempList.Add(1);
-                    else if (i == 32) tempList.Add(2);
-                    else tempList.Add(0);
+                    if (i > 32) tempList.Add(new Dirt());
+                    else tempList.Add(new Air());
                 }
 
                 MapData.Add(tempList);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
+        {
+            for (int i = 0; i < MapData.Count; i++)
+            {
+                for (int j = 0; j < MapData[i].Count; j++)
+                {
+                    MapData[i][j].Draw(spriteBatch, tileset, new Vector2(j * TileSize, i * TileSize));
+                }
             }
         }
     }
