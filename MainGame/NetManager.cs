@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Library;
-using Library.Messenger;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -161,7 +160,7 @@ namespace MainGame
 
                         if (inputId != -1)
                         {
-                            LagCompensate(oldPlayer, inputId);
+                            InputPrediction(oldPlayer, inputId);
                         }
                     }
                     else
@@ -193,7 +192,7 @@ namespace MainGame
             }
         }
 
-        private void LagCompensate(Player player, int inputId)
+        private void InputPrediction(Player player, int inputId)
         {
             for (int i = 0; i < Input.Count; i++)
             {
