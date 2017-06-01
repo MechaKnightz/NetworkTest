@@ -21,6 +21,9 @@ namespace Library
             Conn = conn;
         }
 
+        public const float Width = Map.TileSize * 2;
+        public const float Height = Map.TileSize * 3;
+
         public float Speed;
         public float Rotation;
         public float Health;

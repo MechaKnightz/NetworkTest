@@ -28,7 +28,8 @@ namespace Library
                 var tempList = new List<int>((int)mapSize);
                 for (int j = 0; j < tempList.Capacity; j++)
                 {
-                    if(i >= 32) tempList.Add(1);
+                    if (i > 32) tempList.Add(1);
+                    else if (i == 32) tempList.Add(2);
                     else tempList.Add(0);
                 }
 
