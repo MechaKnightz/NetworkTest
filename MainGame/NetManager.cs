@@ -104,7 +104,7 @@ namespace MainGame
         {
             var outmsg = Client.CreateMessage();
 
-            outmsg.Write((byte)PacketTypes.Move);
+            outmsg.Write((byte)PacketTypes.Input);
 
             Input.Add(key);
             outmsg.Write(Input.Count - 1);

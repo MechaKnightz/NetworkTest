@@ -125,12 +125,12 @@ namespace ServerGUI
                 {
                     if (GameRooms[i].Players[j].IsDirty)
                     {
-                        var outmsg = NetServer.CreateMessage();
-                        outmsg.Write((byte)PacketTypes.PlayerPosition);
-                        NetReader.WritePlayer(outmsg, GameRooms[i].Players[j]);
-
                         for (int k = 0; k < GameRooms[i].Players.Count; k++)
                         {
+                            var outmsg = NetServer.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.PlayerPosition);
+                            NetReader.WritePlayer(outmsg, GameRooms[i].Players[j]);
+
                             NetServer.SendMessage(outmsg, GameRooms[i].Players[k].Conn,
                                 NetDeliveryMethod.ReliableOrdered);
                         }

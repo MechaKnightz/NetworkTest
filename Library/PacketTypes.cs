@@ -12,7 +12,7 @@ namespace Library
         Register,
         PlayerPosition,
         AllPlayerPosition,
-        Move,
+        Input,
         StartState,
         PlayerHealth,
         JoinRoom,

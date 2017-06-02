@@ -14,7 +14,7 @@ namespace ServerGUI.Commands
                     break;
                 case PacketTypes.AllPlayerPosition:
                     break;
-                case PacketTypes.Move:
+                case PacketTypes.Input:
                     return new InputCommand();
                 case PacketTypes.StartState:
                     break;
