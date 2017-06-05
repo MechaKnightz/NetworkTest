@@ -29,11 +29,6 @@ namespace Library.Tiles
             return this;
         }
 
-        public bool IfIntersects()
-        {
-            return false;
-        }
-
         public Rectangle GetCollisionRectangle(int x, int y)
         {
             return Rectangle.Empty;

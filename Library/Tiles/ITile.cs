@@ -11,7 +11,6 @@ namespace MapMaker.Tiles
         void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos);
         void Write(NetOutgoingMessage outmsg);
         ITile Read(NetIncomingMessage inc);
-        bool IfIntersects();
         Rectangle GetCollisionRectangle(int x, int y);
         Rectangle GetClickRectangle();
         void OnClick();

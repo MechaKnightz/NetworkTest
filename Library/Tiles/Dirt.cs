@@ -29,11 +29,6 @@ namespace Library.Tiles
             return this;
         }
 
-        public bool IfIntersects()
-        {
-            return true;
-        }
-
         public Dirt()
         {
             Id = 1;

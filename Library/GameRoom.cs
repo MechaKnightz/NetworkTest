@@ -47,10 +47,7 @@ namespace Library
 
                     if (tempRect.Intersects(tempRect2))
                     {
-                        if (Map.MapData[i][j].IfIntersects())
-                        {
-                            player.Falling = false;
-                        }
+                        player.Falling = false;
                     }
                 }
             }
