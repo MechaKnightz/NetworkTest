@@ -164,9 +164,12 @@ namespace ServerGUI
             {
                 for (int j = 0; j < GameRooms[i].Players.Count; j++)
                 {
-                    if(!GameRooms[i].Players[j].Falling) continue;
+                    if (!GameRooms[i].Players[j].Falling)
+                    {
+                        GameRooms[i].Players[j].Falling = true;
+                        continue;
+                    }
                     GameRooms[i].Players[j].Y += GlobalConsts.GravityConst;
-                    GameRooms[i].Players[j].Falling = true;
                 }
             }
         }
