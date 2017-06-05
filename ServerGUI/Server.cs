@@ -135,9 +135,15 @@ namespace ServerGUI
             return null;
         }
 
-        public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player, List<GameRoom> gameRooms)
+        public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player,
+            List<GameRoom> gameRooms)
         {
             var room = GetGameRoom(player, gameRooms);
+            SendToGameRoomPlayers(server, outmsg, room);
+        }
+
+        public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, GameRoom room)
+        {
             var recipients = new List<NetConnection>();
             for (int i = 0; i < room.Players.Count; i++)
             {

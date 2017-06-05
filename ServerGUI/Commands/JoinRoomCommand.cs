@@ -23,15 +23,13 @@ namespace ServerGUI.Commands
             var command = new SendRoomStartState();
             command.Run(loggerManager, mongoClient, server, inc, player, allPlayers, gameRooms);
 
-            for (int i = 0; i < gameRoom.Players.Count; i++)
-            {
-                var outmsg = server.CreateMessage();
+            var outmsg = server.CreateMessage();
 
-                outmsg.Write((byte)PacketTypes.PlayerPosition);
-                NetReader.WritePlayer(outmsg, tempPlayer);
+            outmsg.Write((byte)PacketTypes.PlayerPosition);
+            NetReader.WritePlayer(outmsg, tempPlayer);
 
-                server.SendMessage(outmsg, gameRoom.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
-            }
+            Server.SendToGameRoomPlayers(server, outmsg, gameRoom);
+
             loggerManager.ServerMsg(tempPlayer.Username + " joined room " + gameRoom.Name);
         }
 
