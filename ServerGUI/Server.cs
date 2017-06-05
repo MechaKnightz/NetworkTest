@@ -57,6 +57,7 @@ namespace ServerGUI
 
             while (true)
             {
+                //TODO fix server loop stopping after 2 room joins
                 NetIncomingMessage inc;
                 if ((inc = NetServer.ReadMessage()) == null) continue;
                 switch (inc.MessageType)
@@ -91,7 +92,6 @@ namespace ServerGUI
                         break;
                 }
             }
-            // ReSharper disable once FunctionNeverReturns
         }
 
         private void Data(NetIncomingMessage inc)
@@ -108,8 +108,9 @@ namespace ServerGUI
                 foreach (var player in AllPlayers)
                 {
                     if (player.Conn != inc.SenderConnection) continue;
-                    AllPlayers.Remove(player);
-                    LoggerManager.ServerMsg("Removed player " + player.Username);
+
+                    var command = new KickPlayerCommand();
+                    command.Run(LoggerManager, MongoClient, NetServer, null, player, AllPlayers, GameRooms);
                     break;
                 }
             }
@@ -129,7 +130,15 @@ namespace ServerGUI
                         {
                             var outmsg = NetServer.CreateMessage();
                             outmsg.Write((byte)PacketTypes.PlayerPosition);
-                            NetReader.WritePlayer(outmsg, GameRooms[i].Players[j]);
+
+                            if (GameRooms[i].Players[k].Username == GameRooms[i].Players[j].Username)
+                            {
+                                NetReader.WritePlayer(outmsg, GameRooms[i].Players[j], GameRooms[i].Players[j].LatestInput);
+                            }
+                            else
+                            {
+                                NetReader.WritePlayer(outmsg, GameRooms[i].Players[j]);
+                            }
 
                             NetServer.SendMessage(outmsg, GameRooms[i].Players[k].Conn,
                                 NetDeliveryMethod.ReliableOrdered);
@@ -157,6 +166,7 @@ namespace ServerGUI
                 {
                     if(!GameRooms[i].Players[j].Falling) continue;
                     GameRooms[i].Players[j].Y += GlobalConsts.GravityConst;
+                    GameRooms[i].Players[j].Falling = true;
                 }
             }
         }
@@ -171,6 +181,16 @@ namespace ServerGUI
                 }
             }
             return null;
+        }
+
+        public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player, List<GameRoom> gameRooms)
+        {
+            var room = GetGameRoom(player, gameRooms);
+
+            for (int i = 0; i < room.Players.Count; i++)
+            {
+                server.SendMessage(outmsg, room.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
+            }
         }
     }
 }

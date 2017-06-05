@@ -33,6 +33,7 @@ namespace Library
         public float Radius;
         public float Cooldown;
         public NetConnection Conn;
+        public int LatestInput;
 
         private float _x;
         public float X

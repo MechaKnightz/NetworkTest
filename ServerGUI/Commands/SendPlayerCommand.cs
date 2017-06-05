@@ -12,10 +12,9 @@ namespace ServerGUI.Commands
 {
     public class SendPlayerCommand : ICommand
     {
-        private readonly int _inputId = -1;
-        public SendPlayerCommand() { }
+        private readonly int _inputId;
 
-        public SendPlayerCommand(int inputId)
+        public SendPlayerCommand(int inputId = -1)
         {
             _inputId = inputId;
         }

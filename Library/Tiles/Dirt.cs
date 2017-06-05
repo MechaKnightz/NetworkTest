@@ -39,9 +39,9 @@ namespace Library.Tiles
             Id = 1;
         }
 
-        public Rectangle GetCollisionRectangle()
+        public Rectangle GetCollisionRectangle(int x, int y)
         {
-            return new Rectangle(0, 0, Map.TileSize, Map.TileSize);
+            return new Rectangle(x, y, Map.TileSize, Map.TileSize);
         }
 
         public Rectangle GetClickRectangle()

@@ -113,23 +113,18 @@ namespace MainGame
 
             if (localPlayer != null)
             {
-                InputHandler.MovePlayer(localPlayer, CurrentRoom.Map, key);
+                CurrentRoom.HandleInput(localPlayer, key);
             }
 
             outmsg.Write((byte)key);
 
             Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
+
         public void CheckServerMessages(GameTime gameTime)
         {
-            // Create new incoming message holder
             NetIncomingMessage inc;
 
-            // While theres new messages
-            //
-            // THIS is exactly the same as in WaitForStartingInfo() function
-            // Check if its Data message
-            // If its PlayerPos, read all the characters to list
             while ((inc = Client.ReadMessage()) != null)
             {
                 if (inc.MessageType == NetIncomingMessageType.Data)
@@ -186,6 +181,16 @@ namespace MainGame
                     var player = CurrentRoom.Players.FirstOrDefault(x => x.Username == playerName);
 
                     if(player != null) player.Health = playerHealth;
+                    break;
+                case PacketTypes.PlayerLeave:
+
+                    var name = inc.ReadString();
+
+                    for (int i = 0; i < CurrentRoom.Players.Count; i++)
+                    {
+                        if(CurrentRoom.Players[i].Username == name) CurrentRoom.Players.RemoveAt(i);
+                    }
+
                     break;
             }
         }

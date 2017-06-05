@@ -34,7 +34,7 @@ namespace Library.Tiles
             return false;
         }
 
-        public Rectangle GetCollisionRectangle()
+        public Rectangle GetCollisionRectangle(int x, int y)
         {
             return Rectangle.Empty;
         }

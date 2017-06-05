@@ -16,6 +16,7 @@ namespace Library
         StartState,
         PlayerHealth,
         JoinRoom,
-        RoomStartState
+        RoomStartState,
+        PlayerLeave
     }
 }

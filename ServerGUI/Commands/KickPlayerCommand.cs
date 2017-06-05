@@ -14,16 +14,32 @@ namespace ServerGUI.Commands
     {
         public void Run(LoggerManager loggerManager, MongoClient mongoCLient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
-            loggerManager.ServerMsg(player.Username + " has been kicked from the server.");
-            allPlayers.Remove(player);
+            for (int i = 0; i < allPlayers.Count; i++)
+            {
+                if(player.Username == allPlayers[i].Username) allPlayers.RemoveAt(i);
+            }
             for (int i = 0; i < gameRooms.Count; i++)
             {
-                var tempPlayer = gameRooms[i].Players.FirstOrDefault(x => x.Username == player.Username);
-                if (tempPlayer != null)
+                for (int j = 0; j < gameRooms[i].Players.Count; j++)
                 {
-                    gameRooms[i].Players.Remove(tempPlayer);
+                    if (gameRooms[i].Players[j].Username == player.Username)
+                    {
+                        gameRooms[i].Players.RemoveAt(j);
+
+                        for (int k = 0; k < gameRooms[i].Players.Count; k++)
+                        {
+                            var outmsg = server.CreateMessage();
+
+                            outmsg.Write((byte)PacketTypes.PlayerLeave);
+
+                            outmsg.Write(gameRooms[i].Players[j].Username);
+
+                            server.SendMessage(outmsg, gameRooms[i].Players[k].Conn, NetDeliveryMethod.ReliableOrdered);
+                        }
+                    }
                 }
             }
+            loggerManager.ServerMsg(player.Username + " has been removed from the server.");
         }
     }
 }

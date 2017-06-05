@@ -29,6 +29,7 @@ namespace Library
                 for (int j = 0; j < tempList.Capacity; j++)
                 {
                     if (i > 32) tempList.Add(new Dirt());
+                    else if(i == 32 && j == 0) tempList.Add(new Dirt());
                     else tempList.Add(new Air());
                 }
 

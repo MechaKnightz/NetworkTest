@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
 using MongoDB.Driver;
@@ -26,13 +23,13 @@ namespace ServerGUI.Commands
             var command = new SendRoomStartState();
             command.Run(loggerManager, mongoClient, server, inc, player, allPlayers, gameRooms);
 
-            var outmsg = server.CreateMessage();
-            
-            outmsg.Write((byte)PacketTypes.PlayerPosition);
-            NetReader.WritePlayer(outmsg, tempPlayer);
-            
             for (int i = 0; i < gameRoom.Players.Count; i++)
             {
+                var outmsg = server.CreateMessage();
+
+                outmsg.Write((byte)PacketTypes.PlayerPosition);
+                NetReader.WritePlayer(outmsg, tempPlayer);
+
                 server.SendMessage(outmsg, gameRoom.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
             }
             loggerManager.ServerMsg(tempPlayer.Username + " joined room " + gameRoom.Name);

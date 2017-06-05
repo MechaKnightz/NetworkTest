@@ -141,7 +141,7 @@ namespace MainGame
 
         private void DrawMainMenu(GameTime gameTime)
         {
-            _spriteBatch.GraphicsDevice.Clear(Color.White);
+            _spriteBatch.GraphicsDevice.Clear(Color.Black);
         }
 
         private void GameLogic(GameTime gameTime)
@@ -189,6 +189,7 @@ namespace MainGame
             }
 
             _spriteBatch.DrawString(_nameFont, new Vector2(localPlayer.X, localPlayer.Y).ToString(), _camera.ScreenToWorld(0, 0), Color.White);
+            _spriteBatch.DrawString(_nameFont, gameTime.TotalGameTime.ToString(), _camera.ScreenToWorld(0, 50), Color.White);
 
         }
 
