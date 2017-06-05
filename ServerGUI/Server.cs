@@ -120,6 +120,33 @@ namespace ServerGUI
         {
             GameRoom.GravityMovePlayers(GameRooms);
 
+            SendPlayerIfDirty();
+        }
+
+        private static GameRoom GetGameRoom(Player player, List<GameRoom> gameRooms)
+        {
+            foreach (var room in gameRooms)
+            {
+                if (room.Players.Any(x => x.Username == player.Username))
+                {
+                    return room;
+                }
+            }
+            return null;
+        }
+
+        public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player, List<GameRoom> gameRooms)
+        {
+            var room = GetGameRoom(player, gameRooms);
+
+            for (int i = 0; i < room.Players.Count; i++)
+            {
+                server.SendMessage(outmsg, room.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        private void SendPlayerIfDirty()
+        {
             for (int i = 0; i < GameRooms.Count; i++)
             {
                 for (int j = 0; j < GameRooms[i].Players.Count; j++)
@@ -146,28 +173,6 @@ namespace ServerGUI
                         GameRooms[i].Players[j].IsDirty = false;
                     }
                 }
-            }
-        }
-
-        private static GameRoom GetGameRoom(Player player, List<GameRoom> gameRooms)
-        {
-            foreach (var room in gameRooms)
-            {
-                if (room.Players.Any(x => x.Username == player.Username))
-                {
-                    return room;
-                }
-            }
-            return null;
-        }
-
-        public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player, List<GameRoom> gameRooms)
-        {
-            var room = GetGameRoom(player, gameRooms);
-
-            for (int i = 0; i < room.Players.Count; i++)
-            {
-                server.SendMessage(outmsg, room.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
             }
         }
     }
