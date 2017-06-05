@@ -28,34 +28,25 @@ namespace Library
             Map = new Map(MapSize.Medium);
         }
 
-        public void Intersection(Player player)
+        public void GravityMove(Player player)
         {
-            var rectangle = new Rectangle(Convert.ToInt32(player.X),
-                Convert.ToInt32(player.Y),
-                Convert.ToInt32(Player.Width),
-                Convert.ToInt32(Player.Height));
-
-
-            for (int i = 0; i < Map.MapData.Count; i++)
-            {
-                for (int j = 0; j < Map.MapData[i].Count; j++)
-                {
-                    var tempRect = Map.MapData[i][j].GetCollisionRectangle(j * Map.TileSize, i * Map.TileSize);
-
-                    var tempRect2 = rectangle;
-                    tempRect2.Y += (int)GlobalConsts.GravityConst;
-
-                    if (tempRect.Intersects(tempRect2))
-                    {
-                        player.Falling = false;
-                    }
-                }
-            }
+            InputHandler.MoveWithCollisionCheck(new Vector2(0, GlobalConsts.GravityConst), player, Map);
         }
 
         public void HandleInput(Player player, Keys key)
         {
             InputHandler.MovePlayer(player, Map, key);
+        }
+
+        public static void GravityMovePlayers(List<GameRoom> gameRooms)
+        {
+            for (int i = 0; i < gameRooms.Count; i++)
+            {
+                for (int j = 0; j < gameRooms[i].Players.Count; j++)
+                {
+                    gameRooms[i].GravityMove(gameRooms[i].Players[j]);
+                }
+            }
         }
     }
 }

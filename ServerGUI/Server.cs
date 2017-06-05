@@ -118,7 +118,7 @@ namespace ServerGUI
 
         private void Update()
         {
-            PlayerTileIntersection();
+            GameRoom.GravityMovePlayers(GameRooms);
 
             for (int i = 0; i < GameRooms.Count; i++)
             {
@@ -145,30 +145,6 @@ namespace ServerGUI
                         }
                         GameRooms[i].Players[j].IsDirty = false;
                     }
-                }
-            }
-        }
-
-        private void PlayerTileIntersection()
-        {
-            //TODO Refactor into GameRoom class
-            for (int i = 0; i < GameRooms.Count; i++)
-            {
-                for (int j = 0; j < GameRooms[i].Players.Count; j++)
-                {
-                    GameRooms[i].Intersection(GameRooms[i].Players[j]);
-                }
-            }
-
-            for (int i = 0; i < GameRooms.Count; i++)
-            {
-                for (int j = 0; j < GameRooms[i].Players.Count; j++)
-                {
-                    if (GameRooms[i].Players[j].Falling)
-                    {
-                        GameRooms[i].Players[j].Y += GlobalConsts.GravityConst;
-                    }
-                    else GameRooms[i].Players[j].Falling = true;
                 }
             }
         }
