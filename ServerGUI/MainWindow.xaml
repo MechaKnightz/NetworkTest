@@ -38,7 +38,7 @@
         <TextBox x:Name="TxbCommand" Padding="0" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="{Binding CommandBox, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Width="168" Height="25" KeyDown="TxbCommand_KeyDown" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
         <Button x:Name="BtnCommand" Content=">" HorizontalAlignment="Left" Padding="0" Margin="183,0,0,10" VerticalAlignment="Bottom" Width="25" Height="25" Click="BtnCommand_Click" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin"/>
         <GroupBox x:Name="PlayersGroupBox" Header="Players" HorizontalAlignment="Left" Margin="10,145,0,40" Width="198" d:LayoutOverrides="LeftMargin, RightMargin">
-            <DataGrid x:Name="PlayersDataGrid" VerticalAlignment="Top" ItemsSource="{Binding Players, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid x:Name="PlayersDataGrid" VerticalAlignment="Top" ItemsSource="{Binding AllPlayers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="ColumnUsername" Binding="{Binding Username}" Header="Username" Width="*"/>
                 </DataGrid.Columns>

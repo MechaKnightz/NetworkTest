@@ -50,7 +50,7 @@ namespace ServerGUI
 
             //temp
             string destPath = Path.Combine(
-Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\MongoLogin\");
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMaker\MongoLogin\");
 
             Directory.CreateDirectory(destPath);
 
@@ -67,7 +67,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
 
             _server = new Server(LoggerManager, AllPlayers, mongoName, mongoPass);
 
-            PlayersDataGrid.DataContext = this;
+            PlayersDataGrid.DataContext = _server;
             ConsoleDataGrid.DataContext = LoggerManager;
             TxbCommand.DataContext = this;
 
@@ -246,7 +246,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MapMak
             }
 
             var command = new KickPlayerCommand();
-            command.Run(LoggerManager, null, null, null, player, AllPlayers, null);
+            command.Run(LoggerManager, null, null, null, player, _server.AllPlayers, _server.GameRooms);
         }
 
         public float GetCpuUsage()

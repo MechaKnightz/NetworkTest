@@ -13,9 +13,9 @@ namespace ServerGUI
 {
     public class Server
     {
-        public NetServer NetServer { get; }
-        public LoggerManager LoggerManager;
-        public MongoClient MongoClient { get; set; }
+        private NetServer NetServer { get; }
+        private LoggerManager LoggerManager;
+        private MongoClient MongoClient { get; }
 
         public List<GameRoom> GameRooms { get; set; }
         public List<Player> AllPlayers { get; set; }
@@ -138,11 +138,12 @@ namespace ServerGUI
         public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player, List<GameRoom> gameRooms)
         {
             var room = GetGameRoom(player, gameRooms);
-
+            var recipients = new List<NetConnection>();
             for (int i = 0; i < room.Players.Count; i++)
             {
-                server.SendMessage(outmsg, room.Players[i].Conn, NetDeliveryMethod.ReliableOrdered);
+                recipients.Add(room.Players[i].Conn);
             }
+            server.SendMessage(outmsg, recipients, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
         private void SendPlayerIfDirty()
