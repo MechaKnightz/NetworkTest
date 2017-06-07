@@ -8,7 +8,20 @@ namespace Library.Tiles
 {
     public class Dirt : ITile
     {
-        public float Id { get; set; }
+        public TileType Id { get; set; }
+        public bool Dirty { get; set; }
+
+        private int _health;
+        public int Health
+        {
+            get { return _health; }
+            set
+            {
+                _health = value;
+                Dirty = true;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
         {
             spriteBatch.Draw(tileset,
@@ -19,19 +32,22 @@ namespace Library.Tiles
 
         public void Write(NetOutgoingMessage outmsg)
         {
-            outmsg.Write(Id);
+            outmsg.Write((byte)Id);
+            outmsg.Write(Health);
         }
 
         public ITile Read(NetIncomingMessage inc)
         {
-            Id = inc.ReadFloat();
-
+            Id = (TileType)inc.ReadByte();
+            Health = inc.ReadInt32();
             return this;
         }
 
         public Dirt()
         {
-            Id = 1;
+            Id = TileType.Dirt;
+            Health = 10;
+            Dirty = false;
         }
 
         public Rectangle GetCollisionRectangle(int x, int y)
@@ -39,14 +55,14 @@ namespace Library.Tiles
             return new Rectangle(x, y, Map.TileSize, Map.TileSize);
         }
 
-        public Rectangle GetClickRectangle()
+        public Rectangle GetClickRectangle(int x, int y)
         {
-            return new Rectangle(0, 0, Map.TileSize, Map.TileSize);
+            return new Rectangle(x, y, Map.TileSize, Map.TileSize);
         }
 
-        public void OnClick()
+        public void OnLeftClick()
         {
-            throw new NotImplementedException();
+            Health--;
         }
     }
 }

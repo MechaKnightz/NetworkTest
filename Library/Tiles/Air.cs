@@ -8,7 +8,10 @@ namespace Library.Tiles
 {
     public class Air : ITile
     {
-        public float Id { get; set; }
+        public TileType Id { get; set ; }
+        public int Health { get; set; }
+        public bool Dirty { get; set; }
+
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
         {
             //spriteBatch.Draw(tileset,
@@ -19,13 +22,12 @@ namespace Library.Tiles
 
         public void Write(NetOutgoingMessage outmsg)
         {
-            outmsg.Write(Id);
+            outmsg.Write((byte)Id);
         }
 
         public ITile Read(NetIncomingMessage inc)
         {
-            Id = inc.ReadFloat();
-
+            Id = (TileType)inc.ReadByte();
             return this;
         }
 
@@ -34,19 +36,21 @@ namespace Library.Tiles
             return Rectangle.Empty;
         }
 
-        public Rectangle GetClickRectangle()
+        public Rectangle GetClickRectangle(int x, int y)
         {
-            return new Rectangle(0, 0, Map.TileSize, Map.TileSize);
+            return new Rectangle(x, y, Map.TileSize, Map.TileSize);
         }
 
-        public void OnClick()
+        public void OnLeftClick()
         {
-            throw new NotImplementedException();
+            
         }
 
         public Air()
         {
-            Id = 0;
+            Id = TileType.Air;
+            Health = 1;
+            Dirty = false;
         }
     }
 }

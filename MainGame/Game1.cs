@@ -154,7 +154,7 @@ namespace MainGame
                 timer = TIMER;
             }
             SetCamera(_camera);
-            _inputManager.Update();
+            _inputManager.Update(_camera);
         }
 
         private void SetCamera(Camera2D camera)
@@ -190,6 +190,7 @@ namespace MainGame
 
             _spriteBatch.DrawString(_nameFont, new Vector2(localPlayer.X, localPlayer.Y).ToString(), _camera.ScreenToWorld(0, 0), Color.White);
             _spriteBatch.DrawString(_nameFont, gameTime.TotalGameTime.ToString(), _camera.ScreenToWorld(0, 50), Color.White);
+            _spriteBatch.DrawString(_nameFont, _netManager.CurrentRoom.Name, _camera.ScreenToWorld(0, 100), Color.White);
 
         }
 

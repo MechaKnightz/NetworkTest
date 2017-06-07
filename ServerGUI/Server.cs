@@ -121,9 +121,11 @@ namespace ServerGUI
             GameRoom.GravityMovePlayers(GameRooms);
 
             SendPlayerIfDirty();
+
+            SendTileIfDirty();
         }
 
-        private static GameRoom GetGameRoom(Player player, List<GameRoom> gameRooms)
+        public static GameRoom GetGameRoom(Player player, List<GameRoom> gameRooms)
         {
             foreach (var room in gameRooms)
             {
@@ -133,6 +135,11 @@ namespace ServerGUI
                 }
             }
             return null;
+        }
+
+        public static Player GetPlayer(NetIncomingMessage inc, List<Player> allPlayers)
+        {
+            return allPlayers.FirstOrDefault(x => x.Conn == inc.SenderConnection);
         }
 
         public static void SendToGameRoomPlayers(NetServer server, NetOutgoingMessage outmsg, Player player,
@@ -149,6 +156,7 @@ namespace ServerGUI
             {
                 recipients.Add(room.Players[i].Conn);
             }
+            if(recipients.Count <= 0) return;
             server.SendMessage(outmsg, recipients, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
@@ -167,11 +175,11 @@ namespace ServerGUI
 
                             if (GameRooms[i].Players[k].Username == GameRooms[i].Players[j].Username)
                             {
-                                NetReader.WritePlayer(outmsg, GameRooms[i].Players[j], GameRooms[i].Players[j].LatestInput);
+                                Library.DataConvert.WritePlayer(outmsg, GameRooms[i].Players[j], GameRooms[i].Players[j].LatestInput);
                             }
                             else
                             {
-                                NetReader.WritePlayer(outmsg, GameRooms[i].Players[j]);
+                                Library.DataConvert.WritePlayer(outmsg, GameRooms[i].Players[j]);
                             }
 
                             NetServer.SendMessage(outmsg, GameRooms[i].Players[k].Conn,
@@ -180,6 +188,37 @@ namespace ServerGUI
                         GameRooms[i].Players[j].IsDirty = false;
                     }
                 }
+            }
+        }
+
+        private void SendTileIfDirty()
+        {
+            for (int i = 0; i < GameRooms.Count; i++)
+            {
+                if(!GameRooms[i].Map.Dirty) continue;
+                for (int j = 0; j < GameRooms[i].Map.MapData.Count; j++)
+                {
+                    for (int k = 0; k < GameRooms[i].Map.MapData[j].Count; k++)
+                    {
+                        if(!GameRooms[i].Map.MapData[j][k].Dirty) continue;
+
+                        var outmsg = NetServer.CreateMessage();
+
+                        outmsg.Write((byte)PacketTypes.TileData);
+
+                        outmsg.Write(j);
+                        outmsg.Write(k);
+
+                        outmsg.Write((byte)GameRooms[i].Map.MapData[j][k].Id);
+
+                        GameRooms[i].Map.MapData[j][k].Write(outmsg);
+                        
+                        SendToGameRoomPlayers(NetServer, outmsg, GameRooms[i]);
+
+                        GameRooms[i].Map.MapData[j][k].Dirty = false;
+                    }
+                }
+                GameRooms[i].Map.Dirty = false;
             }
         }
     }

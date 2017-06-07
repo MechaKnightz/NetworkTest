@@ -14,12 +14,14 @@ namespace ServerGUI.Commands
                     break;
                 case PacketTypes.AllPlayerPosition:
                     break;
-                case PacketTypes.Input:
-                    return new InputCommand();
+                case PacketTypes.KeyInput:
+                    return new KeyInputCommand();
                 case PacketTypes.StartState:
                     break;
                 case PacketTypes.JoinRoom:
                     return new JoinRoomCommand();
+                case PacketTypes.MouseInput:
+                    return new MouseInputCommand();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

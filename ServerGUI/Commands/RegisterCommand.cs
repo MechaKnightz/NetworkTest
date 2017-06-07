@@ -35,6 +35,10 @@ namespace ServerGUI.Commands
                 inc.SenderConnection.Deny("Username too long.");
                 return;
             }
+            if (!name.All(char.IsLetterOrDigit))
+            {
+                inc.SenderConnection.Deny("Username contains invalid characters.");
+            }
             var password = inc.ReadString();
             if (password.Length <= 3)
             {
@@ -46,6 +50,7 @@ namespace ServerGUI.Commands
                 inc.SenderConnection.Deny("Password too long.");
                 return;
             }
+
 
             var database = mongoClient.GetDatabase("MapMaker");
 

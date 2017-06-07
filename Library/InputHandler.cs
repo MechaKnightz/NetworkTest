@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -18,13 +19,13 @@ namespace Library
                     //TODO
                     break;
                 case Keys.A:
-                    if(player.X > 0) MoveWithCollisionCheck(new Vector2(-player.Speed, 0), player, map);
+                    MoveWithCollisionCheck(new Vector2(-player.Speed, 0), player, map);
                     break;
                 case Keys.S:
                     //TODO
                     break;
                 case Keys.D:
-                    if(player.X + Player.Width < Map.TileSize * (int) map.MapSize) MoveWithCollisionCheck(new Vector2(player.Speed, 0), player, map);
+                     MoveWithCollisionCheck(new Vector2(player.Speed, 0), player, map);
                     break;
             }
         }
@@ -52,10 +53,46 @@ namespace Library
                     if (tempPlayerRect.Intersects(rect)) return false;
                 }
             }
+            if (tempPlayer.Y + Player.Height > Map.TileSize * (int) map.MapSize) return false;
+            if (tempPlayer.Y < 0) return false;
+            if (tempPlayer.X + Player.Width > Map.TileSize * (int) map.MapSize) return false;
+            if (tempPlayer.X < 0) return false;
 
             player.X += offset.X;
             player.Y += offset.Y;
             return true;
+        }
+
+        public static void LeftClick(Player player, Map map, float x, float y)
+        {
+            for (int i = 0; i < map.MapData.Count; i++)
+            {
+                for (int j = 0; j < map.MapData[i].Count; j++)
+                {
+                    var rect = map.MapData[i][j].GetClickRectangle(j * Map.TileSize, i * Map.TileSize);
+                    if (rect.Width == 0 || rect.Height == 0) continue;
+                    if (rect.Contains(x, y))
+                    {
+                        map.MapData[i][j].OnLeftClick();
+                        if (map.MapData[i][j].Health <= 0)
+                        {
+                            map.MapData[i][j] = new Air();
+                            map.MapData[i][j].Dirty = true;
+                            map.Dirty = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void RightClick(Player player, Map map, float x, float y)
+        {
+
+        }
+
+        public static void MiddleClick(Player player, Map map, float x, float y)
+        {
+
         }
     }
 }

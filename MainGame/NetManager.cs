@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Library;
+using Library.Tiles;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MapMaker.Tiles;
 
 namespace MainGame
 {
@@ -104,7 +106,7 @@ namespace MainGame
         {
             var outmsg = Client.CreateMessage();
 
-            outmsg.Write((byte)PacketTypes.Input);
+            outmsg.Write((byte)PacketTypes.KeyInput);
 
             Input.Add(key);
             outmsg.Write(Input.Count - 1);
@@ -117,6 +119,21 @@ namespace MainGame
             }
 
             outmsg.Write((byte)key);
+
+            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public void SendMouseInput(MouseButton button, float x, float y)
+        {
+            var outmsg = Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.MouseInput);
+
+            outmsg.Write((byte)button);
+
+            outmsg.Write(x);
+
+            outmsg.Write(y);
 
             Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
@@ -142,7 +159,7 @@ namespace MainGame
                 case PacketTypes.PlayerPosition:
                     Player incPlayer = new Player();
 
-                    var inputId = NetReader.ReadPlayer(inc, incPlayer);
+                    var inputId = Library.DataConvert.ReadPlayer(inc, incPlayer);
 
                     var oldPlayer = CurrentRoom.Players.FirstOrDefault(x => x.Username == incPlayer.Username);
 
@@ -168,7 +185,7 @@ namespace MainGame
                     for (int i = 0; i < count; i++)
                     {
                         Player player2 = new Player();
-                        NetReader.ReadPlayer(inc, player2);
+                        Library.DataConvert.ReadPlayer(inc, player2);
                         CurrentRoom.Players.Add(player2);
                     }
                     break;
@@ -183,14 +200,17 @@ namespace MainGame
                     if(player != null) player.Health = playerHealth;
                     break;
                 case PacketTypes.PlayerLeave:
-
                     var name = inc.ReadString();
 
                     for (int i = 0; i < CurrentRoom.Players.Count; i++)
                     {
                         if(CurrentRoom.Players[i].Username == name) CurrentRoom.Players.RemoveAt(i);
                     }
-
+                    break;
+                case PacketTypes.TileData:
+                    var row = inc.ReadInt32();
+                    var column = inc.ReadInt32();
+                    CurrentRoom.Map.MapData[row][column] = DataConvert.ReadTile(inc);
                     break;
             }
         }
@@ -300,7 +320,7 @@ namespace MainGame
                         if (inc.ReadByte() == (byte)PacketTypes.RoomStartState)
                         {
                             CurrentRoom = new GameRoom();
-                            NetReader.ReadRoom(inc, CurrentRoom);
+                            Library.DataConvert.ReadRoom(inc, CurrentRoom);
                             msg = "Successfully connected to room";
                             return true;
                         }

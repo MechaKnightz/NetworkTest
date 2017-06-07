@@ -4,12 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Library.Messenger;
+using Library.Tiles;
 using Lidgren.Network;
+using MapMaker.Tiles;
 
 namespace Library
 {
-    public static class NetReader
+    public static class DataConvert
     {
+        public static ITile TileFromTileType(TileType type)
+        {
+            ITile tile = new Air();
+            switch (type)
+            {
+                case TileType.Air:
+                    tile = new Air();
+                    break;
+                case TileType.Dirt:
+                    tile = new Dirt();
+                    break;
+                default:
+                    tile = new Air();
+                    break;
+            }
+            return tile;
+        }
+        public static ITile ReadTile(NetIncomingMessage inc)
+        {
+            var tile = TileFromTileType((TileType)inc.ReadByte());
+
+            tile.Read(inc);
+
+            return tile;
+        }
 
         public static void WritePlayer(NetOutgoingMessage outmsg, Player player, int inputId = -1)
         {

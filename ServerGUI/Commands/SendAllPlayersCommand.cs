@@ -22,7 +22,7 @@ namespace ServerGUI.Commands
 
             foreach (var worldPlayer in allPlayers)
             {
-                NetReader.WritePlayer(outmsg, worldPlayer);
+                Library.DataConvert.WritePlayer(outmsg, worldPlayer);
             }
 
             //connectionmessage:

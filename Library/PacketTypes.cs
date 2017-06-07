@@ -12,11 +12,13 @@ namespace Library
         Register,
         PlayerPosition,
         AllPlayerPosition,
-        Input,
+        KeyInput,
         StartState,
         PlayerHealth,
         JoinRoom,
         RoomStartState,
-        PlayerLeave
+        PlayerLeave,
+        MouseInput,
+        TileData
     }
 }

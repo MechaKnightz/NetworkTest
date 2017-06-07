@@ -16,7 +16,7 @@ namespace ServerGUI.Commands
 
             outmsg.Write((byte)PacketTypes.RoomStartState);
 
-            NetReader.WriteRoom(outmsg, GetGameRoom(GetPlayerFromConnection(inc, allPlayers), gameRooms));
+            DataConvert.WriteRoom(outmsg, GetGameRoom(GetPlayerFromConnection(inc, allPlayers), gameRooms));
 
             server.SendMessage(outmsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }

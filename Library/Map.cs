@@ -12,11 +12,13 @@ namespace Library
 
         public List<List<ITile>> MapData { get; set; }
         public MapSize MapSize { get; set; }
+        public bool Dirty { get; set; }
 
         public Map(MapSize mapSize)
         {
             MapData = new List<List<ITile>>((int)mapSize);
             MapSize = mapSize;
+            Dirty = false;
 
             GenerateMap(mapSize);
         }

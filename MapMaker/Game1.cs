@@ -219,10 +219,10 @@ namespace MapMaker
             var diameter = circle.Radius * 2;
 
             var tempRect = new Rectangle(
-                Convert.ToInt16(circle.X - circle.Radius),
-                Convert.ToInt16(circle.Y - circle.Radius),
-                Convert.ToInt16(diameter),
-                Convert.ToInt16(diameter));
+                System.Convert.ToInt16(circle.X - circle.Radius),
+                System.Convert.ToInt16(circle.Y - circle.Radius),
+                System.Convert.ToInt16(diameter),
+                System.Convert.ToInt16(diameter));
 
             spriteBatch.Draw(_circleTexture, tempRect, color);
         }

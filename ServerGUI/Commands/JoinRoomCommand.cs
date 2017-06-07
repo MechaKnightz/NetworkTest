@@ -26,7 +26,7 @@ namespace ServerGUI.Commands
             var outmsg = server.CreateMessage();
 
             outmsg.Write((byte)PacketTypes.PlayerPosition);
-            NetReader.WritePlayer(outmsg, tempPlayer);
+            DataConvert.WritePlayer(outmsg, tempPlayer);
 
             Server.SendToGameRoomPlayers(server, outmsg, gameRoom);
 

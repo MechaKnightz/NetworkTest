@@ -27,7 +27,7 @@ namespace ServerGUI.Commands
 
                 outmsg.Write((byte)PacketTypes.PlayerPosition);
 
-                NetReader.WritePlayer(outmsg, player);
+                Library.DataConvert.WritePlayer(outmsg, player);
 
                 server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
@@ -36,7 +36,7 @@ namespace ServerGUI.Commands
 
             outmsg2.Write((byte)PacketTypes.PlayerPosition);
 
-            NetReader.WritePlayer(outmsg2, player, _inputId);
+            Library.DataConvert.WritePlayer(outmsg2, player, _inputId);
 
             var tempRoom = new GameRoom();
             foreach (var room in gameRooms)

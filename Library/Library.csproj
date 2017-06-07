@@ -55,11 +55,12 @@
     <Compile Include="InputHandler.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapSize.cs" />
+    <Compile Include="MouseButton.cs" />
     <Compile Include="PopupHandler\Message.cs" />
     <Compile Include="PopupHandler\MessageHandler.cs" />
     <Compile Include="Messenger\Message.cs" />
     <Compile Include="MoveDirection.cs" />
-    <Compile Include="NetReader.cs" />
+    <Compile Include="DataConvert.cs" />
     <Compile Include="PacketTypes.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Tiles\Air.cs" />
     <Compile Include="Tiles\Dirt.cs" />
     <Compile Include="Tiles\ITile.cs" />
+    <Compile Include="Tiles\TileType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

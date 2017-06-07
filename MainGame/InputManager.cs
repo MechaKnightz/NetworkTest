@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Library;
+using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 
 namespace MainGame
 {
@@ -6,16 +8,18 @@ namespace MainGame
     {
         private NetManager _netManager;
 
-        private KeyboardState _keyState, _oldKeyState;
+        private KeyboardState _keyState;
+        private MouseState _mouseState;
 
         public InputManager(NetManager netManager)
         {
             _netManager = netManager;
         }
 
-        public void Update()
+        public void Update(Camera2D camera)
         {
             _keyState = Keyboard.GetState();
+            _mouseState = Mouse.GetState();
 
             CheckKeyState(Keys.W);
             CheckKeyState(Keys.A);
@@ -23,7 +27,14 @@ namespace MainGame
             CheckKeyState(Keys.D);
             CheckKeyState(Keys.Space);
 
-            _oldKeyState = Keyboard.GetState();
+            var mousePos = camera.ScreenToWorld(_mouseState.X, _mouseState.Y);
+
+            if (_mouseState.LeftButton == ButtonState.Pressed)
+                _netManager.SendMouseInput(MouseButton.Left, mousePos.X, mousePos.Y);
+            if (_mouseState.RightButton == ButtonState.Pressed)
+                _netManager.SendMouseInput(MouseButton.Right, mousePos.X, mousePos.Y);
+            if (_mouseState.MiddleButton == ButtonState.Pressed)
+                _netManager.SendMouseInput(MouseButton.Middle, mousePos.X, mousePos.Y);
         }
 
         private void CheckKeyState(Keys key)
