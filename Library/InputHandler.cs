@@ -19,13 +19,28 @@ namespace Library
                     //TODO
                     break;
                 case Keys.A:
-                    MoveWithCollisionCheck(new Vector2(-player.Speed, 0), player, map);
+                    if (!MoveWithCollisionCheck(new Vector2(-player.Speed, 0), player, map))
+                    {
+                        for (int i = (int)player.Speed; i >= 1; i--)
+                        {
+                            if (MoveWithCollisionCheck(new Vector2(-i, 0), player, map)) break;
+                        }
+                    }
                     break;
                 case Keys.S:
                     //TODO
                     break;
                 case Keys.D:
-                     MoveWithCollisionCheck(new Vector2(player.Speed, 0), player, map);
+                    if (!MoveWithCollisionCheck(new Vector2(player.Speed, 0), player, map))
+                    {
+                        for (int i = (int)player.Speed; i >= 1; i--)
+                        {
+                            if (MoveWithCollisionCheck(new Vector2(i, 0), player, map)) break;
+                        }
+                    }
+                    break;
+                case Keys.Space:
+                    Jump(player, map);
                     break;
             }
         }
@@ -93,6 +108,13 @@ namespace Library
         public static void MiddleClick(Player player, Map map, float x, float y)
         {
 
+        }
+
+        public static void Jump(Player player, Map map)
+        {
+            //https://jsfiddle.net/LyM87
+            if (player.OnGround)
+                player.Velocity = -12.0f;
         }
     }
 }

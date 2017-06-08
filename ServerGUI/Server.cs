@@ -175,11 +175,11 @@ namespace ServerGUI
 
                             if (GameRooms[i].Players[k].Username == GameRooms[i].Players[j].Username)
                             {
-                                Library.DataConvert.WritePlayer(outmsg, GameRooms[i].Players[j], GameRooms[i].Players[j].LatestInput);
+                                DataConvert.WritePlayer(outmsg, GameRooms[i].Players[j], GameRooms[i].Players[j].LatestInput);
                             }
                             else
                             {
-                                Library.DataConvert.WritePlayer(outmsg, GameRooms[i].Players[j]);
+                                DataConvert.WritePlayer(outmsg, GameRooms[i].Players[j]);
                             }
 
                             NetServer.SendMessage(outmsg, GameRooms[i].Players[k].Conn,
@@ -193,6 +193,7 @@ namespace ServerGUI
 
         private void SendTileIfDirty()
         {
+            //TODO make a list of all the dirty tiles instead of making the server search through all of them
             for (int i = 0; i < GameRooms.Count; i++)
             {
                 if(!GameRooms[i].Map.Dirty) continue;

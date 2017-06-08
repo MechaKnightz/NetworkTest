@@ -8,7 +8,7 @@ namespace Library
     public class Player : ICloneable, INotifyPropertyChanged
     {
         public Player() { }
-        public Player(string username, Vector2 position, float health, float rotation, float speed, float radius, float cooldown, NetConnection conn = null)
+        public Player(string username, Vector2 position, float health, float rotation, float speed, float radius, NetConnection conn = null)
         {
             Username = username;
             X = position.X;
@@ -17,23 +17,25 @@ namespace Library
             Rotation = rotation;
             Speed = speed;
             Radius = radius;
-            Cooldown = cooldown;
             Conn = conn;
-            Falling = true;
         }
 
-        public const float Width = Map.TileSize * 2;
-        public const float Height = Map.TileSize * 3;
+        public const float Width = Map.TileSize * 1.8f;
+        public const float Height = Map.TileSize * 2.8f;
 
         public bool IsDirty;
-        public bool Falling;
         public float Speed;
         public float Rotation;
         public float Health;
         public float Radius;
-        public float Cooldown;
         public NetConnection Conn;
         public int LatestInput;
+        public TimeSpan JumpDuration = TimeSpan.FromSeconds(2);
+        public DateTime JumpTime;
+
+        public bool OnGround = false;
+        public float Velocity;
+        public readonly float Gravity = 0.5f;
 
         private float _x;
         public float X

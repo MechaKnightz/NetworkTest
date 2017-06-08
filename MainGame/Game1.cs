@@ -28,6 +28,7 @@ namespace MainGame
         private SpriteFont _nameFont;
         private string _tempPassString;
         private Texture2D _tileset;
+        private Texture2D _redPixel;
 
         float timer = 15;
         const float TIMER = 15;
@@ -89,6 +90,7 @@ namespace MainGame
             _playerTexture = Content.Load<Texture2D>("PlayerCircle");
             _nameFont = Content.Load<SpriteFont>("BoxFont");
             _tileset = Content.Load<Texture2D>("Tileset");
+            _redPixel = Content.Load<Texture2D>("RedPixel");
         }
 
         protected override void UnloadContent()
@@ -231,14 +233,10 @@ namespace MainGame
                 case GameState.ConnectMenu:
                     var connectMenuPanel = new Panel(new Vector2(500, 500));
                     UserInterface.AddEntity(connectMenuPanel);
-
-                    var backButton = new Button("Back");
-                    backButton.ButtonParagraph.Scale = 0.5f;
-                    backButton.OnClick = (Entity btn) =>
-                    {
-                        State = GameState.MainMenu;
-                    };
-                    connectMenuPanel.AddChild(backButton);
+                    var connectButton = new Button("Connect");
+                    connectButton.ButtonParagraph.Scale = 0.5f;
+                    
+                    connectMenuPanel.AddChild(connectButton);
 
                     TextInput nameText = new TextInput(false);
                     nameText.PlaceholderText = "Enter Username";
@@ -277,8 +275,14 @@ namespace MainGame
 
                     //temp end
 
-                    var connectButton = new Button("Connect");
-                    connectButton.ButtonParagraph.Scale = 0.5f;
+                    var backButton = new Button("Back");
+                    backButton.ButtonParagraph.Scale = 0.5f;
+                    backButton.OnClick = (Entity btn) =>
+                    {
+                        State = GameState.MainMenu;
+                    };
+                    connectMenuPanel.AddChild(backButton);
+
                     connectButton.OnClick = (Entity btn) =>
                     {
                         if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
@@ -295,7 +299,7 @@ namespace MainGame
                             }
                         }
                     };
-                    connectMenuPanel.AddChild(connectButton);
+
                     break;
                 case GameState.RoomConnectMenu:
                     var connectRoomMenuPanel = new Panel(new Vector2(500, 500));
@@ -339,7 +343,7 @@ namespace MainGame
                 Convert.ToInt16(Player.Width),
                 Convert.ToInt16(Player.Height));
 
-            _spriteBatch.Draw(_playerTexture, tempRect, color);
+            _spriteBatch.Draw(_redPixel, tempRect, color);
 
             _spriteBatch.DrawString(_nameFont,
                 player.Username,
@@ -375,13 +379,10 @@ namespace MainGame
             var connectMenuPanel = new Panel(new Vector2(500, 500));
             UserInterface.AddEntity(connectMenuPanel);
 
-            var backButton = new Button("Back");
-            backButton.ButtonParagraph.Scale = 0.5f;
-            backButton.OnClick = (Entity btn) =>
-            {
-                State = GameState.MainMenu;
-            };
-            connectMenuPanel.AddChild(backButton);
+            var connectButton = new Button("Register");
+            connectButton.ButtonParagraph.Scale = 0.5f;
+            
+            connectMenuPanel.AddChild(connectButton);
 
             TextInput nameText = new TextInput(false);
             nameText.PlaceholderText = "Enter Username";
@@ -411,8 +412,14 @@ namespace MainGame
             portText.PlaceholderText = "Enter host port";
             connectMenuPanel.AddChild(portText);
 
-            var connectButton = new Button("Register");
-            connectButton.ButtonParagraph.Scale = 0.5f;
+            var backButton = new Button("Back");
+            backButton.ButtonParagraph.Scale = 0.5f;
+            backButton.OnClick = (Entity btn) =>
+            {
+                State = GameState.MainMenu;
+            };
+            connectMenuPanel.AddChild(backButton);
+
             connectButton.OnClick = (Entity btn) =>
             {
                 if (nameText.Value != "" && ipText.Value != "" && portText.Value != "" && passText.Value != "")
@@ -424,7 +431,6 @@ namespace MainGame
                         MessageHandler.CreateMessage(temp);
                 }
             };
-            connectMenuPanel.AddChild(connectButton);
 
             //temp
             ipText.Value = "127.0.0.1";

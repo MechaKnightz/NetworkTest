@@ -90,7 +90,7 @@ namespace ServerGUI.Commands
 
         private static Player CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, List<Player> allPlayers)
         {
-            return new Player(name, new Vector2(0, 0), 10f, 0f, 5f, 50, 3, inc.SenderConnection);
+            return new Player(name, new Vector2(0, 0), 10f, 0f, 5f, 50, inc.SenderConnection);
         }
     }
 }

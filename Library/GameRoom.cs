@@ -28,9 +28,16 @@ namespace Library
             Map = new Map(MapSize.Medium);
         }
 
-        public void GravityMove(Player player)
+        private void GravityMove(Player player)
         {
-            InputHandler.MoveWithCollisionCheck(new Vector2(0, GlobalConsts.GravityConst), player, Map);
+            player.Velocity += player.Gravity;
+
+            if (!InputHandler.MoveWithCollisionCheck(new Vector2(0, player.Velocity), player, Map))
+            {
+                player.Velocity = 0;
+                player.OnGround = true;
+            }
+            else player.OnGround = false;
         }
 
         public void HandleInput(Player player, Keys key)
