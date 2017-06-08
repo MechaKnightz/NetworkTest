@@ -348,5 +348,14 @@ namespace MainGame
                 }
             }
         }
+
+        public void SendJumpCancel()
+        {
+            var outmsg = Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.JumpCancel);
+
+            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+        }
     }
 }

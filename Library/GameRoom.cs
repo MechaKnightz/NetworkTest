@@ -36,6 +36,7 @@ namespace Library
             {
                 player.Velocity = 0;
                 player.OnGround = true;
+                player.IsJumping = false;
             }
             else player.OnGround = false;
         }

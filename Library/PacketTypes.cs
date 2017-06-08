@@ -19,6 +19,7 @@ namespace Library
         RoomStartState,
         PlayerLeave,
         MouseInput,
-        TileData
+        TileData,
+        JumpCancel
     }
 }

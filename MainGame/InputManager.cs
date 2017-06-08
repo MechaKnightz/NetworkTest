@@ -8,7 +8,7 @@ namespace MainGame
     {
         private NetManager _netManager;
 
-        private KeyboardState _keyState;
+        private KeyboardState _keyState, _oldKeyState;
         private MouseState _mouseState;
 
         public InputManager(NetManager netManager)
@@ -27,6 +27,9 @@ namespace MainGame
             CheckKeyState(Keys.D);
             CheckKeyState(Keys.Space);
 
+            if (!_keyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyDown(Keys.Space))
+                _netManager.SendJumpCancel();
+
             var mousePos = camera.ScreenToWorld(_mouseState.X, _mouseState.Y);
 
             if (_mouseState.LeftButton == ButtonState.Pressed)
@@ -35,6 +38,8 @@ namespace MainGame
                 _netManager.SendMouseInput(MouseButton.Right, mousePos.X, mousePos.Y);
             if (_mouseState.MiddleButton == ButtonState.Pressed)
                 _netManager.SendMouseInput(MouseButton.Middle, mousePos.X, mousePos.Y);
+
+            _oldKeyState = Keyboard.GetState();
         }
 
         private void CheckKeyState(Keys key)

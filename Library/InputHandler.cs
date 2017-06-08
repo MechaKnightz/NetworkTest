@@ -113,8 +113,11 @@ namespace Library
         public static void Jump(Player player, Map map)
         {
             //https://jsfiddle.net/LyM87
-            if (player.OnGround)
-                player.Velocity = -12.0f;
+            if (player.OnGround && !player.IsJumping)
+            {
+                player.Velocity = -Player.JumpStartVelocity;
+                player.IsJumping = true;
+            }
         }
     }
 }

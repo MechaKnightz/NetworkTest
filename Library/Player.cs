@@ -22,6 +22,8 @@ namespace Library
 
         public const float Width = Map.TileSize * 1.8f;
         public const float Height = Map.TileSize * 2.8f;
+        public const float JumpStartVelocity = 20.0f;
+        public const float CancelJumpVelocity = 6.0f;
 
         public bool IsDirty;
         public float Speed;
@@ -34,6 +36,7 @@ namespace Library
         public DateTime JumpTime;
 
         public bool OnGround = false;
+        public bool IsJumping = false;
         public float Velocity;
         public readonly float Gravity = 0.5f;
 

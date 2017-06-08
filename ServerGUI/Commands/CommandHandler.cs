@@ -22,6 +22,8 @@ namespace ServerGUI.Commands
                     return new JoinRoomCommand();
                 case PacketTypes.MouseInput:
                     return new MouseInputCommand();
+                case PacketTypes.JumpCancel:
+                    return new JumpCancelCommand();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
