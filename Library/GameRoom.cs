@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Library;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Library
 {
@@ -32,11 +27,23 @@ namespace Library
         {
             player.Velocity += player.Gravity;
 
-            if (!InputHandler.MoveWithCollisionCheck(new Vector2(0, player.Velocity), player, Map))
+            if (!InputHandler.MoveWithCollisionCheck(new Vector2(0, player.Velocity), player, Map) && player.Velocity > 0)
             {
+                for (int i = (int)player.Velocity; i >= 1; i--)
+                {
+                    if (InputHandler.MoveWithCollisionCheck(new Vector2(0, i), player, Map)) break;
+                }
                 player.Velocity = 0;
                 player.OnGround = true;
                 player.IsJumping = false;
+            }
+            else if(!InputHandler.MoveWithCollisionCheck(new Vector2(0, player.Velocity), player, Map) && player.Velocity < 0)
+            {
+                for (int i = (int)player.Velocity; i <= -1; i++)
+                {
+                    if (InputHandler.MoveWithCollisionCheck(new Vector2(0, i), player, Map)) break;
+                }
+                player.Velocity = 0;
             }
             else player.OnGround = false;
         }
