@@ -1,14 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Library.Messenger;
 
 namespace Library
 {
     public class GameRoom
     {
         public string Name { get; set; }
-        public List<Player> Players { get; set; }
-        public Map Map { get; set; }
+        public List<Player> Players { get; }
+        public Map Map { get; }
+
+        //public List<Message> ChatMessages { get; set; }
 
         public GameRoom(string name)
         {

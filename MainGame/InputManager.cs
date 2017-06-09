@@ -8,7 +8,7 @@ namespace MainGame
     {
         private NetManager _netManager;
 
-        private KeyboardState _keyState, _oldKeyState;
+        public KeyboardState KeyState, OldKeyState;
         private MouseState _mouseState;
 
         public InputManager(NetManager netManager)
@@ -18,7 +18,6 @@ namespace MainGame
 
         public void Update(Camera2D camera)
         {
-            _keyState = Keyboard.GetState();
             _mouseState = Mouse.GetState();
 
             CheckKeyState(Keys.W);
@@ -27,7 +26,7 @@ namespace MainGame
             CheckKeyState(Keys.D);
             CheckKeyState(Keys.Space);
 
-            if (!_keyState.IsKeyDown(Keys.Space) && _oldKeyState.IsKeyDown(Keys.Space))
+            if (!KeyState.IsKeyDown(Keys.Space) && OldKeyState.IsKeyDown(Keys.Space))
                 _netManager.SendJumpCancel();
 
             var mousePos = camera.ScreenToWorld(_mouseState.X, _mouseState.Y);
@@ -38,13 +37,11 @@ namespace MainGame
                 _netManager.SendMouseInput(MouseButton.Right, mousePos.X, mousePos.Y);
             if (_mouseState.MiddleButton == ButtonState.Pressed)
                 _netManager.SendMouseInput(MouseButton.Middle, mousePos.X, mousePos.Y);
-
-            _oldKeyState = Keyboard.GetState();
         }
 
         private void CheckKeyState(Keys key)
         {
-            if (_keyState.IsKeyDown(key))
+            if (KeyState.IsKeyDown(key))
             {
                 _netManager.SendInput(key);
             }
@@ -53,6 +50,11 @@ namespace MainGame
         public bool JoinRoom(string roomName, out string msg)
         {
             return _netManager.SendJoinRoomInput(roomName, out msg);
+        }
+
+        public bool IsKeyClicked(Keys key)
+        {
+            return KeyState.IsKeyDown(key) && !OldKeyState.IsKeyDown(key);
         }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="InputHandler.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapSize.cs" />
+    <Compile Include="MessageHook\MessageHook.cs" />
     <Compile Include="MouseButton.cs" />
     <Compile Include="PopupHandler\Message.cs" />
     <Compile Include="PopupHandler\MessageHandler.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Tiles\Dirt.cs" />
     <Compile Include="Tiles\ITile.cs" />
     <Compile Include="Tiles\TileType.cs" />
+    <Compile Include="MessageHook\WindowsHook.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

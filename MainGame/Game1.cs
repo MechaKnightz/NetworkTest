@@ -6,8 +6,6 @@ using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Lidgren.Network;
-using Lidgren;
 using Library;
 using Library.PopupHandler;
 using MonoGame.Extended;
@@ -29,6 +27,8 @@ namespace MainGame
         private string _tempPassString;
         private Texture2D _tileset;
         private Texture2D _redPixel;
+        private Vector2 _chatPadding = new Vector2(5, 5);
+        private SpriteFont _chatFont;
 
         float timer = 15;
         const float TIMER = 15;
@@ -89,6 +89,7 @@ namespace MainGame
             _circleTexture = Content.Load<Texture2D>("Circle");
             _playerTexture = Content.Load<Texture2D>("PlayerCircle");
             _nameFont = Content.Load<SpriteFont>("BoxFont");
+            _chatFont = Content.Load<SpriteFont>("BoxFont");
             _tileset = Content.Load<Texture2D>("Tileset");
             _redPixel = Content.Load<Texture2D>("RedPixel");
         }
@@ -100,16 +101,21 @@ namespace MainGame
         protected override void Update(GameTime gameTime)
         {
             if (!IsActive) return;
-            
+            _inputManager.KeyState = Keyboard.GetState();
+
             switch (_state)
             {
-                    case GameState.MainMenu:
-                        break;
-                    case GameState.MainGame:
-                        GameLogic(gameTime);
-                        break;
-            }
 
+                case GameState.MainMenu:
+                    break;
+                case GameState.MainGame:
+                    GameLogic(gameTime);
+                    break;
+                case GameState.ChatOpen:
+                    ChatLogic(gameTime);
+                    break;
+            }
+            _inputManager.OldKeyState = Keyboard.GetState();
             MessageHandler.Update();
             UserInterface.Update(gameTime);
             base.Update(gameTime);
@@ -130,11 +136,14 @@ namespace MainGame
                 case GameState.MainGame:
                     DrawGame(gameTime);
                     break;
+                case GameState.ChatOpen:
+                    DrawChatOpen(gameTime);
+                    DrawGame(gameTime);
+                    break;
             }
             _spriteBatch.End();
 
             UserInterface.DrawMainRenderTarget(_spriteBatch);
-
             _spriteBatch.Begin();
             MessageHandler.Draw(_spriteBatch);
             _spriteBatch.End();
@@ -155,8 +164,11 @@ namespace MainGame
                 _netManager.CheckServerMessages(gameTime);
                 timer = TIMER;
             }
+            if (_inputManager.IsKeyClicked(Keys.Enter))
+                State = GameState.ChatOpen;
             SetCamera(_camera);
             _inputManager.Update(_camera);
+            
         }
 
         private void SetCamera(Camera2D camera)
@@ -194,6 +206,7 @@ namespace MainGame
             _spriteBatch.DrawString(_nameFont, gameTime.TotalGameTime.ToString(), _camera.ScreenToWorld(0, 50), Color.White);
             _spriteBatch.DrawString(_nameFont, _netManager.CurrentRoom.Name, _camera.ScreenToWorld(0, 100), Color.White);
 
+            DrawMessages(_spriteBatch, _netManager.ChatMessages, _camera);
         }
 
         private void DrawMap(GameTime gameTime)
@@ -206,132 +219,23 @@ namespace MainGame
             UserInterface.Clear();
         }
 
-        private void ChangeState(GameState state)
+        private void ChatLogic(GameTime gameTime)
         {
-            switch (state)
+            var elapsed = (float)gameTime.ElapsedGameTime.Milliseconds;
+            timer -= elapsed;
+            if (timer < 0)
             {
-                case GameState.MainMenu:
-                    var mainMenuPanel = new Panel(new Vector2(300, 500));
-                    UserInterface.AddEntity(mainMenuPanel);
-
-                    var mainMenuPlayButton = new Button("Play");
-                    mainMenuPlayButton.ButtonParagraph.Scale = 0.5f;
-                    mainMenuPlayButton.OnClick = (Entity btn) =>
-                    {
-                        State = GameState.ConnectMenu;
-                    };
-                    mainMenuPanel.AddChild(mainMenuPlayButton);
-
-                    var mainMenuRegisterButton = new Button("Register");
-                    mainMenuRegisterButton.ButtonParagraph.Scale = 0.5f;
-                    mainMenuRegisterButton.OnClick = (Entity btn) =>
-                    {
-                        State = GameState.RegisterMenu;
-                    };
-                    mainMenuPanel.AddChild(mainMenuRegisterButton);
-                    break;
-                case GameState.ConnectMenu:
-                    var connectMenuPanel = new Panel(new Vector2(500, 500));
-                    UserInterface.AddEntity(connectMenuPanel);
-                    var connectButton = new Button("Connect");
-                    connectButton.ButtonParagraph.Scale = 0.5f;
-                    
-                    connectMenuPanel.AddChild(connectButton);
-
-                    TextInput nameText = new TextInput(false);
-                    nameText.PlaceholderText = "Enter Username";
-                    connectMenuPanel.AddChild(nameText);
-
-                    TextInput passText = new TextInput(false);
-                    passText.PlaceholderText = "Enter password";
-                    connectMenuPanel.AddChild(passText);
-                    passText.OnValueChange = entity =>
-                    {
-                        if (_tempPassString == null) _tempPassString = "";
-                        if (_tempPassString.Length > passText.Value.Length)
-                        {
-                            _tempPassString = _tempPassString.Substring(0, passText.Value.Length);
-                        }
-                        var tempString = passText.Value;
-                        passText.Value = new string('*', passText.Value.Length);
-                        tempString = tempString.Replace("*", "");
-                        _tempPassString += tempString;
-                    };
-
-                    TextInput ipText = new TextInput(false);
-                    ipText.PlaceholderText = "Enter host IP";
-                    connectMenuPanel.AddChild(ipText);
-
-                    TextInput portText = new TextInput(false);
-                    portText.PlaceholderText = "Enter host port";
-                    connectMenuPanel.AddChild(portText);
-
-                    //temp
-
-                    nameText.Value = "mecha";
-                    passText.Value = "test";
-                    ipText.Value = "127.0.0.1";
-                    portText.Value = "9911";
-
-                    //temp end
-
-                    var backButton = new Button("Back");
-                    backButton.ButtonParagraph.Scale = 0.5f;
-                    backButton.OnClick = (Entity btn) =>
-                    {
-                        State = GameState.MainMenu;
-                    };
-                    connectMenuPanel.AddChild(backButton);
-
-                    connectButton.OnClick = (Entity btn) =>
-                    {
-                        if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
-                        {
-                            if (_tempPassString == null) _tempPassString = passText.Value;
-                            string temp;
-                            if (_netManager.Initialize(nameText.Value, _tempPassString, ipText.Value, int.Parse(portText.Value), out temp))
-                            {
-                                State = GameState.RoomConnectMenu;
-                            }
-                            else
-                            {
-                                MessageHandler.CreateMessage(temp);
-                            }
-                        }
-                    };
-
-                    break;
-                case GameState.RoomConnectMenu:
-                    var connectRoomMenuPanel = new Panel(new Vector2(500, 500));
-                    UserInterface.AddEntity(connectRoomMenuPanel);
-
-                    TextInput roomNameText = new TextInput(false);
-                    roomNameText.PlaceholderText = "Enter room name";
-
-                    connectRoomMenuPanel.AddChild(roomNameText);
-
-                    var connectRoomButton = new Button("Join room");
-                    connectRoomButton.ButtonParagraph.Scale = 0.5f;
-
-                    connectRoomButton.OnClick = entity =>
-                    {
-                        string msg;
-                        if (_inputManager.JoinRoom(roomNameText.Value, out msg))
-                        {
-                            State = GameState.MainGame;
-                        }
-                        else
-                        {
-                            MessageHandler.CreateMessage(msg);
-                        }
-                    };
-
-                    connectRoomMenuPanel.AddChild(connectRoomButton);
-                    break;
-                case GameState.RegisterMenu:
-                    DrawRegisterMenu();
-                    break;
+                _netManager.CheckServerMessages(gameTime);
+                timer = TIMER;
             }
+            SetCamera(_camera);
+            if (_inputManager.IsKeyClicked(Keys.Escape))
+                State = GameState.MainGame;
+        }
+
+        private void DrawChatOpen(GameTime gameTime)
+        {
+            
         }
 
         void DrawPlayer(Player player, Color color)
@@ -438,9 +342,175 @@ namespace MainGame
             //temp end
         }
 
+        private void ChangeState(GameState state)
+        {
+            switch (state)
+            {
+                case GameState.MainMenu:
+                    var mainMenuPanel = new Panel(new Vector2(300, 500));
+                    UserInterface.AddEntity(mainMenuPanel);
+
+                    var mainMenuPlayButton = new Button("Play");
+                    mainMenuPlayButton.ButtonParagraph.Scale = 0.5f;
+                    mainMenuPlayButton.OnClick = (Entity btn) =>
+                    {
+                        State = GameState.ConnectMenu;
+                    };
+                    mainMenuPanel.AddChild(mainMenuPlayButton);
+
+                    var mainMenuRegisterButton = new Button("Register");
+                    mainMenuRegisterButton.ButtonParagraph.Scale = 0.5f;
+                    mainMenuRegisterButton.OnClick = (Entity btn) =>
+                    {
+                        State = GameState.RegisterMenu;
+                    };
+                    mainMenuPanel.AddChild(mainMenuRegisterButton);
+                    break;
+                case GameState.ConnectMenu:
+                    var connectMenuPanel = new Panel(new Vector2(500, 500));
+                    UserInterface.AddEntity(connectMenuPanel);
+                    var connectButton = new Button("Connect");
+                    connectButton.ButtonParagraph.Scale = 0.5f;
+
+                    connectMenuPanel.AddChild(connectButton);
+
+                    TextInput nameText = new TextInput(false);
+                    nameText.PlaceholderText = "Enter Username";
+                    connectMenuPanel.AddChild(nameText);
+
+                    TextInput passText = new TextInput(false);
+                    passText.PlaceholderText = "Enter password";
+                    connectMenuPanel.AddChild(passText);
+                    passText.OnValueChange = entity =>
+                    {
+                        if (_tempPassString == null) _tempPassString = "";
+                        if (_tempPassString.Length > passText.Value.Length)
+                        {
+                            _tempPassString = _tempPassString.Substring(0, passText.Value.Length);
+                        }
+                        var tempString = passText.Value;
+                        passText.Value = new string('*', passText.Value.Length);
+                        tempString = tempString.Replace("*", "");
+                        _tempPassString += tempString;
+                    };
+
+                    TextInput ipText = new TextInput(false);
+                    ipText.PlaceholderText = "Enter host IP";
+                    connectMenuPanel.AddChild(ipText);
+
+                    TextInput portText = new TextInput(false);
+                    portText.PlaceholderText = "Enter host port";
+                    connectMenuPanel.AddChild(portText);
+
+                    //temp
+
+                    nameText.Value = "mecha";
+                    passText.Value = "test";
+                    ipText.Value = "127.0.0.1";
+                    portText.Value = "9911";
+
+                    //temp end
+
+                    var backButton = new Button("Back");
+                    backButton.ButtonParagraph.Scale = 0.5f;
+                    backButton.OnClick = (Entity btn) =>
+                    {
+                        State = GameState.MainMenu;
+                    };
+                    connectMenuPanel.AddChild(backButton);
+
+                    connectButton.OnClick = (Entity btn) =>
+                    {
+                        if (nameText.Value != "" && ipText.Value != "" && portText.Value != "")
+                        {
+                            if (_tempPassString == null) _tempPassString = passText.Value;
+                            string temp;
+                            if (_netManager.Initialize(nameText.Value, _tempPassString, ipText.Value, int.Parse(portText.Value), out temp))
+                            {
+                                State = GameState.RoomConnectMenu;
+                            }
+                            else
+                            {
+                                MessageHandler.CreateMessage(temp);
+                            }
+                        }
+                    };
+
+                    break;
+                case GameState.RoomConnectMenu:
+                    var connectRoomMenuPanel = new Panel(new Vector2(500, 500));
+                    UserInterface.AddEntity(connectRoomMenuPanel);
+
+                    TextInput roomNameText = new TextInput(false);
+                    roomNameText.PlaceholderText = "Enter room name";
+
+                    connectRoomMenuPanel.AddChild(roomNameText);
+
+                    var connectRoomButton = new Button("Join room");
+                    connectRoomButton.ButtonParagraph.Scale = 0.5f;
+
+                    connectRoomButton.OnClick = entity =>
+                    {
+                        string msg;
+                        if (_inputManager.JoinRoom(roomNameText.Value, out msg))
+                        {
+                            State = GameState.MainGame;
+                        }
+                        else
+                        {
+                            MessageHandler.CreateMessage(msg);
+                        }
+                    };
+
+                    connectRoomMenuPanel.AddChild(connectRoomButton);
+                    break;
+                case GameState.RegisterMenu:
+                    DrawRegisterMenu();
+                    break;
+            }
+        }
+
         public static float Clamp(float value, float min, float max)
         {
             return (value < min) ? min : (value > max) ? max : value;
+        }
+
+        private void DrawMessages(SpriteBatch spriteBatch, List<Library.Messenger.Message> messages, Camera2D camera)
+        {
+            var length = messages.Count - 10;
+            if (messages.Count <= 10)
+                length = 0;
+            string tempMeasureString = "T";
+
+            if (State == GameState.ChatOpen)
+            {
+                int j = 1;
+                for (int i = messages.Count - 1; i >= length; i--)
+                {
+                    spriteBatch.DrawString(
+                        _chatFont,
+                        messages[i].GetMessage(),
+                        camera.ScreenToWorld(new Vector2(_chatPadding.X, _halfScreen.Y * 2) - new Vector2(0, (j + 1) * (_chatPadding.Y + _chatFont.MeasureString(tempMeasureString).Y))),
+                        Color.White);
+
+                    j++;
+                }
+            }
+            else
+            {
+                int j = 0;
+                for (int i = messages.Count - 1; i >= length; i--)
+                {
+                    if (messages[i].Timestamp + TimeSpan.FromSeconds(5) < DateTime.Now) break;
+                    spriteBatch.DrawString(
+                        _chatFont,
+                        messages[i].GetMessage(),
+                        camera.ScreenToWorld(new Vector2(_chatPadding.X, _halfScreen.Y * 2) - new Vector2(0, (j + 1) * (_chatPadding.Y + _chatFont.MeasureString(tempMeasureString).Y))),
+                        Color.White);
+
+                    j++;
+                }
+            }
         }
     }
 }

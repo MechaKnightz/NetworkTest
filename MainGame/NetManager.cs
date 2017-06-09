@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Library;
-using Library.Tiles;
+using Library.Messenger;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using MapMaker.Tiles;
 
 namespace MainGame
 {
@@ -14,12 +13,14 @@ namespace MainGame
     {
         private NetClient Client { get; set; }
         public List<GameRoom> GameRooms { get; set; }
+        public List<Message> ChatMessages { get; set; }
         public GameRoom CurrentRoom { get; set; }
         public string Username { get; set; }
         public List<Keys> Input { get; set; }
 
         public bool Initialize(string name, string password, string hostip, int port, out string msg)
         {
+            ChatMessages = new List<Message>();
             Input = new List<Keys>();
             GameRooms = new List<GameRoom>();
             CurrentRoom = new GameRoom();
@@ -211,6 +212,11 @@ namespace MainGame
                     var row = inc.ReadInt32();
                     var column = inc.ReadInt32();
                     CurrentRoom.Map.MapData[row][column] = DataConvert.ReadTile(inc);
+                    break;
+                case PacketTypes.ChatMessage:
+                    var message = new Message();
+                    DataConvert.ReadMessage(inc, message);
+                    ChatMessages.Add(message);
                     break;
             }
         }

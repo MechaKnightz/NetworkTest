@@ -24,6 +24,8 @@ namespace ServerGUI.Commands
                     return new MouseInputCommand();
                 case PacketTypes.JumpCancel:
                     return new JumpCancelCommand();
+                case PacketTypes.ChatMessage:
+                    return new ChatMessageCommand();
                 default:
                     throw new ArgumentOutOfRangeException();
             }

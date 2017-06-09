@@ -1,4 +1,5 @@
 ﻿using System;
+using Lidgren.Network;
 
 namespace Library.Messenger
 {
@@ -9,10 +10,17 @@ namespace Library.Messenger
         {
             Sender = sender;
             Text = text;
-            Timestamp = DateTime.Now.TimeOfDay;
+            Timestamp = DateTime.Now;
         }
         public string Sender { get; set; }
         public string Text { get; set; }
-        public TimeSpan Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
+
+        public string GetMessage()
+        {
+            var hourMinute = Timestamp.ToString("HH:mm");
+            var fullMessage = hourMinute + " - " + Sender + ": " + Text;
+            return fullMessage;
+        }
     }
 }

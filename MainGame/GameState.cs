@@ -12,6 +12,7 @@ namespace MainGame
         MainGame,
         RegisterMenu,
         ConnectMenu,
-        RoomConnectMenu
+        RoomConnectMenu,
+        ChatOpen
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Library
 {
     public static class DataConvert
     {
+        public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffffff";
         public static ITile TileFromTileType(TileType type)
         {
             ITile tile = new Air();
@@ -58,14 +60,14 @@ namespace Library
         {
             outmsg.Write(message.Sender);
             outmsg.Write(message.Text);
-            outmsg.Write(message.Timestamp.ToString());
+            outmsg.Write(message.Timestamp.ToString(DateTimeFormat));
         }
 
         public static void ReadMessage(NetIncomingMessage inc, Message message)
         {
             message.Sender = inc.ReadString();
             message.Text = inc.ReadString();
-            message.Timestamp = TimeSpan.Parse(inc.ReadString());
+            message.Timestamp = DateTime.ParseExact(inc.ReadString(), DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
         }
 
         public static void WriteShot(NetOutgoingMessage outmsg, Shot shot)
