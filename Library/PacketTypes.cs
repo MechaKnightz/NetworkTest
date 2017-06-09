@@ -20,6 +20,7 @@ namespace Library
         PlayerLeave,
         MouseInput,
         TileData,
-        JumpCancel
+        JumpCancel,
+        ChatMessage
     }
 }

@@ -16,6 +16,7 @@ namespace ServerGUI.Commands
     {
         public void Run(LoggerManager loggerManager, MongoClient mongoClient, NetServer server, NetIncomingMessage inc, Player player, List<Player> allPlayers, List<GameRoom> gameRooms)
         {
+            loggerManager.ServerMsg("Incoming login");
             var name = inc.ReadString();
             var password = inc.ReadString();
 
@@ -49,8 +50,6 @@ namespace ServerGUI.Commands
                 inc.SenderConnection.Deny("Incorrect username or password");
                 loggerManager.ServerMsg("Incorrect username or password from: " + inc.SenderConnection);
             }
-
-            loggerManager.ServerMsg("Incoming login");
 
             if (allPlayers.Any(x => x.Username == name))
             {

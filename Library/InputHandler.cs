@@ -110,15 +110,15 @@ namespace Library
 
         public static bool MoveWithAdjust(Vector2 offset, Player player, Map map)
         {
+            //todo refactor into MoveWithCollisionCheck method
+            bool returnEarly = false;
             bool booler = !MoveWithCollisionCheck(offset, player, map);
             if (booler && offset.Y > 0)
             {
                 for (int i = (int)offset.Y; i >= 1; i--)
                 {
                     if (MoveWithCollisionCheck(new Vector2(0, i), player, map))
-                    {
-                        return false;
-                    }
+                        returnEarly = true;
                 }
             }
             else if(booler && offset.Y < 0)
@@ -126,7 +126,7 @@ namespace Library
                 for (int i = (int)offset.Y; i <= -1; i++)
                 {
                     if (MoveWithCollisionCheck(new Vector2(0, i), player, map))
-                        return false;
+                        returnEarly = true;
                 }
             }
 
@@ -135,9 +135,7 @@ namespace Library
                 for (int i = (int)offset.X; i >= 1; i--)
                 {
                     if (MoveWithCollisionCheck(new Vector2(i, 0), player, map))
-                    {
-                        return false;
-                    }
+                        returnEarly = true;
                 }
             }
             else if (booler && offset.X < 0)
@@ -145,9 +143,10 @@ namespace Library
                 for (int i = (int)offset.X; i <= -1; i++)
                 {
                     if (MoveWithCollisionCheck(new Vector2(i, 0), player, map))
-                        return false;
+                        returnEarly = true;
                 }
             }
+            if (returnEarly) return false;
 
             return !booler;
         }

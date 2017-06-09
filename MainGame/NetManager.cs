@@ -340,7 +340,7 @@ namespace MainGame
                                     msg = "Connection denied";
                                     return false;
                                 }
-                                msg = "Connection denied, reason: " + reason;
+                                msg = reason;
                                 return false;
                             }
                         }
