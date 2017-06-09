@@ -27,22 +27,14 @@ namespace Library
         {
             player.Velocity += player.Gravity;
 
-            if (!InputHandler.MoveWithCollisionCheck(new Vector2(0, player.Velocity), player, Map) && player.Velocity > 0)
+            if (!InputHandler.MoveWithAdjust(new Vector2(0, player.Velocity), player, Map) && player.Velocity > 0)
             {
-                for (int i = (int)player.Velocity; i >= 1; i--)
-                {
-                    if (InputHandler.MoveWithCollisionCheck(new Vector2(0, i), player, Map)) break;
-                }
                 player.Velocity = 0;
                 player.OnGround = true;
                 player.IsJumping = false;
             }
-            else if(!InputHandler.MoveWithCollisionCheck(new Vector2(0, player.Velocity), player, Map) && player.Velocity < 0)
+            else if(!InputHandler.MoveWithAdjust(new Vector2(0, player.Velocity), player, Map) && player.Velocity < 0)
             {
-                for (int i = (int)player.Velocity; i <= -1; i++)
-                {
-                    if (InputHandler.MoveWithCollisionCheck(new Vector2(0, i), player, Map)) break;
-                }
                 player.Velocity = 0;
             }
             else player.OnGround = false;

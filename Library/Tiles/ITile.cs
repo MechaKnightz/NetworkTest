@@ -17,5 +17,6 @@ namespace MapMaker.Tiles
         Rectangle GetCollisionRectangle(int x, int y);
         Rectangle GetClickRectangle(int x, int y);
         void OnLeftClick();
+        void OnTouch(Player player);
     }
 }

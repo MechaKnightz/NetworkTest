@@ -19,25 +19,13 @@ namespace Library
                     //TODO
                     break;
                 case Keys.A:
-                    if (!MoveWithCollisionCheck(new Vector2(-player.Speed, 0), player, map))
-                    {
-                        for (int i = (int)player.Speed; i >= 1; i--)
-                        {
-                            if (MoveWithCollisionCheck(new Vector2(-i, 0), player, map)) break;
-                        }
-                    }
+                    MoveWithAdjust(new Vector2(-player.Speed, 0), player, map);
                     break;
                 case Keys.S:
                     //TODO
                     break;
                 case Keys.D:
-                    if (!MoveWithCollisionCheck(new Vector2(player.Speed, 0), player, map))
-                    {
-                        for (int i = (int)player.Speed; i >= 1; i--)
-                        {
-                            if (MoveWithCollisionCheck(new Vector2(i, 0), player, map)) break;
-                        }
-                    }
+                    MoveWithAdjust(new Vector2(player.Speed, 0), player, map);
                     break;
                 case Keys.Space:
                     Jump(player, map);
@@ -118,6 +106,50 @@ namespace Library
                 player.Velocity = -Player.JumpStartVelocity;
                 player.IsJumping = true;
             }
+        }
+
+        public static bool MoveWithAdjust(Vector2 offset, Player player, Map map)
+        {
+            bool booler = !MoveWithCollisionCheck(offset, player, map);
+            if (booler && offset.Y > 0)
+            {
+                for (int i = (int)offset.Y; i >= 1; i--)
+                {
+                    if (MoveWithCollisionCheck(new Vector2(0, i), player, map))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if(booler && offset.Y < 0)
+            {
+                for (int i = (int)offset.Y; i <= -1; i++)
+                {
+                    if (MoveWithCollisionCheck(new Vector2(0, i), player, map))
+                        return false;
+                }
+            }
+
+            if (booler && offset.X > 0)
+            {
+                for (int i = (int)offset.X; i >= 1; i--)
+                {
+                    if (MoveWithCollisionCheck(new Vector2(i, 0), player, map))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (booler && offset.X < 0)
+            {
+                for (int i = (int)offset.X; i <= -1; i++)
+                {
+                    if (MoveWithCollisionCheck(new Vector2(i, 0), player, map))
+                        return false;
+                }
+            }
+
+            return !booler;
         }
     }
 }

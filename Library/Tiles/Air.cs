@@ -52,5 +52,9 @@ namespace Library.Tiles
             Health = 1;
             Dirty = false;
         }
+        public void OnTouch(Player player)
+        {
+
+        }
     }
 }

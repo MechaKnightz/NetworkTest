@@ -22,7 +22,7 @@ namespace Library
 
         public const float Width = Map.TileSize * 1.8f;
         public const float Height = Map.TileSize * 2.8f;
-        public const float JumpStartVelocity = 18.0f;
+        public const float JumpStartVelocity = 12.0f;
         public const float CancelJumpVelocity = 6.0f;
 
         public bool IsDirty;

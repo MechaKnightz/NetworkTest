@@ -64,5 +64,10 @@ namespace Library.Tiles
         {
             Health--;
         }
+
+        public void OnTouch(Player player)
+        {
+            
+        }
     }
 }
