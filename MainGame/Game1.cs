@@ -7,8 +7,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Library;
+using Library.MessageHook;
+using Library.Messenger;
 using Library.PopupHandler;
 using MonoGame.Extended;
+using Button = GeonBit.UI.Entities.Button;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
+using Panel = GeonBit.UI.Entities.Panel;
 
 namespace MainGame
 {
@@ -29,6 +34,8 @@ namespace MainGame
         private Texture2D _redPixel;
         private Vector2 _chatPadding = new Vector2(5, 5);
         private SpriteFont _chatFont;
+        private KeyboardDispatcher _keyboardDispatcher;
+        private TextBox _chatTextBox;
 
         float timer = 15;
         const float TIMER = 15;
@@ -52,11 +59,13 @@ namespace MainGame
         }
         protected override void Initialize()
         {
+            _keyboardDispatcher = new KeyboardDispatcher(Window);
+
             UserInterface.Initialize(Content, "custom");
             UserInterface.UseRenderTarget = true;
             Paragraph.BaseSize = 1.0f;
 
-            var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);
+            var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(Window.Handle);
             form.Location = new System.Drawing.Point(0, 0);
 
             Graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
@@ -92,6 +101,12 @@ namespace MainGame
             _chatFont = Content.Load<SpriteFont>("BoxFont");
             _tileset = Content.Load<Texture2D>("Tileset");
             _redPixel = Content.Load<Texture2D>("RedPixel");
+            _chatTextBox = new TextBox(Content.Load<Texture2D>("TextBox"), Content.Load<Texture2D>("Caret"), _chatFont)
+            {
+                X = 0,
+                Y = 0,
+                Width = 300
+            };
         }
 
         protected override void UnloadContent()
@@ -137,8 +152,8 @@ namespace MainGame
                     DrawGame(gameTime);
                     break;
                 case GameState.ChatOpen:
-                    DrawChatOpen(gameTime);
                     DrawGame(gameTime);
+                    DrawChatOpen(gameTime);
                     break;
             }
             _spriteBatch.End();
@@ -221,6 +236,7 @@ namespace MainGame
 
         private void ChatLogic(GameTime gameTime)
         {
+            _chatTextBox.Update(gameTime);
             var elapsed = (float)gameTime.ElapsedGameTime.Milliseconds;
             timer -= elapsed;
             if (timer < 0)
@@ -231,11 +247,18 @@ namespace MainGame
             SetCamera(_camera);
             if (_inputManager.IsKeyClicked(Keys.Escape))
                 State = GameState.MainGame;
+            if (_inputManager.IsKeyClicked(Keys.Enter))
+            {
+                ChatMessage();
+            }
+            _chatTextBox.X = Convert.ToInt16(_camera.ScreenToWorld(_chatPadding.X, 0).X);
+            var value = _halfScreen.Y * 2 - _chatPadding.Y - _chatFont.MeasureString("T").Y;
+            _chatTextBox.Y = Convert.ToInt16(_camera.ScreenToWorld(0, value).Y);
         }
 
         private void DrawChatOpen(GameTime gameTime)
         {
-            
+            _chatTextBox.Draw(_spriteBatch, gameTime);
         }
 
         void DrawPlayer(Player player, Color color)
@@ -467,6 +490,16 @@ namespace MainGame
                 case GameState.RegisterMenu:
                     DrawRegisterMenu();
                     break;
+                case GameState.ChatOpen:
+                    _keyboardDispatcher.Subscriber = _chatTextBox;
+                    _chatTextBox.Text = "";
+                    //_chatTextBox.OnEnterPressed += sender =>
+                    //{
+                    //    if (sender.Text == "") return;
+                    //    _netManager.ChatMessages.Add(new Library.Messenger.Message(sender.Text, "tester"));
+                    //    State = GameState.MainGame;
+                    //};
+                    break;
             }
         }
 
@@ -487,10 +520,19 @@ namespace MainGame
                 int j = 1;
                 for (int i = messages.Count - 1; i >= length; i--)
                 {
+                    var drawPos =
+                        camera.ScreenToWorld(new Vector2(_chatPadding.X, _halfScreen.Y * 2) -
+                                             new Vector2(0,
+                                                 (j + 1) *
+                                                 (_chatPadding.Y + _chatFont.MeasureString(tempMeasureString).Y)));
+                    var message = messages[i].GetMessage();
+
+                    spriteBatch.DrawString(_chatFont, message, drawPos + Vector2.One, Color.Black);
+
                     spriteBatch.DrawString(
                         _chatFont,
-                        messages[i].GetMessage(),
-                        camera.ScreenToWorld(new Vector2(_chatPadding.X, _halfScreen.Y * 2) - new Vector2(0, (j + 1) * (_chatPadding.Y + _chatFont.MeasureString(tempMeasureString).Y))),
+                        message,
+                        drawPos,
                         Color.White);
 
                     j++;
@@ -502,15 +544,31 @@ namespace MainGame
                 for (int i = messages.Count - 1; i >= length; i--)
                 {
                     if (messages[i].Timestamp + TimeSpan.FromSeconds(5) < DateTime.Now) break;
+                    var drawPos =
+                        camera.ScreenToWorld(new Vector2(_chatPadding.X, _halfScreen.Y * 2) -
+                                             new Vector2(0,
+                                                 (j + 1) *
+                                                 (_chatPadding.Y + _chatFont.MeasureString(tempMeasureString).Y)));
+                    var message = messages[i].GetMessage();
+
+                    spriteBatch.DrawString(_chatFont, message, drawPos + Vector2.One, Color.Black);
+
                     spriteBatch.DrawString(
                         _chatFont,
-                        messages[i].GetMessage(),
-                        camera.ScreenToWorld(new Vector2(_chatPadding.X, _halfScreen.Y * 2) - new Vector2(0, (j + 1) * (_chatPadding.Y + _chatFont.MeasureString(tempMeasureString).Y))),
+                        message,
+                        drawPos,
                         Color.White);
 
                     j++;
                 }
             }
+        }
+
+        private void ChatMessage()
+        {
+            if (_chatTextBox.Text == "") return;
+            _netManager.SendMessage(_chatTextBox.Text);
+            State = GameState.MainGame;
         }
     }
 }

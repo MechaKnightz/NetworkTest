@@ -36,6 +36,7 @@
       <HintPath>..\MapMaker\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -55,7 +56,8 @@
     <Compile Include="InputHandler.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapSize.cs" />
-    <Compile Include="MessageHook\MessageHook.cs" />
+    <Compile Include="MessageHook\KeyboardDispatcher.cs" />
+    <Compile Include="MessageHook\TextBox.cs" />
     <Compile Include="MouseButton.cs" />
     <Compile Include="PopupHandler\Message.cs" />
     <Compile Include="PopupHandler\MessageHandler.cs" />
@@ -71,7 +73,7 @@
     <Compile Include="Tiles\Dirt.cs" />
     <Compile Include="Tiles\ITile.cs" />
     <Compile Include="Tiles\TileType.cs" />
-    <Compile Include="MessageHook\WindowsHook.cs" />
+    <Compile Include="MessageHook\KeyboardLayout.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

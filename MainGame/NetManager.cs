@@ -363,5 +363,16 @@ namespace MainGame
 
             Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
+
+        public void SendMessage(string message)
+        {
+            var outmsg = Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.ChatMessage);
+
+            outmsg.Write(message);
+
+            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+        }
     }
 }
