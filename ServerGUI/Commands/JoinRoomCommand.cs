@@ -17,8 +17,6 @@ namespace ServerGUI.Commands
 
             var gameRoom = GetGameRoom(roomName, gameRooms);
             gameRoom.Players.Add(tempPlayer);
-
-            gameRooms.Add(gameRoom);
             
             var command = new SendRoomStartState();
             command.Run(loggerManager, mongoClient, server, inc, player, allPlayers, gameRooms);
@@ -40,6 +38,7 @@ namespace ServerGUI.Commands
             if (tempRoom == null)
             {
                 tempRoom = new GameRoom(name);
+                gameRooms.Add(tempRoom);
             }
             return tempRoom;
         }
