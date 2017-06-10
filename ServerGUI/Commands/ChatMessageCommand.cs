@@ -14,6 +14,18 @@ namespace ServerGUI.Commands
         {
             var sender = Server.GetPlayer(inc, allPlayers);
 
+            if (sender.LastMessageTime + TimeSpan.FromSeconds(3) > DateTime.Now)
+            {
+                var spammsg = server.CreateMessage();
+
+                spammsg.Write((byte)PacketTypes.ChatMessage);
+                DataConvert.WriteMessage(spammsg, new Message("You are sending messages too fast", "[SERVER]"));
+                server.SendMessage(spammsg, sender.Conn, NetDeliveryMethod.ReliableOrdered);
+                return;
+            }
+
+            sender.LastMessageTime = DateTime.Now;
+
             var message = inc.ReadString();
 
             var fullMessage = new Message(message, sender.Username);

@@ -40,6 +40,8 @@ namespace Library
         public float Velocity;
         public readonly float Gravity = 0.5f;
 
+        public DateTime LastMessageTime = DateTime.MinValue;
+
         private float _x;
         public float X
         {
