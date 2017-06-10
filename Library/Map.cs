@@ -14,6 +14,7 @@ namespace Library
         public MapSize MapSize { get; set; }
         public bool Dirty { get; set; }
 
+        public Map() { }
         public Map(MapSize mapSize)
         {
             MapData = new List<List<ITile>>((int)mapSize);
@@ -48,6 +49,26 @@ namespace Library
                     MapData[i][j].Draw(spriteBatch, tileset, new Vector2(j * TileSize, i * TileSize));
                 }
             }
+        }
+
+        public static Map GetEmptyMap(MapSize size)
+        {
+            var map = new Map();
+
+            map.MapSize = size;
+            map.MapData = new List<List<ITile>>();
+
+            for (int i = 0; i < (int)size; i++)
+            {
+                map.MapData.Add(new List<ITile>());
+
+                for (int j = 0; j < (int)size; j++)
+                {
+                    map.MapData[i].Add(null);
+                }
+            }
+
+            return map;
         }
     }
 }

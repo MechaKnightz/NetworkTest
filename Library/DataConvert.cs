@@ -104,7 +104,7 @@ namespace Library
         public static Map ReadMap(NetIncomingMessage inc)
         {
             var size = (MapSize)inc.ReadByte();
-            var map = new Map(size);
+            var map = Map.GetEmptyMap(size);
             var rows = inc.ReadInt32();
 
             for (int i = 0; i < rows; i++)
