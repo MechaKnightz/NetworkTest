@@ -326,7 +326,7 @@ namespace MainGame
                         if (inc.ReadByte() == (byte)PacketTypes.RoomStartState)
                         {
                             CurrentRoom = new GameRoom();
-                            Library.DataConvert.ReadRoom(inc, CurrentRoom);
+                            DataConvert.ReadRoom(inc, CurrentRoom);
                             msg = "Successfully connected to room";
                             return true;
                         }

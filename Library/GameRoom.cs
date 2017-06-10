@@ -9,7 +9,7 @@ namespace Library
     {
         public string Name { get; set; }
         public List<Player> Players { get; }
-        public Map Map { get; }
+        public Map Map { get; set; }
 
         //public List<Message> ChatMessages { get; set; }
 

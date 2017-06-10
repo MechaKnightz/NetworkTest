@@ -8,7 +8,7 @@ namespace Library.Tiles
 {
     public class Air : ITile
     {
-        public TileType Id { get; set ; }
+        public TileType Id { get; }
         public int Health { get; set; }
         public bool Dirty { get; set; }
 
@@ -27,7 +27,6 @@ namespace Library.Tiles
 
         public ITile Read(NetIncomingMessage inc)
         {
-            Id = (TileType)inc.ReadByte();
             return this;
         }
 

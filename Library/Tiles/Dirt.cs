@@ -8,7 +8,7 @@ namespace Library.Tiles
 {
     public class Dirt : ITile
     {
-        public TileType Id { get; set; }
+        public TileType Id { get; }
         public bool Dirty { get; set; }
 
         private int _health;
@@ -38,7 +38,6 @@ namespace Library.Tiles
 
         public ITile Read(NetIncomingMessage inc)
         {
-            Id = (TileType)inc.ReadByte();
             Health = inc.ReadInt32();
             return this;
         }

@@ -210,8 +210,6 @@ namespace ServerGUI
                         outmsg.Write(j);
                         outmsg.Write(k);
 
-                        outmsg.Write((byte)GameRooms[i].Map.MapData[j][k].Id);
-
                         GameRooms[i].Map.MapData[j][k].Write(outmsg);
                         
                         SendToGameRoomPlayers(NetServer, outmsg, GameRooms[i]);

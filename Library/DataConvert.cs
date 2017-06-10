@@ -31,6 +31,7 @@ namespace Library
             }
             return tile;
         }
+
         public static ITile ReadTile(NetIncomingMessage inc)
         {
             var tile = TileFromTileType((TileType)inc.ReadByte());
@@ -70,29 +71,10 @@ namespace Library
             message.Timestamp = DateTime.ParseExact(inc.ReadString(), DateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
         }
 
-        public static void WriteShot(NetOutgoingMessage outmsg, Shot shot)
-        {
-            outmsg.Write(shot.Speed);
-            outmsg.Write(shot.X);
-            outmsg.Write(shot.Y);
-            outmsg.Write(shot.Damage);
-            outmsg.Write(shot.Rotation);
-            outmsg.Write(shot.Radius);
-        }
-        public static void ReadShot(NetIncomingMessage inc, Shot shot)
-        {
-            shot.Speed = inc.ReadFloat();
-            shot.X = inc.ReadFloat();
-            shot.Y = inc.ReadFloat();
-            shot.Damage = inc.ReadFloat();
-            shot.Rotation = inc.ReadFloat();
-            shot.Radius = inc.ReadFloat();
-        }
-
         public static void ReadRoom(NetIncomingMessage inc, GameRoom room)
         {
             room.Name = inc.ReadString();
-            ReadMap(inc, room.Map);
+            room.Map = ReadMap(inc);
             ReadPlayerList(inc, room.Players);
         }
 
@@ -105,6 +87,7 @@ namespace Library
 
         public static void WriteMap(NetOutgoingMessage outmsg, Map map)
         {
+            outmsg.Write((byte)map.MapSize);
             var rows = map.MapData.Count;
             outmsg.Write(rows);
             for (int i = 0; i < rows; i++)
@@ -118,17 +101,23 @@ namespace Library
             }
         }
 
-        public static void ReadMap(NetIncomingMessage inc, Map map)
+        public static Map ReadMap(NetIncomingMessage inc)
         {
+            var size = (MapSize)inc.ReadByte();
+            var map = new Map(size);
             var rows = inc.ReadInt32();
+
             for (int i = 0; i < rows; i++)
             {
                 var columnLength = inc.ReadInt32();
+                map.MapData.Add(new List<ITile>());
+
                 for (int j = 0; j < columnLength; j++)
                 {
-                    map.MapData[i][j] = map.MapData[i][j].Read(inc);
+                    map.MapData[i][j] = ReadTile(inc);
                 }
             }
+            return map;
         }
 
         public static void WritePlayerList(NetOutgoingMessage outmsg, List<Player> players)

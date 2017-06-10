@@ -8,7 +8,7 @@ namespace MapMaker.Tiles
 {
     public interface ITile
     {
-        TileType Id { get; set; }
+        TileType Id { get; }
         int Health { get; set; }
         bool Dirty { get; set; }
         void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos);
