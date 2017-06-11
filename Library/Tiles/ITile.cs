@@ -1,10 +1,8 @@
-﻿using Library;
-using Library.Tiles;
-using Microsoft.Xna.Framework.Graphics;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace MapMaker.Tiles
+namespace Library.Tiles
 {
     public interface ITile
     {

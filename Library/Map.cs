@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Library.Tiles;
-using MapMaker.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -31,8 +30,8 @@ namespace Library
                 var tempList = new List<ITile>((int)mapSize);
                 for (int j = 0; j < tempList.Capacity; j++)
                 {
-                    if (i > 32) tempList.Add(new Dirt());
-                    else if(i == 32 && j == 0) tempList.Add(new Dirt());
+                    if (i > 31) tempList.Add(new Dirt());
+                    else if(i == 31) tempList.Add(new Grass());
                     else tempList.Add(new Air());
                 }
 

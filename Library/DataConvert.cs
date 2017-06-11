@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Library.Messenger;
 using Library.Tiles;
 using Lidgren.Network;
-using MapMaker.Tiles;
 
 namespace Library
 {
@@ -24,6 +23,9 @@ namespace Library
                     break;
                 case TileType.Dirt:
                     tile = new Dirt();
+                    break;
+                case TileType.Grass:
+                    tile = new Grass();
                     break;
                 default:
                     tile = new Air();

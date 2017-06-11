@@ -71,6 +71,7 @@
     <Compile Include="StringCheck.cs" />
     <Compile Include="Tiles\Air.cs" />
     <Compile Include="Tiles\Dirt.cs" />
+    <Compile Include="Tiles\Grass.cs" />
     <Compile Include="Tiles\ITile.cs" />
     <Compile Include="Tiles\TileType.cs" />
     <Compile Include="MessageHook\KeyboardLayout.cs" />

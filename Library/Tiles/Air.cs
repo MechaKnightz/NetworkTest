@@ -1,6 +1,5 @@
 ﻿using System;
 using Lidgren.Network;
-using MapMaker.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

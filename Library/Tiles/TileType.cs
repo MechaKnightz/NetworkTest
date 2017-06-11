@@ -9,6 +9,7 @@ namespace Library.Tiles
     public enum TileType
     {
         Air,
-        Dirt
+        Dirt,
+        Grass
     }
 }

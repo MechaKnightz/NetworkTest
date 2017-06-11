@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Library.Tiles;
-using MapMaker.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
