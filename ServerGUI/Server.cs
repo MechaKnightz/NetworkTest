@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Library;
 using Lidgren.Network;
@@ -49,7 +50,7 @@ namespace ServerGUI
 
         public void Run()
         {
-            LoggerManager.ServerMsg("Server started at local IP: '" + GetLocalIPAddress() + "' and port: '" + NetServer.Configuration.Port + "'");
+            LoggerManager.ServerMsg("Server started at local IP: '" + GetLocalIPAddress() + "', external IP: '"+ GetExternalIPAddress() + "' and port: '" + NetServer.Configuration.Port + "'");
             
             LoggerManager.ServerMsg("Waiting for new connections and updating world state to current ones");
 
@@ -236,6 +237,13 @@ namespace ServerGUI
                 }
             }
             return "Local IP Address Not Found!";
+        }
+
+        public static string GetExternalIPAddress()
+        {
+            string ip = new WebClient().DownloadString("http://icanhazip.com");
+            string replacement = Regex.Replace(ip, @"\n", "");
+            return replacement;
         }
     }
 }
