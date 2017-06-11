@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using Library;
 using Lidgren.Network;
@@ -28,7 +30,7 @@ namespace ServerGUI
             LoggerManager = loggerManager;
             GameRooms = new List<GameRoom>();
 
-            NetPeerConfiguration config = new NetPeerConfiguration("testGame")
+            NetPeerConfiguration config = new NetPeerConfiguration("TerraBuilder")
             {
                 MaximumConnections = 32,
                 Port = 9911
@@ -42,11 +44,12 @@ namespace ServerGUI
                 ":" + mongoPass +
                 "@cluster0-shard-00-00-kp9r9.mongodb.net:27017,cluster0-shard-00-01-kp9r9.mongodb.net:27017,cluster0-shard-00-02-kp9r9.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin");
 
+            loggerManager.ServerMsg("Logged into MongoDB database as user: " + mongoUsername);
         }
 
         public void Run()
         {
-            LoggerManager.ServerMsg("Server started at IP: " + "Unknown" + " and port: " + NetServer.Port);
+            LoggerManager.ServerMsg("Server started at local IP: '" + GetLocalIPAddress() + "' and port: '" + NetServer.Configuration.Port + "'");
             
             LoggerManager.ServerMsg("Waiting for new connections and updating world state to current ones");
 
@@ -219,6 +222,20 @@ namespace ServerGUI
                 }
                 GameRooms[i].Map.Dirty = false;
             }
+        }
+
+        //not mine
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return "Local IP Address Not Found!";
         }
     }
 }

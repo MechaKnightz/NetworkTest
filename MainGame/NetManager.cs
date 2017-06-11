@@ -25,7 +25,7 @@ namespace MainGame
             GameRooms = new List<GameRoom>();
             CurrentRoom = new GameRoom();
             Username = name;
-            NetPeerConfiguration config = new NetPeerConfiguration("testGame");
+            NetPeerConfiguration config = new NetPeerConfiguration("TerraBuilder");
             Client = new NetClient(config);
 
             Client.Start();
