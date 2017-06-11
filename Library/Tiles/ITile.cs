@@ -10,6 +10,7 @@ namespace MapMaker.Tiles
     {
         TileType Id { get; }
         int Health { get; set; }
+        int HealthMax { get; }
         bool Dirty { get; set; }
         void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos);
         void Write(NetOutgoingMessage outmsg);

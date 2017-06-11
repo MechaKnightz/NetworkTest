@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Library.Tiles;
+using MapMaker.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -41,11 +42,7 @@ namespace Library
             tempPlayer.X += offset.X;
             tempPlayer.Y += offset.Y;
 
-            var tempPlayerRect = new Rectangle(
-                Convert.ToInt32(tempPlayer.X),
-                Convert.ToInt32(tempPlayer.Y),
-                Convert.ToInt32(Player.Width),
-                Convert.ToInt32(Player.Height));
+            var tempPlayerRect = GetPlayerRectangle(tempPlayer);
 
             for (int i = 0; i < map.MapData.Count; i++)
             {
@@ -76,21 +73,36 @@ namespace Library
                     if (rect.Width == 0 || rect.Height == 0) continue;
                     if (rect.Contains(x, y))
                     {
+                        //TODO make list dirty if somehting is changed
+                        map.Dirty = true;
                         map.MapData[i][j].OnLeftClick();
                         if (map.MapData[i][j].Health <= 0)
                         {
                             map.MapData[i][j] = new Air();
                             map.MapData[i][j].Dirty = true;
-                            map.Dirty = true;
                         }
                     }
                 }
             }
         }
 
-        public static void RightClick(Player player, Map map, float x, float y)
+        public static void RightClick(List<Player> allPlayers, Player player, Map map, float x, float y)
         {
-
+            for (int i = 0; i < map.MapData.Count; i++)
+            {
+                for (int j = 0; j < map.MapData[i].Count; j++)
+                {
+                    var rect = map.MapData[i][j].GetClickRectangle(j * Map.TileSize, i * Map.TileSize);
+                    if (rect.Width == 0 || rect.Height == 0) continue;
+                    if (rect.Contains(x, y) && map.MapData[i][j].Id == TileType.Air)
+                    {
+                        if(IsAPlayerInTile(allPlayers, map.MapData[i][j], i, j)) return;
+                        map.MapData[i][j] = new Dirt();
+                        map.MapData[i][j].Dirty = true;
+                        map.Dirty = true;
+                    }
+                }
+            }
         }
 
         public static void MiddleClick(Player player, Map map, float x, float y)
@@ -149,6 +161,27 @@ namespace Library
             if (returnEarly) return false;
 
             return !booler;
+        }
+
+        public static bool IsAPlayerInTile(List<Player> allPlayers, ITile tile, int row, int column)
+        {
+            var rect = new Rectangle(column * Map.TileSize, row * Map.TileSize, Map.TileSize, Map.TileSize);
+
+            for (int i = 0; i < allPlayers.Count; i++)
+            {
+                var tempRect = GetPlayerRectangle(allPlayers[i]);
+                if (rect.Intersects(tempRect)) return true;
+            }
+            return false;
+        }
+
+        public static Rectangle GetPlayerRectangle(Player player)
+        {
+             return new Rectangle(
+                Convert.ToInt32(player.X),
+                Convert.ToInt32(player.Y),
+                Convert.ToInt32(Player.Width),
+                Convert.ToInt32(Player.Height));
         }
     }
 }

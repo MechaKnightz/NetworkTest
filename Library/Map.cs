@@ -40,13 +40,21 @@ namespace Library
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Texture2D tileset)
+        public void Draw(SpriteBatch spriteBatch, Texture2D tileset, SpriteFont font)
         {
             for (int i = 0; i < MapData.Count; i++)
             {
                 for (int j = 0; j < MapData[i].Count; j++)
                 {
                     MapData[i][j].Draw(spriteBatch, tileset, new Vector2(j * TileSize, i * TileSize));
+                    if (MapData[i][j].Health < MapData[i][j].HealthMax)
+                    {
+                        spriteBatch.DrawString(
+                            font,
+                            MapData[i][j].Health.ToString(),
+                            new Vector2(j * TileSize + TileSize / 2, i * TileSize + TileSize / 2) - font.MeasureString(MapData[i][j].Health.ToString()) / 2,
+                            Color.White);
+                    }
                 }
             }
         }

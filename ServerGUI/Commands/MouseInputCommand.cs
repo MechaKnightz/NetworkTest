@@ -30,7 +30,7 @@ namespace ServerGUI.Commands
                     InputHandler.LeftClick(player, room.Map, x, y);
                     break;
                 case MouseButton.Right:
-                    InputHandler.RightClick(player, room.Map, x, y);
+                    InputHandler.RightClick(allPlayers, player, room.Map, x, y);
                     break;
                 case MouseButton.Middle:
                     InputHandler.MiddleClick(player, room.Map, x, y);

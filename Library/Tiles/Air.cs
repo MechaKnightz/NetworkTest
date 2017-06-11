@@ -10,6 +10,7 @@ namespace Library.Tiles
     {
         public TileType Id { get; }
         public int Health { get; set; }
+        public int HealthMax { get; }
         public bool Dirty { get; set; }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
@@ -49,6 +50,7 @@ namespace Library.Tiles
         {
             Id = TileType.Air;
             Health = 1;
+            HealthMax = 1;
             Dirty = false;
         }
         public void OnTouch(Player player)

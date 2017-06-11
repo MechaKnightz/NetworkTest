@@ -245,8 +245,9 @@ namespace ServerGUI
                 return;
             }
 
-            var command = new KickPlayerCommand();
-            command.Run(LoggerManager, null, null, null, player, _server.AllPlayers, _server.GameRooms);
+            //TODO disabled for now
+            //var command = new KickPlayerCommand();
+            //command.Run(LoggerManager, null, _server.NetServer, null, player, _server.AllPlayers, _server.GameRooms);
         }
 
         public float GetCpuUsage()

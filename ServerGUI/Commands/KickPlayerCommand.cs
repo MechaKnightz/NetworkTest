@@ -32,7 +32,7 @@ namespace ServerGUI.Commands
 
                             outmsg.Write((byte)PacketTypes.PlayerLeave);
 
-                            outmsg.Write(gameRooms[i].Players[j].Username);
+                            outmsg.Write(gameRooms[i].Players[k].Username);
 
                             server.SendMessage(outmsg, gameRooms[i].Players[k].Conn, NetDeliveryMethod.ReliableOrdered);
                         }

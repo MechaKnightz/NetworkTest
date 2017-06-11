@@ -15,7 +15,7 @@ namespace ServerGUI
 {
     public class Server
     {
-        private NetServer NetServer { get; }
+        public NetServer NetServer { get; }
         private LoggerManager LoggerManager;
         private MongoClient MongoClient { get; }
 

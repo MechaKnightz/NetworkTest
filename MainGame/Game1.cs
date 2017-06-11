@@ -226,7 +226,7 @@ namespace MainGame
 
         private void DrawMap(GameTime gameTime)
         {
-            _netManager.CurrentRoom.Map.Draw(_spriteBatch, _tileset);
+            _netManager.CurrentRoom.Map.Draw(_spriteBatch, _tileset, _nameFont);
         }
 
         private void OldStateChange(GameState state)
@@ -390,7 +390,7 @@ namespace MainGame
                     mainMenuPanel.AddChild(mainMenuRegisterButton);
                     break;
                 case GameState.ConnectMenu:
-                    var connectMenuPanel = new Panel(new Vector2(500, 500));
+                    var connectMenuPanel = new Panel(new Vector2(700, 500));
                     UserInterface.AddEntity(connectMenuPanel);
                     var connectButton = new Button("Connect");
                     connectButton.ButtonParagraph.Scale = 0.5f;

@@ -21,6 +21,7 @@ namespace Library.Tiles
                 Dirty = true;
             }
         }
+        public int HealthMax { get; }
 
         public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
         {
@@ -46,6 +47,7 @@ namespace Library.Tiles
         {
             Id = TileType.Dirt;
             Health = 10;
+            HealthMax = 10;
             Dirty = false;
         }
 
