@@ -23,7 +23,7 @@ namespace ServerGUI.Commands
                 inc.SenderConnection.Deny("You have created too many accounts within the last 5 minutes.");
                 return;
             }
-
+            
             var name = inc.ReadString();
             if (name.Length <= 3)
             {
@@ -61,12 +61,14 @@ namespace ServerGUI.Commands
 
             var documentTest = collection.Find(filter).Project(projection).FirstOrDefault();
 
+            //todo add registered date
             if (documentTest == null)
             {
                 var document = new BsonDocument
                 { 
                     { "Username", name},
-                    { "Password", Hasher.ComputeHash(password, "SHA256", null) }
+                    { "Password", Hasher.ComputeHash(password, "SHA256", null) },
+                    { "RegisterDate", DateTime.Now.Date }
                 };
                 collection.InsertOne(document);
                 Cooldowns.Add(new Cooldown(inc.SenderConnection));

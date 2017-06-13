@@ -75,6 +75,7 @@
     <Compile Include="Tiles\ITile.cs" />
     <Compile Include="Tiles\TileType.cs" />
     <Compile Include="MessageHook\KeyboardLayout.cs" />
+    <Compile Include="UsefulMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

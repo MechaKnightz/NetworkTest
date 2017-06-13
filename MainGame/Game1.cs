@@ -194,11 +194,11 @@ namespace MainGame
 
             var tempPos = new Vector2(localPlayer.X, localPlayer.Y) - _halfScreen;
 
-            tempPos.X = Clamp(tempPos.X,
+            tempPos.X = UsefulMethods.Clamp(tempPos.X,
                 0,
                 (float)_netManager.CurrentRoom.Map.MapSize * Map.TileSize - _halfScreen.X * 2);
 
-            tempPos.Y = Clamp(tempPos.Y,
+            tempPos.Y = UsefulMethods.Clamp(tempPos.Y,
                 0,
                 (float) _netManager.CurrentRoom.Map.MapSize * Map.TileSize - _halfScreen.Y * 2);
 
@@ -501,11 +501,6 @@ namespace MainGame
                     //};
                     break;
             }
-        }
-
-        public static float Clamp(float value, float min, float max)
-        {
-            return (value < min) ? min : (value > max) ? max : value;
         }
 
         private void DrawMessages(SpriteBatch spriteBatch, List<Library.Messenger.Message> messages, Camera2D camera)
