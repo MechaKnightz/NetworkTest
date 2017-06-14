@@ -54,6 +54,9 @@
     <Compile Include="GameRoom.cs" />
     <Compile Include="GlobalConsts.cs" />
     <Compile Include="InputHandler.cs" />
+    <Compile Include="Inventory.cs" />
+    <Compile Include="Item\IDrawable.cs" />
+    <Compile Include="Item\IItem.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapSize.cs" />
     <Compile Include="MessageHook\KeyboardDispatcher.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="Tiles\Dirt.cs" />
     <Compile Include="Tiles\Grass.cs" />
     <Compile Include="Tiles\ITile.cs" />
+    <Compile Include="Tiles\TileBase.cs" />
     <Compile Include="Tiles\TileType.cs" />
     <Compile Include="MessageHook\KeyboardLayout.cs" />
     <Compile Include="UsefulMethods.cs" />

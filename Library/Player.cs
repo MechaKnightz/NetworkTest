@@ -42,6 +42,8 @@ namespace Library
 
         public DateTime LastMessageTime = DateTime.MinValue;
 
+        public Inventory Inventory { get; set; }
+
         private float _x;
         public float X
         {
@@ -86,6 +88,11 @@ namespace Library
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        public override string ToString()
+        {
+            return Username;
         }
     }
 }
