@@ -66,9 +66,7 @@ namespace Library
             {
                 for (int j = 0; j < map.MapData[i].Count; j++)
                 {
-                    var rect = map.MapData[i][j].GetClickRectangle(j * Map.TileSize, i * Map.TileSize);
-                    if (rect.Width == 0 || rect.Height == 0) continue;
-                    if (rect.Contains(x, y))
+                    if (map.MapData[i][j].MouseIntersect(x, y, j * Map.TileSize, i * Map.TileSize))
                     {
                         //TODO make list dirty if somehting is changed
                         map.Dirty = true;
@@ -89,9 +87,7 @@ namespace Library
             {
                 for (int j = 0; j < map.MapData[i].Count; j++)
                 {
-                    var rect = map.MapData[i][j].GetClickRectangle(j * Map.TileSize, i * Map.TileSize);
-                    if (rect.Width == 0 || rect.Height == 0) continue;
-                    if (rect.Contains(x, y) && map.MapData[i][j].Id == TileType.Air)
+                    if (map.MapData[i][j].MouseIntersect(x, y, j * Map.TileSize, i * Map.TileSize) && map.MapData[i][j].Id == TileType.Air)
                     {
                         if(IsAPlayerInTile(allPlayers, map.MapData[i][j], i, j)) return;
                         map.MapData[i][j] = new Dirt();

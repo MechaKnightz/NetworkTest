@@ -14,7 +14,7 @@ namespace Library.Tiles
         void Write(NetOutgoingMessage outmsg);
         ITile Read(NetIncomingMessage inc);
         bool Intersects(Rectangle rectangle, int row, int column);
-        Rectangle GetClickRectangle(int x, int y);
+        bool MouseIntersect(float mouseX, float mouseY, int row, int column);
         void OnLeftClick();
         void OnTouch(Player player);
     }

@@ -57,9 +57,10 @@ namespace Library.Tiles
             return rectangle.Intersects(rect);
         }
 
-        public Rectangle GetClickRectangle(int x, int y)
+        public bool MouseIntersect(float mouseX, float mouseY, int row, int column)
         {
-            return new Rectangle(x, y, Map.TileSize, Map.TileSize);
+            var rect = new Rectangle(row, column, Map.TileSize, Map.TileSize);
+            return rect.Contains(mouseX, mouseY);
         }
 
         public void OnLeftClick()
