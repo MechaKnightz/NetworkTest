@@ -47,9 +47,7 @@ namespace Library
             {
                 for (int j = 0; j < map.MapData[i].Count; j++)
                 {
-                    var rect = map.MapData[i][j].GetCollisionRectangle(j * Map.TileSize, i * Map.TileSize);
-                    if (rect.Width == 0 || rect.Height == 0) continue;
-                    if (tempPlayerRect.Intersects(rect)) return false;
+                    if(map.MapData[i][j].Intersects(tempPlayerRect, j, i)) return false;
                 }
             }
             if (tempPlayer.Y + Player.Height > Map.TileSize * (int) map.MapSize) return false;
@@ -124,7 +122,8 @@ namespace Library
             //todo refactor into MoveWithCollisionCheck method
             bool returnEarly = false;
             bool booler = !MoveWithCollisionCheck(offset, player, map);
-            if (booler && offset.Y > 0)
+            if (!booler) return true;
+            if (offset.Y > 0)
             {
                 for (int i = (int)offset.Y; i >= 1; i--)
                 {
@@ -132,7 +131,7 @@ namespace Library
                         returnEarly = true;
                 }
             }
-            else if(booler && offset.Y < 0)
+            else if(offset.Y < 0)
             {
                 for (int i = (int)offset.Y; i <= -1; i++)
                 {
@@ -141,7 +140,7 @@ namespace Library
                 }
             }
 
-            if (booler && offset.X > 0)
+            if (offset.X > 0)
             {
                 for (int i = (int)offset.X; i >= 1; i--)
                 {
@@ -149,7 +148,7 @@ namespace Library
                         returnEarly = true;
                 }
             }
-            else if (booler && offset.X < 0)
+            else if (offset.X < 0)
             {
                 for (int i = (int)offset.X; i <= -1; i++)
                 {
@@ -159,7 +158,7 @@ namespace Library
             }
             if (returnEarly) return false;
 
-            return !booler;
+            return false;
         }
 
         public static bool IsAPlayerInTile(List<Player> allPlayers, ITile tile, int row, int column)

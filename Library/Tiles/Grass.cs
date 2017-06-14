@@ -36,9 +36,10 @@ namespace Library.Tiles
             return new Rectangle(x, y, Map.TileSize, Map.TileSize);
         }
 
-        public Rectangle GetCollisionRectangle(int x, int y)
+        public bool Intersects(Rectangle rectangle, int row, int column)
         {
-            return new Rectangle(x, y, Map.TileSize, Map.TileSize);
+            var rect = new Rectangle(row * Map.TileSize, column * Map.TileSize, Map.TileSize, Map.TileSize);
+            return rectangle.Intersects(rect);
         }
 
         public void OnLeftClick()

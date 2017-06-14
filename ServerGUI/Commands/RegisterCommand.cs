@@ -61,7 +61,6 @@ namespace ServerGUI.Commands
 
             var documentTest = collection.Find(filter).Project(projection).FirstOrDefault();
 
-            //todo add registered date
             if (documentTest == null)
             {
                 var document = new BsonDocument

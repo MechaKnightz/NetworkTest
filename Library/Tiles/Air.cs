@@ -30,9 +30,9 @@ namespace Library.Tiles
             return this;
         }
 
-        public Rectangle GetCollisionRectangle(int x, int y)
+        public bool Intersects(Rectangle rectangle, int row, int column)
         {
-            return Rectangle.Empty;
+            return false;
         }
 
         public Rectangle GetClickRectangle(int x, int y)

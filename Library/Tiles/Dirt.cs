@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -50,9 +51,10 @@ namespace Library.Tiles
             Dirty = false;
         }
 
-        public Rectangle GetCollisionRectangle(int x, int y)
+        public bool Intersects(Rectangle rectangle, int row, int column)
         {
-            return new Rectangle(x, y, Map.TileSize, Map.TileSize);
+            var rect = new Rectangle(row * Map.TileSize, column * Map.TileSize, Map.TileSize, Map.TileSize);
+            return rectangle.Intersects(rect);
         }
 
         public Rectangle GetClickRectangle(int x, int y)

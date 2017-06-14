@@ -13,7 +13,7 @@ namespace Library.Tiles
         void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos);
         void Write(NetOutgoingMessage outmsg);
         ITile Read(NetIncomingMessage inc);
-        Rectangle GetCollisionRectangle(int x, int y);
+        bool Intersects(Rectangle rectangle, int row, int column);
         Rectangle GetClickRectangle(int x, int y);
         void OnLeftClick();
         void OnTouch(Player player);
