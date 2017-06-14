@@ -27,6 +27,9 @@ namespace Library
                 case TileType.Grass:
                     tile = new Grass();
                     break;
+                case TileType.Slab:
+                    tile = new Slab();
+                    break;
                 default:
                     tile = new Air();
                     break;

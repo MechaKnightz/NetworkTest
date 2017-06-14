@@ -10,6 +10,7 @@ namespace Library.Tiles
     {
         Air,
         Dirt,
-        Grass
+        Grass,
+        Slab = 5
     }
 }

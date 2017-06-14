@@ -38,7 +38,7 @@ namespace MainGame
             outmsg.Write(password);
 
             Client.Connect(hostip, port, outmsg);
-            
+
             var tempBool = WaitForStartingInfo(Client, out msg);
 
             return tempBool;

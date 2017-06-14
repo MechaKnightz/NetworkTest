@@ -76,6 +76,7 @@
     <Compile Include="Tiles\Dirt.cs" />
     <Compile Include="Tiles\Grass.cs" />
     <Compile Include="Tiles\ITile.cs" />
+    <Compile Include="Tiles\Slab.cs" />
     <Compile Include="Tiles\TileBase.cs" />
     <Compile Include="Tiles\TileType.cs" />
     <Compile Include="MessageHook\KeyboardLayout.cs" />

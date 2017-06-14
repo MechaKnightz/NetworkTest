@@ -9,10 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Library.Tiles
 {
-    public abstract class TileBase
+    public abstract class TileBase : ITile
     {
         public TileType Id { get; }
-        public bool Dirty { get; set; } = false;
+        public bool Dirty { get; set; }
 
         private int _health;
         public int Health
@@ -34,6 +34,18 @@ namespace Library.Tiles
                 Color.White);
         }
 
+        public void Write(NetOutgoingMessage outmsg)
+        {
+            outmsg.Write((byte)Id);
+            outmsg.Write(Health);
+        }
+
+        public ITile Read(NetIncomingMessage inc)
+        {
+            Health = inc.ReadInt32();
+            return this;
+        }
+
         public bool Intersects(Rectangle rectangle, int row, int column)
         {
             var rect = new Rectangle(row * Map.TileSize, column * Map.TileSize, Map.TileSize, Map.TileSize);
@@ -42,7 +54,7 @@ namespace Library.Tiles
 
         public bool MouseIntersect(float mouseX, float mouseY, int row, int column)
         {
-            var rect = new Rectangle(row, column, Map.TileSize, Map.TileSize);
+            var rect = new Rectangle(row * Map.TileSize, column * Map.TileSize, Map.TileSize, Map.TileSize);
             return rect.Contains(mouseX, mouseY);
         }
 
@@ -54,6 +66,14 @@ namespace Library.Tiles
         public void OnTouch(Player player)
         {
 
+        }
+
+        protected TileBase(TileType type, int healthMax)
+        {
+            Id = type;
+            HealthMax = healthMax;
+            Health = HealthMax;
+            Dirty = false;
         }
     }
 }

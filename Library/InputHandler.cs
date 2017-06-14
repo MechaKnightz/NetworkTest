@@ -66,7 +66,7 @@ namespace Library
             {
                 for (int j = 0; j < map.MapData[i].Count; j++)
                 {
-                    if (map.MapData[i][j].MouseIntersect(x, y, j * Map.TileSize, i * Map.TileSize))
+                    if (map.MapData[i][j].MouseIntersect(x, y, j, i))
                     {
                         //TODO make list dirty if somehting is changed
                         map.Dirty = true;
@@ -87,7 +87,7 @@ namespace Library
             {
                 for (int j = 0; j < map.MapData[i].Count; j++)
                 {
-                    if (map.MapData[i][j].MouseIntersect(x, y, j * Map.TileSize, i * Map.TileSize) && map.MapData[i][j].Id == TileType.Air)
+                    if (map.MapData[i][j].MouseIntersect(x, y, j, i) && map.MapData[i][j].Id == TileType.Air)
                     {
                         if(IsAPlayerInTile(allPlayers, map.MapData[i][j], i, j)) return;
                         map.MapData[i][j] = new Dirt();

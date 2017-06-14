@@ -5,14 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Library.Tiles
 {
-    public class Air : ITile
+    public class Air : TileBase, ITile
     {
-        public TileType Id { get; }
-        public int Health { get; set; }
-        public int HealthMax { get; }
-        public bool Dirty { get; set; }
-
-        public void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
+        public new void Draw(SpriteBatch spriteBatch, Texture2D tileset, Vector2 pos)
         {
             //spriteBatch.Draw(tileset,
             //    pos,
@@ -20,42 +15,28 @@ namespace Library.Tiles
             //    Color.White);
         }
 
-        public void Write(NetOutgoingMessage outmsg)
+        public new void Write(NetOutgoingMessage outmsg)
         {
             outmsg.Write((byte)Id);
         }
 
-        public ITile Read(NetIncomingMessage inc)
+        public new ITile Read(NetIncomingMessage inc)
         {
             return this;
         }
 
-        public bool Intersects(Rectangle rectangle, int row, int column)
+        public new bool Intersects(Rectangle rectangle, int row, int column)
         {
             return false;
         }
 
-        public bool MouseIntersect(float mouseX, float mouseY, int row, int column)
-        {
-            var rect = new Rectangle(row, column, Map.TileSize, Map.TileSize);
-            return rect.Contains(mouseX, mouseY);
-        }
-
-        public void OnLeftClick()
+        public new void OnLeftClick()
         {
             
         }
 
-        public Air()
+        public Air() : base(TileType.Air, 1)
         {
-            Id = TileType.Air;
-            Health = 1;
-            HealthMax = 1;
-            Dirty = false;
-        }
-        public void OnTouch(Player player)
-        {
-
         }
     }
 }

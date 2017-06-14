@@ -9,8 +9,8 @@ namespace Library
     {
         public const int TileSize = 32;
 
-        public List<List<ITile>> MapData { get; set; }
-        public MapSize MapSize { get; set; }
+        public List<List<ITile>> MapData { get; private set; }
+        public MapSize MapSize { get; private set; }
         public bool Dirty { get; set; }
 
         public Map() { }
@@ -32,6 +32,7 @@ namespace Library
                 {
                     if (i > 31) tempList.Add(new Dirt());
                     else if(i == 31) tempList.Add(new Grass());
+                    else if(i == 30) tempList.Add(new Slab());
                     else tempList.Add(new Air());
                 }
 
