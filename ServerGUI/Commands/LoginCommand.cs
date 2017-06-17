@@ -32,7 +32,7 @@ namespace ServerGUI.Commands
             if (documentTest == null)
             {
                 inc.SenderConnection.Deny("Incorrect username or password");
-                loggerManager.ServerMsg("Incorrect username or password from: " + inc.SenderConnection);
+                loggerManager.ServerMsg("Incorrect username from: " + inc.SenderConnection);
                 return;
             }
 
@@ -89,7 +89,7 @@ namespace ServerGUI.Commands
 
         private static Player CreatePlayer(LoggerManager loggerManager, NetIncomingMessage inc, string name, List<Player> allPlayers)
         {
-            return new Player(name, new Vector2(0, 0), 10f, 0f, 5f, 50, inc.SenderConnection);
+            return new Player(name, new Vector2(0, 0), 10f, 10f, inc.SenderConnection);
         }
     }
 }

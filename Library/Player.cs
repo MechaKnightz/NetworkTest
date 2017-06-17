@@ -8,15 +8,13 @@ namespace Library
     public class Player : ICloneable, INotifyPropertyChanged
     {
         public Player() { }
-        public Player(string username, Vector2 position, float health, float rotation, float speed, float radius, NetConnection conn = null)
+        public Player(string username, Vector2 position, float health, float speed, NetConnection conn = null)
         {
             Username = username;
             X = position.X;
             Y = position.Y;
             Health = health;
-            Rotation = rotation;
             Speed = speed;
-            Radius = radius;
             Conn = conn;
         }
 
@@ -27,18 +25,20 @@ namespace Library
 
         public bool IsDirty;
         public float Speed;
-        public float Rotation;
         public float Health;
-        public float Radius;
-        public NetConnection Conn;
+        public readonly NetConnection Conn;
         public int LatestInput;
         public TimeSpan JumpDuration = TimeSpan.FromSeconds(2);
         public DateTime JumpTime;
 
+        public float VelocityX;
+        public float GravityX = 2f;
+
         public bool OnGround = false;
         public bool IsJumping = false;
-        public float Velocity;
-        public readonly float Gravity = 0.5f;
+        public float VelocityY;
+        public float Gravity = 0.5f;
+        public float Range = 500;
 
         public DateTime LastMessageTime = DateTime.MinValue;
 

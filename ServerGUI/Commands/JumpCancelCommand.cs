@@ -17,9 +17,9 @@ namespace ServerGUI.Commands
             player = Server.GetPlayer(inc, allPlayers);
             //Todo make it so you can't cheat by canceling jump mid-air
             //register last jump send tomman maybe
-            if (player.Velocity < -Player.CancelJumpVelocity && !player.OnGround && player.IsJumping)
+            if (player.VelocityY < -Player.CancelJumpVelocity && !player.OnGround && player.IsJumping)
             {
-                player.Velocity = -Player.CancelJumpVelocity;
+                player.VelocityY = -Player.CancelJumpVelocity;
                 player.IsJumping = false;
             }
         }

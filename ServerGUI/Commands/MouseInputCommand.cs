@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Library;
 using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using MongoDB.Driver;
 using ServerGUI.ServerLogger;
 
@@ -21,6 +22,8 @@ namespace ServerGUI.Commands
             var y = inc.ReadFloat();
 
             player = Server.GetPlayer(inc, allPlayers);
+
+            if (Vector2.Distance(new Vector2(x, y), new Vector2(player.X, player.Y)) > player.Range) return;
 
             var room = Server.GetGameRoom(player, gameRooms);
 

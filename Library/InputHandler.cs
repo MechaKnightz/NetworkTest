@@ -19,13 +19,13 @@ namespace Library
                     //TODO
                     break;
                 case Keys.A:
-                    MoveWithAdjust(new Vector2(-player.Speed, 0), player, map);
+                    player.VelocityX = -player.Speed;
                     break;
                 case Keys.S:
                     //TODO
                     break;
                 case Keys.D:
-                    MoveWithAdjust(new Vector2(player.Speed, 0), player, map);
+                    player.VelocityX = player.Speed;
                     break;
                 case Keys.Space:
                     Jump(player, map);
@@ -108,7 +108,7 @@ namespace Library
             //https://jsfiddle.net/LyM87
             if (player.OnGround && !player.IsJumping)
             {
-                player.Velocity = -Player.JumpStartVelocity;
+                player.VelocityY = -Player.JumpStartVelocity;
                 player.IsJumping = true;
             }
         }

@@ -20,19 +20,7 @@ namespace ServerGUI.ServerCommands
             var firstPlayer = allPlayers.FirstOrDefault(x => x.Username == parameters[0]);
             var secondPlayer = allPlayers.FirstOrDefault(x => x.Username == parameters[1]);
 
-            if(firstPlayer == null || secondPlayer == null)
-
-                try
-                {
-                    firstPlayer.X = secondPlayer.X + firstPlayer.Radius + secondPlayer.Radius;
-                    firstPlayer.Y = secondPlayer.Y + firstPlayer.Radius + secondPlayer.Radius;
-                }
-                catch (Exception e)
-                {
-                    runMessage = e.Message;
-                    throw;
-                    return false;
-                }
+            //todo
             runMessage = firstPlayer.Username + " teleported to " + secondPlayer.Username + " at pos: " +
                          new Vector2(secondPlayer.X, secondPlayer.Y);
             return true;

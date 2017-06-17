@@ -39,6 +39,10 @@ namespace MainGame
 
             Client.Connect(hostip, port, outmsg);
 
+            bool test = Client.DiscoverKnownPeer(hostip, port);
+
+            test = false;
+
             var tempBool = WaitForStartingInfo(Client, out msg);
 
             return tempBool;

@@ -57,6 +57,7 @@
     <Compile Include="Inventory.cs" />
     <Compile Include="Item\IDrawable.cs" />
     <Compile Include="Item\IItem.cs" />
+    <Compile Include="Item\ItemType.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MapSize.cs" />
     <Compile Include="MessageHook\KeyboardDispatcher.cs" />

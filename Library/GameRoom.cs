@@ -28,17 +28,26 @@ namespace Library
 
         private void GravityMove(Player player)
         {
-            player.Velocity += player.Gravity;
+            InputHandler.MoveWithAdjust(new Vector2(player.VelocityX, 0), player, Map);
 
-            if (!InputHandler.MoveWithAdjust(new Vector2(0, player.Velocity), player, Map) && player.Velocity > 0)
+            if (player.VelocityX >= player.GravityX) player.VelocityX -= player.GravityX;
+            else if(player.VelocityX > 0) player.VelocityX = 0;
+            else if(player.VelocityX <= -player.GravityX) player.VelocityX += player.GravityX;
+            else if (player.VelocityX < 0) player.VelocityX = 0;
+            //player.VelocityX = 0;
+
+
+            player.VelocityY += player.Gravity;
+
+            if (!InputHandler.MoveWithAdjust(new Vector2(0, player.VelocityY), player, Map) && player.VelocityY > 0)
             {
-                player.Velocity = 0;
+                player.VelocityY = 0;
                 player.OnGround = true;
                 player.IsJumping = false;
             }
-            else if(!InputHandler.MoveWithAdjust(new Vector2(0, player.Velocity), player, Map) && player.Velocity < 0)
+            else if(!InputHandler.MoveWithAdjust(new Vector2(0, player.VelocityY), player, Map) && player.VelocityY < 0)
             {
-                player.Velocity = 0;
+                player.VelocityY = 0;
             }
             else player.OnGround = false;
         }
