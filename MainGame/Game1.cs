@@ -183,7 +183,38 @@ namespace MainGame
                 State = GameState.ChatOpen;
             SetCamera(_camera);
             _inputManager.Update(_camera);
-            
+
+            InputPredictionUpdate(gameTime);
+        }
+
+        private void InputPredictionUpdate(GameTime gameTime)
+        {
+            var player = _netManager.CurrentRoom.Players.FirstOrDefault(x => x.Username == _netManager.Username);
+
+            if (player == null) return;
+
+            InputHandler.MoveWithAdjust(new Vector2(player.VelocityX, 0), player, _netManager.CurrentRoom.Map);
+
+            if (player.VelocityX >= player.GravityX) player.VelocityX -= player.GravityX;
+            else if (player.VelocityX > 0) player.VelocityX = 0;
+            else if (player.VelocityX <= -player.GravityX) player.VelocityX += player.GravityX;
+            else if (player.VelocityX < 0) player.VelocityX = 0;
+            //player.VelocityX = 0;
+
+
+            player.VelocityY += player.Gravity;
+
+            if (!InputHandler.MoveWithAdjust(new Vector2(0, player.VelocityY), player, _netManager.CurrentRoom.Map) && player.VelocityY > 0)
+            {
+                player.VelocityY = 0;
+                player.OnGround = true;
+                player.IsJumping = false;
+            }
+            else if (!InputHandler.MoveWithAdjust(new Vector2(0, player.VelocityY), player, _netManager.CurrentRoom.Map) && player.VelocityY < 0)
+            {
+                player.VelocityY = 0;
+            }
+            else player.OnGround = false;
         }
 
         private void SetCamera(Camera2D camera)
