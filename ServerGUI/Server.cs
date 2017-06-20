@@ -31,7 +31,7 @@ namespace ServerGUI
             LoggerManager = loggerManager;
             GameRooms = new List<GameRoom>();
 
-            NetPeerConfiguration config = new NetPeerConfiguration("TerraBuilder")
+            NetPeerConfiguration config = new NetPeerConfiguration("TerraStructor")
             {
                 MaximumConnections = 32,
                 Port = 9911
