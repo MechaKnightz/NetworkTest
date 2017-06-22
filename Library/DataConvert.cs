@@ -12,38 +12,23 @@ namespace Library
 {
     public static class DataConvert
     {
-        public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffffff";
-        public static ITile TileFromTileType(TileType type)
-        {
-            ITile tile = new Air();
-            switch (type)
-            {
-                case TileType.Air:
-                    tile = new Air();
-                    break;
-                case TileType.Dirt:
-                    tile = new Dirt();
-                    break;
-                case TileType.Grass:
-                    tile = new Grass();
-                    break;
-                case TileType.Slab:
-                    tile = new Slab();
-                    break;
-                default:
-                    tile = new Air();
-                    break;
-            }
-            return tile;
-        }
+        private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffffff";
 
         public static ITile ReadTile(NetIncomingMessage inc)
         {
-            var tile = TileFromTileType((TileType)inc.ReadByte());
+            var tileType = (TileType) inc.ReadByte();
+            var typeString = string.Concat("Library.Tiles.", tileType.ToString("G"));
+            var tile = (ITile)GetInstance(typeString);
 
             tile.Read(inc);
 
             return tile;
+        }
+
+        public static object GetInstance(string strFullyQualifiedName)
+        {
+            Type t = Type.GetType(strFullyQualifiedName);
+            return Activator.CreateInstance(t);
         }
 
         public static void WritePlayer(NetOutgoingMessage outmsg, Player player, int inputId = -1)

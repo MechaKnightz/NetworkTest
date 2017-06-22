@@ -12,7 +12,7 @@
         <TextBox x:Name="Username" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Username, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,278,660,722" Width="600"  d:LayoutOverrides="Width"/>
         <Designer:PasswordBox x:Name="Password" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Password, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,363,660,637" Width="600"  d:LayoutOverrides="Width"/>
         <TextBox x:Name="IP" IsReadOnly="True" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding IP, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,448,660,552" Width="600"  d:LayoutOverrides="Width"/>
-        <Designer:NumericTextBox x:Name="Port" IsReadOnly="True" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Port, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,533,660,467" Width="600"  d:LayoutOverrides="VerticalAlignment, Width"/>
+        <TextBox x:Name="Port" IsReadOnly="True" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Port, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,533,660,467" Width="600"  d:LayoutOverrides="VerticalAlignment, Width"/>
         <Button x:Name="BtnBack" FontSize="55" Content="Back" Margin="660,0,660,382" VerticalAlignment="Bottom" Height="80"
                 Command="{Binding BackButtonCommand}" CommandParameter="Click Back Button"/>
     </Grid>
