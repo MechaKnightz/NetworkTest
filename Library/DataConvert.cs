@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,7 @@ namespace Library
         public static object GetInstance(string strFullyQualifiedName)
         {
             Type t = Type.GetType(strFullyQualifiedName);
+            if (t == null) return new Air();
             return Activator.CreateInstance(t);
         }
 
