@@ -25,7 +25,7 @@ namespace TerraStructorClient.GameState
 
         public new void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.GraphicsDevice.Clear(Color.Red);
+            spriteBatch.GraphicsDevice.Clear(Color.DarkSlateGray);
             Game._mainMenuRoot.Draw(gameTime.ElapsedGameTime.TotalMilliseconds);
         }
     }
