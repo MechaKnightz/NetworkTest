@@ -86,6 +86,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.e_4 = new MainMenuRegisterUserControl();
             this.e_0.Children.Add(this.e_4);
             this.e_4.Name = "e_4";
+            this.e_4.Margin = new Thickness(0F, -10F, 0F, 10F);
             Binding binding_e_4_Visibility = new Binding("RegisterMenuVisible");
             binding_e_4_Visibility.Mode = BindingMode.TwoWay;
             this.e_4.SetBinding(MainMenuRegisterUserControl.VisibilityProperty, binding_e_4_Visibility);

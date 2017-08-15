@@ -72,15 +72,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainMenuConnectUserControl.xaml.cs">
-      <DependentUpon>MainMenuConnectUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainMenuJoinRoomUserControl.xaml.cs">
-      <DependentUpon>MainMenuJoinRoomUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainMenuRegisterUserControl.xaml.cs">
-      <DependentUpon>MainMenuRegisterUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -117,27 +108,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainMenuConnectUserControl.xaml">
+    <Page Include="MainMenu\MainMenuConnectUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainMenuFirstUserControl.xaml">
+    <Page Include="MainMenu\MainMenuFirstUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainMenuJoinRoomUserControl.xaml">
+    <Page Include="MainMenu\MainMenuJoinRoomUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainMenuRegisterUserControl.xaml">
+    <Page Include="MainMenu\MainMenuRegisterUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainMenuRoot.xaml">
+    <Page Include="MainMenu\MainMenuRoot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>CD "$(SolutionDir)packages\EmptyKeysUI_Generator*\tools"
