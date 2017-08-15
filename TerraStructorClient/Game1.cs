@@ -4,6 +4,7 @@ using System.Linq;
 using EmptyKeys.UserInterface;
 using EmptyKeys.UserInterface.Generated;
 using EmptyKeys.UserInterface.Mvvm;
+using GameLibrary;
 using GameUILibrary;
 using Library;
 using Library.MessageHook;
@@ -261,6 +262,28 @@ namespace TerraStructorClient
                 }
             }
             return false;
+        }
+
+        public void ChangeResolution(int width, int height)
+        {
+            Graphics.PreferredBackBufferWidth = width;
+            Graphics.PreferredBackBufferHeight = height;
+        }
+
+        public Resolution GetResolution()
+        {
+            return new Resolution(Graphics.PreferredBackBufferWidth, Graphics.PreferredBackBufferHeight);
+
+        }
+
+        public List<Resolution> GetSupportedResolutions()
+        {
+            List<Resolution> resolutions = new List<Resolution>();
+            foreach (DisplayMode mode in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
+            {
+                resolutions.Add(new Resolution(mode.Width, mode.Height, mode.AspectRatio));
+            }
+            return resolutions;
         }
 
         public bool Register(string username, string password, string ip, string port)

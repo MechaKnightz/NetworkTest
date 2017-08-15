@@ -7,6 +7,19 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <Grid IsHitTestVisible="True">
-        
+        <TabControl Width="1280" Height="720" x:Name="tabControl" Margin="0,0,0,0">
+            <TabItem Header="TabItem">
+                <Grid Background="#333333">
+                    <CheckBox x:Name="checkBox" Content="Fullscreen" HorizontalAlignment="Left" Margin="429.666,87,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#333333">
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <ComboBox x:Name="comboBox" Margin="896,180,762,0" VerticalAlignment="Top" Height="111.96"/>
+
     </Grid>
 </UserControl>

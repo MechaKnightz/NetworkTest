@@ -1,4 +1,6 @@
-﻿using GameUILibrary;
+﻿using System.Collections.Generic;
+using GameLibrary;
+using GameUILibrary;
 using Microsoft.Xna.Framework;
 
 namespace TerraStructorClient
@@ -37,6 +39,21 @@ namespace TerraStructorClient
         public bool Register(string username, string password, string ip, string port)
         {
             return Game.Register(username, password, ip, port);
+        }
+
+        public void ChangeResolution(int width, int height)
+        {
+            Game.ChangeResolution(width, height);
+        }
+
+        public Resolution GetResolution()
+        {
+            return Game.GetResolution();
+        }
+
+        public List<Resolution> GetSupportedResolutions()
+        {
+            return Game.GetSupportedResolutions();
         }
     }
 }

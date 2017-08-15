@@ -178,6 +178,8 @@ namespace GameUILibrary
             HideAllUserControls();
 
             SettingsMenuVisible = Visibility.Visible;
+
+            //var test = GetService<IGameService>()?.GetSupportedResolutions();
         }
 
         private void HideAllUserControls()
