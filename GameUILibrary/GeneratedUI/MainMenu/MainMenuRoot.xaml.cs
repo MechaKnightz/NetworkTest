@@ -37,6 +37,8 @@ namespace EmptyKeys.UserInterface.Generated {
         
         private MainMenuRegisterUserControl e_4;
         
+        private MainMenuSettingsUserControl e_5;
+        
         public MainMenuRoot() : 
                 base() {
             this.Initialize();
@@ -86,10 +88,16 @@ namespace EmptyKeys.UserInterface.Generated {
             this.e_4 = new MainMenuRegisterUserControl();
             this.e_0.Children.Add(this.e_4);
             this.e_4.Name = "e_4";
-            this.e_4.Margin = new Thickness(0F, -10F, 0F, 10F);
             Binding binding_e_4_Visibility = new Binding("RegisterMenuVisible");
             binding_e_4_Visibility.Mode = BindingMode.TwoWay;
             this.e_4.SetBinding(MainMenuRegisterUserControl.VisibilityProperty, binding_e_4_Visibility);
+            // e_5 element
+            this.e_5 = new MainMenuSettingsUserControl();
+            this.e_0.Children.Add(this.e_5);
+            this.e_5.Name = "e_5";
+            Binding binding_e_5_Visibility = new Binding("SettingsMenuVisible");
+            binding_e_5_Visibility.Mode = BindingMode.TwoWay;
+            this.e_5.SetBinding(MainMenuSettingsUserControl.VisibilityProperty, binding_e_5_Visibility);
         }
     }
 }

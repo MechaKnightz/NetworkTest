@@ -52,6 +52,17 @@ namespace GameUILibrary
             }
         }
 
+        private Visibility _settingsMenuVisible;
+        public Visibility SettingsMenuVisible
+        {
+            get { return _settingsMenuVisible; }
+            set
+            {
+                _settingsMenuVisible = value;
+                RaisePropertyChanged("SettingsMenuVisible");
+            }
+        }
+
         public ICommand ExitButtonCommand { get; set; }
         public ICommand PlayButtonCommand { get; set; }
         public ICommand ConnectButtonCommand { get; set; }
@@ -60,6 +71,7 @@ namespace GameUILibrary
         public ICommand JoinRoomButtonCommand { get; set; }
         public ICommand RegisterButtonCommand { get; set; }
         public ICommand RegisterCommand { get; set; }
+        public ICommand SettingsButtonCommand { get; set; }
 
         public string Username { get; set; }
         public string Password { get; set; }
@@ -78,6 +90,7 @@ namespace GameUILibrary
             JoinRoomButtonCommand = new RelayCommand(new Action<object>(BtnJoinRoom_OnClick));
             RegisterButtonCommand = new RelayCommand(new Action<object>(BtnRegisterMenu_OnClick));
             RegisterCommand = new RelayCommand(new Action<object>(BtnRegister_OnClick));
+            SettingsButtonCommand = new RelayCommand(new Action<object>(BtnSettings_OnClick));
 
             HideAllUserControls();
             FirstMenuVisible = Visibility.Visible;
@@ -160,12 +173,20 @@ namespace GameUILibrary
             }
         }
 
+        private void BtnSettings_OnClick(object obj)
+        {
+            HideAllUserControls();
+
+            SettingsMenuVisible = Visibility.Visible;
+        }
+
         private void HideAllUserControls()
         {
             FirstMenuVisible = Visibility.Hidden;
             ConnectMenuVisible = Visibility.Hidden;
             JoinRoomMenuVisible = Visibility.Hidden;
             RegisterMenuVisible = Visibility.Hidden;
+            SettingsMenuVisible = Visibility.Hidden;
         }
     }
 }

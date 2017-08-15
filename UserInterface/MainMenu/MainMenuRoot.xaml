@@ -18,6 +18,8 @@
         <local:MainMenuJoinRoomUserControl
             Visibility="{Binding JoinRoomMenuVisible, Mode=TwoWay}"/>
         <local:MainMenuRegisterUserControl
-            Visibility="{Binding RegisterMenuVisible, Mode=TwoWay}" Margin="0,-10,0,10"/>
+            Visibility="{Binding RegisterMenuVisible, Mode=TwoWay}"/>
+        <local:MainMenuSettingsUserControl
+            Visibility="{Binding SettingsMenuVisible, Mode=TwoWay}"/>
     </Grid>
 </ek:UIRoot>

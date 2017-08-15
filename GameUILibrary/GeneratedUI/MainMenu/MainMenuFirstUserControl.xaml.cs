@@ -33,6 +33,8 @@ namespace EmptyKeys.UserInterface.Generated {
         
         private Button BtnRegister;
         
+        private Button BtnSettings;
+        
         private Button BtnExit;
         
         private TextBox TempTitleBox;
@@ -78,9 +80,24 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnRegister.VerticalAlignment = VerticalAlignment.Top;
             this.BtnRegister.TabIndex = 2;
             this.BtnRegister.Content = "Register";
-            this.BtnRegister.CommandParameter = "Click Connect Button";
+            this.BtnRegister.CommandParameter = "Click Register Button";
             Binding binding_BtnRegister_Command = new Binding("RegisterButtonCommand");
             this.BtnRegister.SetBinding(Button.CommandProperty, binding_BtnRegister_Command);
+            // BtnSettings element
+            this.BtnSettings = new Button();
+            this.e_0.Children.Add(this.BtnSettings);
+            this.BtnSettings.Name = "BtnSettings";
+            this.BtnSettings.Height = 70F;
+            this.BtnSettings.Width = 200F;
+            this.BtnSettings.IsHitTestVisible = true;
+            this.BtnSettings.Margin = new Thickness(0F, 405F, 0F, 0F);
+            this.BtnSettings.HorizontalAlignment = HorizontalAlignment.Center;
+            this.BtnSettings.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnSettings.TabIndex = 3;
+            this.BtnSettings.Content = "Settings";
+            this.BtnSettings.CommandParameter = "Click Settings Button";
+            Binding binding_BtnSettings_Command = new Binding("SettingsButtonCommand");
+            this.BtnSettings.SetBinding(Button.CommandProperty, binding_BtnSettings_Command);
             // BtnExit element
             this.BtnExit = new Button();
             this.e_0.Children.Add(this.BtnExit);

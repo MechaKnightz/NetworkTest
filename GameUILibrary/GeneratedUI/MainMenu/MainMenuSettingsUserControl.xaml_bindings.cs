@@ -3,7 +3,7 @@
 //  This file was generated, please do not modify.
 //  
 // -----------------------------------------------------------
-namespace EmptyKeys.UserInterface.Generated.MainMenuFirstUserControl_Bindings {
+namespace EmptyKeys.UserInterface.Generated.MainMenuSettingsUserControl_Bindings {
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.ObjectModel;
