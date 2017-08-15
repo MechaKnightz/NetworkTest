@@ -31,9 +31,9 @@ namespace EmptyKeys.UserInterface.Generated {
         
         private Button BtnConnect;
         
-        private Button BtnExit;
-        
         private Button BtnRegister;
+        
+        private Button BtnExit;
         
         private TextBox TempTitleBox;
         
@@ -50,6 +50,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.Content = this.e_0;
             this.e_0.Name = "e_0";
             this.e_0.IsHitTestVisible = true;
+            this.e_0.Margin = new Thickness(0F, 0F, 10F, 0F);
             // BtnConnect element
             this.BtnConnect = new Button();
             this.e_0.Children.Add(this.BtnConnect);
@@ -57,13 +58,27 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnConnect.Height = 70F;
             this.BtnConnect.Width = 200F;
             this.BtnConnect.IsHitTestVisible = true;
-            this.BtnConnect.Margin = new Thickness(0F, 0F, 0F, 500F);
+            this.BtnConnect.Margin = new Thickness(0F, 255F, 0F, 0F);
             this.BtnConnect.HorizontalAlignment = HorizontalAlignment.Center;
-            this.BtnConnect.VerticalAlignment = VerticalAlignment.Center;
+            this.BtnConnect.VerticalAlignment = VerticalAlignment.Top;
             this.BtnConnect.Content = "Play";
             this.BtnConnect.CommandParameter = "Click Connect Button";
             Binding binding_BtnConnect_Command = new Binding("PlayButtonCommand");
             this.BtnConnect.SetBinding(Button.CommandProperty, binding_BtnConnect_Command);
+            // BtnRegister element
+            this.BtnRegister = new Button();
+            this.e_0.Children.Add(this.BtnRegister);
+            this.BtnRegister.Name = "BtnRegister";
+            this.BtnRegister.Height = 70F;
+            this.BtnRegister.Width = 200F;
+            this.BtnRegister.IsHitTestVisible = true;
+            this.BtnRegister.Margin = new Thickness(0F, 330F, 0F, 0F);
+            this.BtnRegister.HorizontalAlignment = HorizontalAlignment.Center;
+            this.BtnRegister.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnRegister.Content = "Register";
+            this.BtnRegister.CommandParameter = "Click Connect Button";
+            Binding binding_BtnRegister_Command = new Binding("RegisterButtonCommand");
+            this.BtnRegister.SetBinding(Button.CommandProperty, binding_BtnRegister_Command);
             // BtnExit element
             this.BtnExit = new Button();
             this.e_0.Children.Add(this.BtnExit);
@@ -77,20 +92,6 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnExit.CommandParameter = "Click Exit Button";
             Binding binding_BtnExit_Command = new Binding("ExitButtonCommand");
             this.BtnExit.SetBinding(Button.CommandProperty, binding_BtnExit_Command);
-            // BtnRegister element
-            this.BtnRegister = new Button();
-            this.e_0.Children.Add(this.BtnRegister);
-            this.BtnRegister.Name = "BtnRegister";
-            this.BtnRegister.Height = 70F;
-            this.BtnRegister.Width = 200F;
-            this.BtnRegister.IsHitTestVisible = true;
-            this.BtnRegister.Margin = new Thickness(860F, 330F, 860F, 0F);
-            this.BtnRegister.HorizontalAlignment = HorizontalAlignment.Center;
-            this.BtnRegister.VerticalAlignment = VerticalAlignment.Top;
-            this.BtnRegister.Content = "Register";
-            this.BtnRegister.CommandParameter = "Click Connect Button";
-            Binding binding_BtnRegister_Command = new Binding("RegisterButtonCommand");
-            this.BtnRegister.SetBinding(Button.CommandProperty, binding_BtnRegister_Command);
             // TempTitleBox element
             this.TempTitleBox = new TextBox();
             this.e_0.Children.Add(this.TempTitleBox);

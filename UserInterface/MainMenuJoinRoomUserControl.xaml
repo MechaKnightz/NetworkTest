@@ -7,10 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <Grid>
-        <Button x:Name="BtnJoinRoom" FontSize="55" Content="Join room" Margin="660,193,660,0" VerticalAlignment="Top" Height="80"
+        <Button x:Name="BtnJoinRoom" FontSize="55" Content="Join room" Width="600" Margin="0,193,0,0" VerticalAlignment="Top" Height="80"
             Command="{Binding JoinRoomButtonCommand}" CommandParameter="Click Join Room Button"/>
-        <TextBox x:Name="textBox" FontSize="55" TextAlignment="Center" Height="80" Margin="660,278,660,0" TextWrapping="Wrap" Text="{Binding RoomName, Mode=TwoWay}" VerticalAlignment="Top"/>
-        <Button x:Name="BtnBack2" FontSize="55" Content="Back" Margin="660,363,660,0" VerticalAlignment="Top" Height="80"
+        <TextBox x:Name="textBox" FontSize="55" TextAlignment="Center" Width="600" Height="80" Margin="0,278,0,0" TextWrapping="Wrap" Text="{Binding RoomName, Mode=TwoWay}" VerticalAlignment="Top"/>
+        <Button x:Name="BtnBack2" FontSize="55" Content="Back" Width="600" Margin="0,363,0,0" VerticalAlignment="Top" Height="80"
             Command="{Binding BackButton2Command}" CommandParameter="Click Back Button 2"/>
     </Grid>
 </UserControl>

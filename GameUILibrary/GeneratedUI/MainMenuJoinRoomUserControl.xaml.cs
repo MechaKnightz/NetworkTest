@@ -52,7 +52,8 @@ namespace EmptyKeys.UserInterface.Generated {
             this.e_0.Children.Add(this.BtnJoinRoom);
             this.BtnJoinRoom.Name = "BtnJoinRoom";
             this.BtnJoinRoom.Height = 80F;
-            this.BtnJoinRoom.Margin = new Thickness(660F, 193F, 660F, 0F);
+            this.BtnJoinRoom.Width = 600F;
+            this.BtnJoinRoom.Margin = new Thickness(0F, 193F, 0F, 0F);
             this.BtnJoinRoom.VerticalAlignment = VerticalAlignment.Top;
             this.BtnJoinRoom.FontSize = 55F;
             this.BtnJoinRoom.Content = "Join room";
@@ -64,7 +65,8 @@ namespace EmptyKeys.UserInterface.Generated {
             this.e_0.Children.Add(this.textBox);
             this.textBox.Name = "textBox";
             this.textBox.Height = 80F;
-            this.textBox.Margin = new Thickness(660F, 278F, 660F, 0F);
+            this.textBox.Width = 600F;
+            this.textBox.Margin = new Thickness(0F, 278F, 0F, 0F);
             this.textBox.VerticalAlignment = VerticalAlignment.Top;
             this.textBox.FontSize = 55F;
             Binding binding_textBox_Text = new Binding("RoomName");
@@ -75,7 +77,8 @@ namespace EmptyKeys.UserInterface.Generated {
             this.e_0.Children.Add(this.BtnBack2);
             this.BtnBack2.Name = "BtnBack2";
             this.BtnBack2.Height = 80F;
-            this.BtnBack2.Margin = new Thickness(660F, 363F, 660F, 0F);
+            this.BtnBack2.Width = 600F;
+            this.BtnBack2.Margin = new Thickness(0F, 363F, 0F, 0F);
             this.BtnBack2.VerticalAlignment = VerticalAlignment.Top;
             this.BtnBack2.FontSize = 55F;
             this.BtnBack2.Content = "Back";

@@ -61,7 +61,6 @@ namespace ServerGUI
 
             while (true)
             {
-                //TODO fix server loop stopping after 2 room joins
                 NetIncomingMessage inc;
                 if ((inc = NetServer.ReadMessage()) == null) continue;
                 switch (inc.MessageType)
@@ -84,7 +83,7 @@ namespace ServerGUI
                             }
                         }
 
-                        var deniedReason = "Faulty connection type";
+                        const string deniedReason = "Faulty connection type";
                         inc.SenderConnection.Deny(deniedReason);
                         LoggerManager.ServerMsg(deniedReason);
                         break;

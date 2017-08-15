@@ -18,6 +18,7 @@ namespace Library
         public static ITile ReadTile(NetIncomingMessage inc)
         {
             var tileType = (TileType) inc.ReadByte();
+            //Library.Tiles. == namespace
             var typeString = string.Concat("Library.Tiles.", tileType.ToString("G"));
             var tile = (ITile)GetInstance(typeString);
 

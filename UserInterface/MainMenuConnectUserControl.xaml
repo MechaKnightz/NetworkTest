@@ -7,13 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
     <Grid IsHitTestVisible="True">
-        <Button x:Name="ConnectButton" FontSize="55" Content="Connect" Margin="660,193,660,0" VerticalAlignment="Top" Height="80"
+        <Button x:Name="ConnectButton" FontSize="55" Width="600"  Content="Connect" Margin="0,193,0,0" VerticalAlignment="Top" Height="80"
                 Command="{Binding ConnectButtonCommand}" CommandParameter="Click Connect Button"/>
-        <TextBox x:Name="Username" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Username, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,278,660,722" Width="600"  d:LayoutOverrides="Width"/>
-        <Designer:PasswordBox x:Name="Password" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Password, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,363,660,637" Width="600"  d:LayoutOverrides="Width"/>
-        <TextBox x:Name="IP" IsReadOnly="True" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding IP, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,448,660,552" Width="600"  d:LayoutOverrides="Width"/>
-        <TextBox x:Name="Port" IsReadOnly="True" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Port, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="660,533,660,467" Width="600"  d:LayoutOverrides="VerticalAlignment, Width"/>
-        <Button x:Name="BtnBack" FontSize="55" Content="Back" Margin="660,0,660,382" VerticalAlignment="Bottom" Height="80"
-                Command="{Binding BackButtonCommand}" CommandParameter="Click Back Button"/>
+        <TextBox x:Name="Username" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Username, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="0,278,0,0" Width="600" Height="80" VerticalAlignment="Top"/>
+        <Designer:PasswordBox x:Name="Password" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Password, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="0,363,0,0" Width="600" Height="80" VerticalAlignment="Top"/>
+        <TextBox x:Name="IP"  TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding IP, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="0,448,0,0" Width="600" Height="80" VerticalAlignment="Top"/>
+        <TextBox x:Name="Port" IsReadOnly="True" TextAlignment="Center"  TextWrapping="Wrap" Text="{Binding Port, Mode=TwoWay}" FontSize="55" HorizontalAlignment="Center" Margin="0,533,0,0" Width="600" Height="80" VerticalAlignment="Top"/>
+        <Button x:Name="BtnBack" FontSize="55" Content="Back" Width="600" Margin="0,618,0,0"
+                Command="{Binding BackButtonCommand}" CommandParameter="Click Back Button" Height="80" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>
