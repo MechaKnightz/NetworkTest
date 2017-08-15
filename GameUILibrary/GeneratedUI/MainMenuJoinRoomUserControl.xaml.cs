@@ -55,6 +55,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnJoinRoom.Width = 600F;
             this.BtnJoinRoom.Margin = new Thickness(0F, 193F, 0F, 0F);
             this.BtnJoinRoom.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnJoinRoom.TabIndex = 1;
             this.BtnJoinRoom.FontSize = 55F;
             this.BtnJoinRoom.Content = "Join room";
             this.BtnJoinRoom.CommandParameter = "Click Join Room Button";
@@ -68,6 +69,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.textBox.Width = 600F;
             this.textBox.Margin = new Thickness(0F, 278F, 0F, 0F);
             this.textBox.VerticalAlignment = VerticalAlignment.Top;
+            this.textBox.TabIndex = 1;
             this.textBox.FontSize = 55F;
             Binding binding_textBox_Text = new Binding("RoomName");
             binding_textBox_Text.Mode = BindingMode.TwoWay;
@@ -80,6 +82,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnBack2.Width = 600F;
             this.BtnBack2.Margin = new Thickness(0F, 363F, 0F, 0F);
             this.BtnBack2.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnBack2.TabIndex = 2;
             this.BtnBack2.FontSize = 55F;
             this.BtnBack2.Content = "Back";
             this.BtnBack2.CommandParameter = "Click Back Button 2";

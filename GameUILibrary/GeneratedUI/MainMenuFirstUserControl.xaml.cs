@@ -61,6 +61,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnConnect.Margin = new Thickness(0F, 255F, 0F, 0F);
             this.BtnConnect.HorizontalAlignment = HorizontalAlignment.Center;
             this.BtnConnect.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnConnect.TabIndex = 1;
             this.BtnConnect.Content = "Play";
             this.BtnConnect.CommandParameter = "Click Connect Button";
             Binding binding_BtnConnect_Command = new Binding("PlayButtonCommand");
@@ -75,6 +76,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnRegister.Margin = new Thickness(0F, 330F, 0F, 0F);
             this.BtnRegister.HorizontalAlignment = HorizontalAlignment.Center;
             this.BtnRegister.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnRegister.TabIndex = 2;
             this.BtnRegister.Content = "Register";
             this.BtnRegister.CommandParameter = "Click Connect Button";
             Binding binding_BtnRegister_Command = new Binding("RegisterButtonCommand");
@@ -88,6 +90,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnExit.Margin = new Thickness(0F, 10F, 10F, 0F);
             this.BtnExit.HorizontalAlignment = HorizontalAlignment.Right;
             this.BtnExit.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnExit.TabIndex = 3;
             this.BtnExit.Content = "X";
             this.BtnExit.CommandParameter = "Click Exit Button";
             Binding binding_BtnExit_Command = new Binding("ExitButtonCommand");

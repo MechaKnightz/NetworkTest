@@ -62,6 +62,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.ConnectButton.Width = 600F;
             this.ConnectButton.Margin = new Thickness(0F, 193F, 0F, 0F);
             this.ConnectButton.VerticalAlignment = VerticalAlignment.Top;
+            this.ConnectButton.TabIndex = 1;
             this.ConnectButton.FontSize = 55F;
             this.ConnectButton.Content = "Connect";
             this.ConnectButton.CommandParameter = "Click Connect Button";
@@ -76,6 +77,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.Username.Margin = new Thickness(0F, 278F, 0F, 0F);
             this.Username.HorizontalAlignment = HorizontalAlignment.Center;
             this.Username.VerticalAlignment = VerticalAlignment.Top;
+            this.Username.TabIndex = 2;
             this.Username.FontSize = 55F;
             Binding binding_Username_Text = new Binding("Username");
             binding_Username_Text.Mode = BindingMode.TwoWay;
@@ -89,6 +91,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.Password.Margin = new Thickness(0F, 363F, 0F, 0F);
             this.Password.HorizontalAlignment = HorizontalAlignment.Center;
             this.Password.VerticalAlignment = VerticalAlignment.Top;
+            this.Password.TabIndex = 3;
             this.Password.FontSize = 55F;
             Binding binding_Password_Text = new Binding("Password");
             binding_Password_Text.Mode = BindingMode.TwoWay;
@@ -102,6 +105,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.IP.Margin = new Thickness(0F, 448F, 0F, 0F);
             this.IP.HorizontalAlignment = HorizontalAlignment.Center;
             this.IP.VerticalAlignment = VerticalAlignment.Top;
+            this.IP.TabIndex = 4;
             this.IP.FontSize = 55F;
             Binding binding_IP_Text = new Binding("IP");
             binding_IP_Text.Mode = BindingMode.TwoWay;
@@ -115,6 +119,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.Port.Margin = new Thickness(0F, 533F, 0F, 0F);
             this.Port.HorizontalAlignment = HorizontalAlignment.Center;
             this.Port.VerticalAlignment = VerticalAlignment.Top;
+            this.Port.TabIndex = 5;
             this.Port.FontSize = 55F;
             this.Port.IsReadOnly = true;
             Binding binding_Port_Text = new Binding("Port");
@@ -128,6 +133,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.BtnBack.Width = 600F;
             this.BtnBack.Margin = new Thickness(0F, 618F, 0F, 0F);
             this.BtnBack.VerticalAlignment = VerticalAlignment.Top;
+            this.BtnBack.TabIndex = 6;
             this.BtnBack.FontSize = 55F;
             this.BtnBack.Content = "Back";
             this.BtnBack.CommandParameter = "Click Back Button";
