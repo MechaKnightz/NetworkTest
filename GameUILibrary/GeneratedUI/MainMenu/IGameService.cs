@@ -16,5 +16,6 @@ namespace GameUILibrary
         void ChangeResolution(int width, int heigh);
         Resolution GetResolution();
         List<Resolution> GetSupportedResolutions();
+        void ToggleFullscreen(bool value);
     }
 }

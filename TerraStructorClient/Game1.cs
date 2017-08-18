@@ -5,6 +5,7 @@ using EmptyKeys.UserInterface;
 using EmptyKeys.UserInterface.Generated;
 using EmptyKeys.UserInterface.Mvvm;
 using GameLibrary;
+using GameLibrary.GeneratedUI.MainMenu;
 using GameUILibrary;
 using Library;
 using Library.MessageHook;
@@ -47,9 +48,9 @@ namespace TerraStructorClient
         public Game1() : base()
         {
             Graphics = new GraphicsDeviceManager(this);
-
-            Graphics.PreferredBackBufferWidth = 1920;
-            Graphics.PreferredBackBufferHeight = 1080;
+            Window.IsBorderless = false;
+            Graphics.PreferredBackBufferWidth = 1920; //1366
+            Graphics.PreferredBackBufferHeight = 1080; //768
             Graphics.DeviceCreated += graphics_DeviceCreated;
             Graphics.PreparingDeviceSettings += graphics_PreparingDeviceSettings;
 
@@ -268,6 +269,7 @@ namespace TerraStructorClient
         {
             Graphics.PreferredBackBufferWidth = width;
             Graphics.PreferredBackBufferHeight = height;
+            Graphics.ApplyChanges();
         }
 
         public Resolution GetResolution()
@@ -284,6 +286,13 @@ namespace TerraStructorClient
                 resolutions.Add(new Resolution(mode.Width, mode.Height, mode.AspectRatio));
             }
             return resolutions;
+        }
+
+        public void ToggleFullscreen(bool value)
+        {
+            Graphics.IsFullScreen = value;
+            Window.IsBorderless = value;
+            Graphics.ApplyChanges();
         }
 
         public bool Register(string username, string password, string ip, string port)

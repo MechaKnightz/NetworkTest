@@ -55,5 +55,10 @@ namespace TerraStructorClient
         {
             return Game.GetSupportedResolutions();
         }
+
+        public void ToggleFullscreen(bool value)
+        {
+            Game.ToggleFullscreen(value);
+        }
     }
 }
