@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameUILibrary", "GameUILibr
 		{E66E4C19-43B7-42AC-BF64-98C3A6D2C4D1} = {E66E4C19-43B7-42AC-BF64-98C3A6D2C4D1}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerraStructorClientCopy", "TerraStructorClientCopy\TerraStructorClientCopy.csproj", "{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerraStructorClient", "TerraStructorClientCopy\TerraStructorClient.csproj", "{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
