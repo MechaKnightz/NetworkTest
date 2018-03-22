@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TerraStructorClient")]
-[assembly: AssemblyProduct("TerraStructorClient")]
+[assembly: AssemblyTitle("TerraStructorClientCopy")]
+[assembly: AssemblyProduct("TerraStructorClientCopy")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2017")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2dd194cb-2226-41c7-8e18-6023e93802aa")]
+[assembly: Guid("fbbaf9e1-f8e9-4942-9164-0d44764ee594")]
 
 // Version information for an assembly consists of the following four values:
 //
