@@ -107,7 +107,7 @@ namespace EmptyKeys.UserInterface.Generated {
             this.IP.VerticalAlignment = VerticalAlignment.Top;
             this.IP.TabIndex = 4;
             this.IP.FontSize = 55F;
-            this.IP.IsReadOnly = true;
+            this.IP.IsReadOnly = false;
             Binding binding_IP_Text = new Binding("IP");
             binding_IP_Text.Mode = BindingMode.TwoWay;
             this.IP.SetBinding(TextBox.TextProperty, binding_IP_Text);

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{F35E5F87-1033-4FCC-B9C8-91E82A79F044}"
 EndProject
@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameUILibrary", "GameUILibr
 		{E66E4C19-43B7-42AC-BF64-98C3A6D2C4D1} = {E66E4C19-43B7-42AC-BF64-98C3A6D2C4D1}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerraStructorClient", "TerraStructorClient\TerraStructorClient.csproj", "{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerraStructorClientCopy", "TerraStructorClientCopy\TerraStructorClientCopy.csproj", "{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,14 +61,17 @@ Global
 		{5C061337-FC4B-400E-A16E-50B92F619B6A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C061337-FC4B-400E-A16E-50B92F619B6A}.Release|x86.ActiveCfg = Release|Any CPU
 		{5C061337-FC4B-400E-A16E-50B92F619B6A}.Release|x86.Build.0 = Release|Any CPU
-		{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}.Debug|x86.ActiveCfg = Debug|x86
-		{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}.Debug|x86.Build.0 = Debug|x86
-		{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}.Release|Any CPU.ActiveCfg = Release|x86
-		{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}.Release|x86.ActiveCfg = Release|x86
-		{40B6A333-B6F1-4E74-B9BA-C454D9A013EA}.Release|x86.Build.0 = Release|x86
+		{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}.Debug|x86.ActiveCfg = Debug|x86
+		{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}.Debug|x86.Build.0 = Debug|x86
+		{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}.Release|Any CPU.ActiveCfg = Release|x86
+		{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}.Release|x86.ActiveCfg = Release|x86
+		{3A2F0EBC-7AB3-4E27-84F9-46B5395AF9E2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0345B007-5115-4E84-956C-3342FA1AAC79}
 	EndGlobalSection
 EndGlobal

@@ -116,6 +116,8 @@ namespace Library
         public static bool MoveWithAdjust(Vector2 offset, Player player, Map map)
         {
             //todo refactor into MoveWithCollisionCheck method
+            //wow dis be innefficient
+            //todo
             bool returnEarly = false;
             bool booler = !MoveWithCollisionCheck(offset, player, map);
             if (!booler) return true;

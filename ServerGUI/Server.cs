@@ -240,7 +240,15 @@ namespace ServerGUI
 
         public static string GetExternalIPAddress()
         {
-            string ip = new WebClient().DownloadString("http://icanhazip.com");
+            string ip;
+            try
+            {
+                ip = new WebClient().DownloadString("http://icanhazip.com");
+            }
+            catch(Exception e)
+            {
+                ip = "Unknown";
+            }
             string replacement = Regex.Replace(ip, @"\n", "");
             return replacement;
         }
